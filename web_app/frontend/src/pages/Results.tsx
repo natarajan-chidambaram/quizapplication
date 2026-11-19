@@ -13,7 +13,7 @@ import { useQuizState } from "../context/QuizStateContext";
  */
 const Results: React.FC = () => {
   const navigate = useNavigate();
-  const { state, resetSession } = useQuizState();
+  const { state, resetSession, resetAll } = useQuizState();
   const attemptId = state.attemptId;
 
   const [results, setResults] = useState<any>(null);
@@ -146,9 +146,25 @@ const Results: React.FC = () => {
         ))}
       </section>
 
-      <button type="button" className="ds-btn ds-btn-primary" style={{ marginTop: "1rem" }} onClick={handleRestart}>
-        Restart the quiz
-      </button>
+      <div style={{ display: "flex", gap: "0.75rem", marginTop: "1rem", flexWrap: "wrap" }}>
+        <button type="button" className="ds-btn ds-btn-primary" onClick={handleRestart}>
+          Restart the quiz
+        </button>
+        {/* Request update #3: upload a new document sits next to the
+            restart button and clears the whole session, unlocking the
+            Document Upload screen again (request update #1 of the
+            previous run: once uploaded, the upload cannot be changed). */}
+        <button
+          type="button"
+          className="ds-btn"
+          onClick={() => {
+            resetAll();
+            navigate("/");
+          }}
+        >
+          Upload a new document
+        </button>
+      </div>
     </div>
   );
 };

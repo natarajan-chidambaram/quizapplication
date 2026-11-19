@@ -2,6 +2,7 @@ from datetime import datetime, date, time
 from typing import Any, List, Optional, Union, Set
 from enum import Enum
 from pydantic import BaseModel, field_validator
+import re
 
 
 ############################################
@@ -20,6 +21,18 @@ class ResponseLinkCreate(BaseModel):
     selectedOptionIds: str
     answeredAt: datetime
     isMarkedCorrect: Optional[bool] = None
+
+    @field_validator("selectedOptionIds")
+    @classmethod
+    def _single_answer(cls, v: str) -> str:
+        """R13: one answer per question — at most one option id."""
+        tokens = [token for token in re.split(r"[,;\s]+", str(v or "")) if token]
+        if len(tokens) > 1:
+            raise ValueError(
+                "selectedOptionIds must contain exactly one option id "
+                "(one answer per question is allowed)"
+            )
+        return tokens[0] if tokens else v
 
 ############################################
 # Classes are defined here
@@ -42,6 +55,26 @@ class ResponseCreate(BaseModel):
     attemptQuestion: str  # association end -> Question primary key
     attempts: str  # association end -> Attempt primary key
     option: Optional[str] = None  # N:1 Relationship (optional)
+
+    @field_validator("selectedOptionIds")
+    @classmethod
+    def _single_answer(cls, v: str) -> str:
+        """R13/R14: exactly one answer per question.
+
+        selectedOptionIds must reference AT MOST ONE option id. A payload
+        holding several option references (comma / semicolon / whitespace
+        separated) is the reported Option-feature bug and is rejected with a
+        validation error instead of being stored.
+        """
+        if v is None:
+            return v
+        tokens = [token for token in re.split(r"[,;\s]+", str(v)) if token]
+        if len(tokens) > 1:
+            raise ValueError(
+                "selectedOptionIds must contain exactly one option id "
+                "(one answer per question is allowed)"
+            )
+        return tokens[0] if tokens else v
 
 
 class QuizPageCreate(BaseModel):

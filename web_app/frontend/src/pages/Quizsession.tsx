@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import quizApi, { ApiError } from "../api/quizApi";
 import { useQuizState, QuizAnswer } from "../context/QuizStateContext";
+import JerryAvatar from "../components/JerryAvatar";
 
 /**
  * Screen 3 — Quiz Session (R12-R20).
@@ -196,13 +197,7 @@ const Quizsession: React.FC = () => {
 
           {isLearning && alreadyAnswered && (
             <div style={{ display: "flex", gap: "0.75rem", alignItems: "center", marginTop: "1rem", flexWrap: "wrap" }}>
-              <div
-                className={`jerry-avatar ${isCorrect ? "jerry-avatar--cheer" : ""}`}
-                role="img"
-                aria-label={isCorrect ? "Jerry the mouse clapping" : "Jerry the mouse"}
-              >
-                {isCorrect ? "🐭👏" : "🐭"}
-              </div>
+              <JerryAvatar clapping={isCorrect} />
               <div>
                 {isCorrect && (
                   <>
@@ -239,6 +234,8 @@ const Quizsession: React.FC = () => {
             >
               {submitting ? "Saving your answer…" : alreadyAnswered ? "Answer saved (cannot be changed)" : "Submit answer"}
             </button>
+            {/* R17: the Next button advances one question per page and is
+                disabled until the current question has its single answer. */}
             <button type="button" className="ds-btn" onClick={handleNext} disabled={!alreadyAnswered}>
               {currentIndex + 1 >= total ? "Finish and see results →" : "Next question →"}
             </button>

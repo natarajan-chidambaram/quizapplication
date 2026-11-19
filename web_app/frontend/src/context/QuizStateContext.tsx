@@ -60,6 +60,7 @@ interface QuizStateContextValue {
   nextQuestion: () => void;
   markCompleted: () => void;
   resetSession: () => void;
+  resetAll: () => void;
 }
 
 const QuizStateContext = createContext<QuizStateContextValue | undefined>(undefined);
@@ -127,6 +128,13 @@ export const QuizStateProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     setState((previous) => ({ ...previous, completed: true }));
   }, []);
 
+  const resetAll = useCallback(() => {
+    // "Upload a new document" (request update #3): clear EVERYTHING,
+    // including the locked uploaded document, so a new file can be
+    // uploaded on the Document Upload screen.
+    setState({ ...EMPTY_STATE });
+  }, []);
+
   const resetSession = useCallback(() => {
     // Restart (R25): keep only the chosen document, go back to configuration.
     setState((previous) => ({
@@ -143,8 +151,8 @@ export const QuizStateProvider: React.FC<{ children: React.ReactNode }> = ({ chi
   }, []);
 
   const value = useMemo(
-    () => ({ state, selectDocument, configure, startAttempt, recordAnswer, nextQuestion, markCompleted, resetSession }),
-    [state, selectDocument, configure, startAttempt, recordAnswer, nextQuestion, markCompleted, resetSession]
+    () => ({ state, selectDocument, configure, startAttempt, recordAnswer, nextQuestion, markCompleted, resetSession, resetAll }),
+    [state, selectDocument, configure, startAttempt, recordAnswer, nextQuestion, markCompleted, resetSession, resetAll]
   );
 
   return <QuizStateContext.Provider value={value}>{children}</QuizStateContext.Provider>;

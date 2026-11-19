@@ -574,8 +574,10 @@ async def get_session(attempt_id: str, index: int = None, database: Session = De
         .first()
     )
 
-    reveal = db_attempt.mode == "learning"
     answered = existing is not None and existing.selectedOptionId is not None
+    # In Learning Mode the correct answer is revealed only AFTER the
+    # question is answered (R17/R18) — never before (R13, no leaking).
+    reveal = db_attempt.mode == "learning" and answered
     payload = _question_dict(question, reveal=reveal, database=database)
     if answered and existing.selectedOptionId:
         selected_option = database.query(Option).filter(Option.id == existing.selectedOptionId).first()

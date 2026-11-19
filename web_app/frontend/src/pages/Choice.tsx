@@ -28,7 +28,7 @@ const Choice: React.FC = () => {
               "color": "white",
               "borderRadius": "4px",
               "--chart-color-palette": "default"
-            }} onClick={(e) => { if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return; e.preventDefault(); navigate("/documentspage"); }} href="/documentspage">{"DocumentsPage"}</a>
+            }} onClick={(e) => { if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return; e.preventDefault(); navigate("/"); }} href="/">{"Document Uploade"}</a>
           <a id="iw468i" style={{
               "padding": "10px 15px",
               "textDecoration": "none",

@@ -1,111 +1,218 @@
-import React from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { TableBlock } from "../components/runtime/TableBlock";
+import quizApi from "../api/quizApi";
+import { useQuizState } from "../context/QuizStateContext";
 
+/**
+ * Screen 1 — Document Upload (R3-R6).
+ * Upload a JSON or PDF file of MCQs, see validation errors, list uploaded
+ * documents, and click one to base the quiz on it (proceeds to Quiz
+ * Configuration).
+ */
 const Documentpage: React.FC = () => {
   const navigate = useNavigate();
+  const { state, selectDocument } = useQuizState();
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [documents, setDocuments] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [uploading, setUploading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [notice, setNotice] = useState<string | null>(null);
+  const [selectedId, setSelectedId] = useState<string | null>(state.documentId);
+  // R31: while a quiz session is running the upload is locked — the
+  // document cannot be changed until the session is reset (Restart or
+  // "Upload a new document" on the Results screen).
+  const uploadLocked = Boolean(state.attemptId);
+
+  const loadDocuments = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const data = await quizApi.listDocuments();
+      const rows = Array.isArray(data) ? data : (data as any)?.data ?? [];
+      setDocuments(rows);
+    } catch (err: any) {
+      setError(err?.detail || "Could not load the uploaded documents");
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    loadDocuments();
+  }, [loadDocuments]);
+
+  const handleFileChange = useCallback(
+    async (event: React.ChangeEvent<HTMLInputElement>) => {
+      const file = event.target.files?.[0];
+      event.target.value = ""; // allow re-uploading the same file
+      if (!file) return;
+      const isJson = /\.json$/i.test(file.name) || file.type === "application/json";
+      const isPdf = /\.pdf$/i.test(file.name) || file.type === "application/pdf";
+      if (!isJson && !isPdf) {
+        setError("Only JSON or PDF files are accepted");
+        return;
+      }
+      setUploading(true);
+      setError(null);
+      setNotice(null);
+      try {
+        const result = await quizApi.uploadDocument(file);
+        setNotice(
+          `Uploaded "${result.document?.fileName ?? file.name}" — ${result.questionCount} question(s) extracted and validated`
+        );
+        await loadDocuments();
+        if (result.document?.id) {
+          setSelectedId(result.document.id);
+        }
+      } catch (err: any) {
+        setError(err?.detail || "The document could not be uploaded or validated");
+      } finally {
+        setUploading(false);
+      }
+    },
+    [loadDocuments]
+  );
+
+  const handleDelete = useCallback(
+    async (id: string) => {
+      setError(null);
+      setNotice(null);
+      try {
+        await quizApi.deleteDocument(id);
+        setNotice("Document deleted");
+        setSelectedId((previous) => (previous === id ? null : previous));
+        await loadDocuments();
+      } catch (err: any) {
+        setError(err?.detail || "The document could not be deleted");
+      }
+    },
+    [loadDocuments]
+  );
+
+  const proceedToConfiguration = useCallback(() => {
+    if (!selectedId) return;
+    const doc = documents.find((item) => item.id === selectedId);
+    selectDocument(selectedId, doc?.fileName ?? "document");
+    navigate("/configure");
+  }, [documents, navigate, selectDocument, selectedId]);
+
   return (
-    <div id="page-documentpage-2">
-    <div id="i4d8n" style={{"height": "100vh", "fontFamily": "Arial, sans-serif", "display": "flex", "--chart-color-palette": "default"}}>
-      <nav id="idtgk" style={{
-          "width": "250px",
-          "padding": "20px",
-          "display": "flex",
-          "overflowY": "auto",
-          "background": "linear-gradient(135deg, #4b3c82 0%, #5a3d91 100%)",
-          "color": "white",
-          "--chart-color-palette": "default",
-          "flexDirection": "column"
-        }}>
-        <h2 id="ihcvd4" style={{"fontSize": "24px", "fontWeight": "bold", "marginTop": "0", "marginBottom": "30px", "--chart-color-palette": "default"}}>{"BESSER"}</h2>
-        <div id="i4xc2c" style={{"display": "flex", "--chart-color-palette": "default", "flexDirection": "column", "flex": "1"}}>
-          <a id="iw3j7d" style={{
-              "padding": "10px 15px",
-              "textDecoration": "none",
-              "marginBottom": "5px",
-              "display": "block",
-              "background": "transparent",
-              "color": "white",
-              "borderRadius": "4px",
-              "--chart-color-palette": "default"
-            }} onClick={(e) => { if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return; e.preventDefault(); navigate("/documentspage"); }} href="/documentspage">{"DocumentsPage"}</a>
-          <a id="itk1rk" style={{
-              "padding": "10px 15px",
-              "textDecoration": "none",
-              "marginBottom": "5px",
-              "display": "block",
-              "background": "rgba(255,255,255,0.2)",
-              "color": "white",
-              "borderRadius": "4px",
-              "--chart-color-palette": "default"
-            }} onClick={(e) => { if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return; e.preventDefault(); navigate("/documentpage"); }} href="/documentpage">{"DocumentPage"}</a>
-          <a id="ibpxhx" style={{
-              "padding": "10px 15px",
-              "textDecoration": "none",
-              "marginBottom": "5px",
-              "display": "block",
-              "background": "transparent",
-              "color": "white",
-              "borderRadius": "4px",
-              "--chart-color-palette": "default"
-            }} onClick={(e) => { if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return; e.preventDefault(); navigate("/question"); }} href="/question">{"Question"}</a>
-          <a id="iz44oj" style={{
-              "padding": "10px 15px",
-              "textDecoration": "none",
-              "marginBottom": "5px",
-              "display": "block",
-              "background": "transparent",
-              "color": "white",
-              "borderRadius": "4px",
-              "--chart-color-palette": "default"
-            }} onClick={(e) => { if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return; e.preventDefault(); navigate("/choice"); }} href="/choice">{"Choice"}</a>
-          <a id="i2kkzk" style={{
-              "padding": "10px 15px",
-              "textDecoration": "none",
-              "marginBottom": "5px",
-              "display": "block",
-              "background": "transparent",
-              "color": "white",
-              "borderRadius": "4px",
-              "--chart-color-palette": "default"
-            }} onClick={(e) => { if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return; e.preventDefault(); navigate("/quizsession"); }} href="/quizsession">{"QuizSession"}</a>
-          <a id="i0dc5v" style={{
-              "padding": "10px 15px",
-              "textDecoration": "none",
-              "marginBottom": "5px",
-              "display": "block",
-              "background": "transparent",
-              "color": "white",
-              "borderRadius": "4px",
-              "--chart-color-palette": "default"
-            }} onClick={(e) => { if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return; e.preventDefault(); navigate("/response"); }} href="/response">{"Response"}</a>
-          <a id="itt7a2" style={{
-              "padding": "10px 15px",
-              "textDecoration": "none",
-              "marginBottom": "5px",
-              "display": "block",
-              "background": "transparent",
-              "color": "white",
-              "borderRadius": "4px",
-              "--chart-color-palette": "default"
-            }} onClick={(e) => { if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return; e.preventDefault(); navigate("/quiz"); }} href="/quiz">{"Quiz"}</a>
+    <div className="ds-section">
+      <h1 className="ds-heading">Document Upload</h1>
+      <p style={{ color: "var(--ds-muted)", marginTop: 0 }}>
+        Upload a JSON or PDF file that contains multiple-choice questions, answer options and correct answers.
+      </p>
+
+      {error && (
+        <div className="ds-notice" role="alert" style={{ borderColor: "var(--ds-primary)", marginBottom: "1rem" }}>
+          <strong>Validation failed:</strong>&nbsp;{error}
         </div>
-        <p id="i16xrf" style={{
-            "fontSize": "11px",
-            "paddingTop": "20px",
-            "marginTop": "auto",
-            "textAlign": "center",
-            "opacity": "0.8",
-            "borderTop": "1px solid rgba(255,255,255,0.2)",
-            "--chart-color-palette": "default"
-          }}>{"© 2026 BESSER. All rights reserved."}</p>
-      </nav>
-      <main id="i5s6zr" style={{"padding": "40px", "overflowY": "auto", "background": "#f5f5f5", "--chart-color-palette": "default", "flex": "1"}}>
-        <h1 id="idizck" style={{"fontSize": "32px", "marginTop": "0", "marginBottom": "10px", "color": "#333", "--chart-color-palette": "default"}}>{"DocumentPage"}</h1>
-        <p id="i582l3" style={{"marginBottom": "30px", "color": "#666", "--chart-color-palette": "default"}}>{"Manage DocumentPage data"}</p>
-        <TableBlock id="table-documentpage-2" styles={{"width": "100%", "minHeight": "400px", "--chart-color-palette": "default"}} title="DocumentPage List" options={{"showHeader": true, "stripedRows": false, "showPagination": true, "rowsPerPage": 5, "actionButtons": true}} />
-      </main>
-    </div>    </div>
+      )}
+      {notice && (
+        <div className="ds-notice" role="status">
+          {notice}
+        </div>
+      )}
+      {uploadLocked && (
+        <div className="ds-notice" role="status" style={{ marginBottom: "1rem" }}>
+          🔒 This document is locked for the current quiz session. You can restart the quiz from the Results screen, or
+          use <strong>Upload a new document</strong> there to unlock this screen.
+        </div>
+      )}
+
+      <section className="ds-card" style={{ marginTop: "1rem", padding: "1.25rem" }}>
+        <h2 className="ds-heading" style={{ fontSize: "1.2rem" }}>
+          Upload a document
+        </h2>
+        <div className="ds-field">
+          <label className="ds-label" htmlFor="quiz-file-input">
+            File (JSON or PDF)
+          </label>
+          <input
+            id="quiz-file-input"
+            ref={inputRef}
+            type="file"
+            className="ds-input"
+            accept=".json,.pdf,application/json,application/pdf"
+            onChange={handleFileChange}
+            disabled={uploading || uploadLocked}
+          />
+        </div>
+        <button
+          type="button"
+          className="ds-btn ds-btn-primary"
+          onClick={() => inputRef.current?.click()}
+          disabled={uploading || uploadLocked}
+        >
+          {uploadLocked ? "Upload locked during the session" : uploading ? "Validating and uploading…" : "Choose a file to upload"}
+        </button>
+        <p style={{ color: "var(--ds-muted)", marginBottom: 0 }}>
+          The document is validated before you can proceed: every question needs at least two options and exactly one
+          correct answer.
+        </p>
+      </section>
+
+      <section style={{ marginTop: "1.5rem" }}>
+        <h2 className="ds-heading" style={{ fontSize: "1.2rem" }}>
+          Uploaded documents
+        </h2>
+        {loading ? (
+          <p style={{ color: "var(--ds-muted)" }}>Loading documents…</p>
+        ) : documents.length === 0 ? (
+          <p style={{ color: "var(--ds-muted)" }}>No documents uploaded yet. Start by uploading a JSON or PDF file.</p>
+        ) : (
+          <div className="ds-table-wrap">
+            <table className="ds-table">
+              <thead>
+                <tr>
+                  <th></th>
+                  <th>File name</th>
+                  <th>Type</th>
+                  <th>Size</th>
+                  <th>Uploaded</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                {documents.map((doc) => (
+                  <tr key={doc.id}>
+                    <td>
+                      <input
+                        type="radio"
+                        name="selected-document"
+                        aria-label={`Base the quiz on ${doc.fileName}`}
+                        checked={selectedId === doc.id}
+                        onChange={() => setSelectedId(doc.id)}
+                        disabled={uploadLocked}
+                      />
+                    </td>
+                    <td>{doc.fileName}</td>
+                    <td>{doc.contentType}</td>
+                    <td>{(doc.fileSizeBytes ?? 0).toLocaleString()} bytes</td>
+                    <td>{doc.uploadDate ? new Date(doc.uploadDate).toLocaleString() : "—"}</td>
+                    <td>
+                      <button type="button" className="ds-btn" onClick={() => handleDelete(doc.id)} disabled={uploadLocked}>
+                        Delete
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+        <button
+          type="button"
+          className="ds-btn ds-btn-primary"
+          style={{ marginTop: "1rem" }}
+          onClick={proceedToConfiguration}
+          disabled={!selectedId}
+        >
+          Base the quiz on the selected document →
+        </button>
+      </section>
+    </div>
   );
 };
 
