@@ -1,0 +1,102 @@
+/* Design-system overrides + the few extra rules the four quiz screens need.
+   Only --ds-* variables and var(--ds-*) references are used here. */
+
+/* Cheerful Jerry avatar (R19): claps when the answer is correct. */
+.jerry-avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3.25rem;
+  line-height: 1;
+  border-radius: 999px;
+  background: var(--ds-surface);
+  border: 2px solid var(--ds-border);
+  box-shadow: var(--ds-shadow);
+  padding: 0.5rem;
+}
+
+.jerry-avatar--cheer {
+  border-color: var(--ds-accent);
+  animation: jerry-clap 0.5s ease-in-out infinite alternate;
+}
+
+@keyframes jerry-clap {
+  from {
+    transform: rotate(-6deg) scale(1);
+  }
+  to {
+    transform: rotate(6deg) scale(1.12);
+  }
+}
+
+.jerry-caption {
+  font-weight: 600;
+  color: var(--ds-muted);
+}
+
+/* Option buttons of the quiz session */
+.quiz-option {
+  display: flex;
+  width: 100%;
+  text-align: left;
+  gap: 0.75rem;
+  align-items: center;
+  background: var(--ds-surface);
+  border: 1px solid var(--ds-border);
+  border-radius: var(--ds-radius);
+  padding: 0.75rem 1rem;
+  margin-bottom: 0.75rem;
+  cursor: pointer;
+  font: inherit;
+  color: var(--ds-text);
+}
+
+.quiz-option:hover:not(:disabled) {
+  border-color: var(--ds-primary);
+}
+
+.quiz-option:disabled {
+  cursor: default;
+  opacity: 0.9;
+}
+
+.quiz-option--selected {
+  border-color: var(--ds-primary);
+  box-shadow: var(--ds-shadow);
+  font-weight: 600;
+}
+
+.quiz-option--correct {
+  border-color: #10b981;
+  background: rgba(16, 185, 129, 0.08);
+}
+
+.quiz-option--incorrect {
+  border-color: #f43f5e;
+  background: rgba(244, 63, 94, 0.08);
+}
+
+.quiz-progress {
+  height: 0.5rem;
+  width: 100%;
+  background: var(--ds-border);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.quiz-progress-bar {
+  height: 100%;
+  background: var(--ds-primary);
+  border-radius: 999px;
+  transition: width 0.25s ease;
+}
+
+.feedback-correct {
+  color: #10b981;
+  font-weight: 700;
+}
+
+.feedback-incorrect {
+  color: #f43f5e;
+  font-weight: 700;
+}

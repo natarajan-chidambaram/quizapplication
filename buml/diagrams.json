@@ -7522,7 +7522,7 @@
             },
             "assessments": {}
           },
-          "lastUpdate": "2026-11-19T08:58:30.683Z"
+          "lastUpdate": "2026-11-19T08:58:30.682Z"
         }
       ],
       "GUINoCodeDiagram": [
@@ -12955,9 +12955,17 @@
         {
           "role": "assistant",
           "content": "Generating your application from your specs\u2026"
+        },
+        {
+          "role": "assistant",
+          "content": "\u2705 Generated **83** files with BESSER's `generate_web_app` generator. 4 checks could not be verified. **64%** of files were unchanged from the scaffold in this run. This measures file provenance, not correctness or requirements coverage. Top level: `README.md`, `web_app`. Use the **Download** button on the run card to save it."
+        },
+        {
+          "role": "assistant",
+          "content": "The Spec-Driven Agent finished with 4 unresolved blockers; the application is incomplete. You can run the generation again to finish the remaining changes."
         }
       ],
-      "updatedAt": "2026-11-19T08:57:23.481Z"
+      "updatedAt": "2026-11-19T09:30:05.443Z"
     },
     "attribution": {
       "attr_05qccirie_mwj8y7g6_qqq": {
@@ -14010,7 +14018,7 @@
       }
     }
   },
-  "exportedAt": "2026-11-19T08:58:30.689Z",
+  "exportedAt": "2026-11-19T09:30:22.698Z",
   "version": "2.0.0",
   "editorVersion": "8.9.4"
 }

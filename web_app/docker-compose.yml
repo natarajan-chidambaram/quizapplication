@@ -1,0 +1,55 @@
+version: '3.8'
+
+services:
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        VITE_API_URL: http://localhost:8000
+        VITE_AGENT_URL: ws://localhost:8765
+        # JSON map keyed by agent name so each AgentComponent in the React app
+        # can connect to its own backing service. Quoted so the YAML parser
+        # treats it as a literal string, not an inline mapping.
+        VITE_AGENT_URLS: '{"Library_Agent":"ws://localhost:8765" }'
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+      - library_agent_agent
+    environment:
+      - VITE_API_URL=http://localhost:8000
+      - VITE_AGENT_URL=ws://localhost:8765
+      - 'VITE_AGENT_URLS={"Library_Agent":"ws://localhost:8765" }'
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=sqlite:///./data/Class_Diagram_3.db
+    volumes:
+      - sqlite_data:/app/data
+    depends_on:
+      - library_agent_agent
+
+  library_agent_agent:
+    build:
+      context: ./agents/library_agent
+      dockerfile: Dockerfile
+    ports:
+      - "8765:8765"
+      - "5000:5000"
+    volumes:
+      - library_agent_agent_data:/app/data
+      # The backend's database volume: db1 in this agent's config.yaml is
+      # /app/webapp_data/Class_Diagram_3.db, the file the backend serves.
+      - sqlite_data:/app/webapp_data
+    environment:
+      - PYTHONUNBUFFERED=1
+
+volumes:
+  sqlite_data:
+  library_agent_agent_data:

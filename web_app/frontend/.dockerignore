@@ -1,0 +1,17 @@
+**/node_modules
+dist
+build
+**/__pycache__
+**/*.py[cod]
+**/.venv
+**/venv
+**/*.db
+**/*.db-journal
+**/*.db-wal
+**/*.db-shm
+**/*.sqlite
+**/*.sqlite3
+**/*.log
+**/.env.local
+**/.env.*.local
+.git

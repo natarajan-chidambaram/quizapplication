@@ -1,0 +1,25 @@
+{
+  "questions": [
+    {
+      "text": "What is the capital of France?",
+      "options": ["London", "Paris", "Berlin", "Madrid"],
+      "correctAnswer": "B",
+      "explanation": "Paris is the capital city of France."
+    },
+    {
+      "text": "Which planet is known as the Red Planet?",
+      "options": [{"text": "Mars", "isCorrect": true}, {"text": "Venus"}, {"text": "Jupiter"}],
+      "explanation": "Mars appears red due to iron oxide on its surface."
+    },
+    {
+      "text": "What is 7 x 8?",
+      "options": ["54", "56", "58", "64"],
+      "answer": 2
+    },
+    {
+      "text": "Who wrote Hamlet?",
+      "options": ["Dickens", "Shakespeare", "Tolstoy"],
+      "answer": "Shakespeare"
+    }
+  ]
+}

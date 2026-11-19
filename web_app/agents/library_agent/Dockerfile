@@ -1,0 +1,31 @@
+FROM python:3.11-slim
+
+WORKDIR /app
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    gcc \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy requirements if they exist
+COPY requirements.txt* ./
+RUN if [ -f requirements.txt ]; then pip install --no-cache-dir -r requirements.txt; fi
+
+# Install BESSER Agent Framework with LLM support (add [extras] if RAG is needed)
+RUN pip install --no-cache-dir besser-agentic-framework[llms]
+
+# Download NLTK data at build time so it's cached in the image layer
+RUN python -c "import nltk; nltk.download('punkt', quiet=True); nltk.download('punkt_tab', quiet=True)"
+
+# Copy agent files
+COPY . .
+
+# Bind the websocket and Streamlit servers to all interfaces: a server bound to
+# localhost inside the container is unreachable through the published ports.
+RUN python -c "import yaml; p = 'config.yaml'; c = yaml.safe_load(open(p)) or {}; pf = c['platforms'] = c.get('platforms') or {}; ws = pf['websocket'] = pf.get('websocket') or {}; ws['host'] = '0.0.0.0'; st = ws['streamlit'] = ws.get('streamlit') or {}; st['host'] = '0.0.0.0'; yaml.safe_dump(c, open(p, 'w'), sort_keys=False)"
+
+# Expose ports
+EXPOSE 8765 5000
+
+# Run the agent
+CMD ["python", "Library_Agent.py"]
