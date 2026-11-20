@@ -19,6 +19,7 @@ export interface QuizState {
   documentName: string | null;
   mode: "learning" | "testing" | null;
   questionOrder: "sequential" | "random" | null;
+  timerEnabled: boolean;
   timerScope: "per_question" | "per_session" | null;
   timerDurationSeconds: number;
   attemptId: string | null;
@@ -35,6 +36,7 @@ const EMPTY_STATE: QuizState = {
   documentName: null,
   mode: null,
   questionOrder: null,
+  timerEnabled: true,
   timerScope: null,
   timerDurationSeconds: 60,
   attemptId: null,
@@ -62,7 +64,8 @@ interface QuizStateContextValue {
     mode: "learning" | "testing",
     questionOrder: "sequential" | "random",
     timerScope: "per_question" | "per_session",
-    timerDurationSeconds: number
+    timerDurationSeconds: number,
+    timerEnabled: boolean
   ) => void;
   startAttempt: (
     attemptId: string,
@@ -98,9 +101,10 @@ export const QuizStateProvider: React.FC<{ children: React.ReactNode }> = ({ chi
       mode: "learning" | "testing",
       questionOrder: "sequential" | "random",
       timerScope: "per_question" | "per_session",
-      timerDurationSeconds: number
+      timerDurationSeconds: number,
+      timerEnabled: boolean
     ) => {
-      setState((previous) => ({ ...previous, mode, questionOrder, timerScope, timerDurationSeconds }));
+      setState((previous) => ({ ...previous, mode, questionOrder, timerEnabled, timerScope, timerDurationSeconds }));
     },
     []
   );
@@ -153,6 +157,7 @@ export const QuizStateProvider: React.FC<{ children: React.ReactNode }> = ({ chi
       documentName: previous.documentName,
       mode: null,
       questionOrder: null,
+      timerEnabled: previous.timerEnabled,
       timerScope: previous.timerScope,
       timerDurationSeconds: previous.timerDurationSeconds,
       attemptId: null,

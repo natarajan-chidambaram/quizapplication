@@ -33,10 +33,13 @@ const Quizsession: React.FC = () => {
   const [docsLoading, setDocsLoading] = useState(false);
 
   // Speech (R26-R27): the question's audio sentence is read out loud with the
-  // browser's built-in speechSynthesis, and can be replayed.
+  // browser's built-in speechSynthesis — ONLY when the user clicks the play
+  // control (R29). Nothing is spoken automatically when a question loads.
   const [speechSupported, setSpeechSupported] = useState(true);
   const [speechError, setSpeechError] = useState<string | null>(null);
-  const speechSentences = useRef<string>("");
+  const [isSpeaking, setIsSpeaking] = useState(false);
+  const isAudioSession =
+    ((session?.attempt?.selectedQuestionType as string | undefined) ?? "mcq") === "audio";
 
   // Timer (R29-R33): driven by the TimerSetting chosen on the configuration
   // screen and persisted with the attempt. "per_question" restarts for every
@@ -123,41 +126,40 @@ const Quizsession: React.FC = () => {
   // Red once 75% of the allotted time has elapsed (R33).
   const timerWarning = remainingSeconds <= Math.ceil(allottedSeconds * 0.25);
 
-  // Speech (R26): read the audio sentence of the current question aloud with
-  // the browser's built-in speechSynthesis. Fires once per question and can
-  // be replayed by the student.
+  // Speech (R26, R29): read the audio sentence of the current question aloud
+  // with the browser's built-in speechSynthesis. NOTHING is spoken when a
+  // question loads or on navigation — audio is played only when the user
+  // clicks the play control (R29), and can be played again by clicking it.
   useEffect(() => {
     const supported =
       typeof window !== "undefined" && "speechSynthesis" in window && typeof window.SpeechSynthesisUtterance !== "undefined";
     setSpeechSupported(supported);
-    if (!supported || !session?.question) return;
-    const audioSentence = session.question.audioSentence as string | null | undefined;
-    const isAudioQuestion = Boolean(audioSentence);
-    if (!isAudioQuestion) {
-      window.speechSynthesis.cancel();
-      speechSentences.current = "";
-      return;
-    }
-    const sentence = audioSentence as string;
-    if (speechSentences.current === sentence) return; // same question: no repeat
-    speechSentences.current = sentence;
-    window.speechSynthesis.cancel();
-    const utterance = new window.SpeechSynthesisUtterance(sentence);
-    utterance.lang = window.navigator.language || "en-US";
-    window.speechSynthesis.speak(utterance);
-  }, [session?.question?.id, session?.question?.audioSentence]);
+  }, []);
 
-  const replayAudioSentence = useCallback(() => {
+  // Leaving a question (or the page) stops any running playback (R29).
+  useEffect(() => {
+    return () => {
+      if (typeof window !== "undefined" && "speechSynthesis" in window) {
+        window.speechSynthesis.cancel();
+      }
+    };
+  }, [session?.question?.id]);
+
+  const playAudioSentence = useCallback(() => {
     if (typeof window === "undefined" || !("speechSynthesis" in window)) return;
     setSpeechError(null);
-    const sentence =
-      (speechSentences.current as string) || ((session?.question?.audioSentence as string) ?? "");
+    const sentence = (session?.question?.audioSentence as string | null | undefined) ?? "";
     if (!sentence) return;
     window.speechSynthesis.cancel();
     const utterance = new window.SpeechSynthesisUtterance(sentence);
     utterance.lang = window.navigator.language || "en-US";
     const failure = window.setTimeout(() => setSpeechError("The browser could not play the audio."), 4000);
-    utterance.onstart = () => window.clearTimeout(failure);
+    utterance.onstart = () => {
+      window.clearTimeout(failure);
+      setIsSpeaking(true);
+    };
+    utterance.onend = () => setIsSpeaking(false);
+    utterance.onerror = () => setIsSpeaking(false);
     window.speechSynthesis.speak(utterance);
   }, [session?.question?.audioSentence]);
 
@@ -399,7 +401,7 @@ const Quizsession: React.FC = () => {
             </span>
           )}
           <p style={{ fontWeight: 700, fontSize: "1.15rem", marginTop: 0 }}>
-            {question.questionType === "audio" || question.audioSentence ? (
+            {isAudioSession && question.audioSentence ? (
               <span
                 className="ds-badge"
                 style={{ marginRight: "0.5rem", fontSize: "0.75rem" }}
@@ -411,11 +413,12 @@ const Quizsession: React.FC = () => {
             {question.text}
           </p>
 
-          {(question.audioSentence || question.questionType === "audio") && (
+          {(isAudioSession && question.audioSentence) && (
             <div className="quiz-speech-controls">
-              <button type="button" className="ds-btn" onClick={replayAudioSentence} aria-label="Replay the audio sentence">
-                🔊 Listen again
+              <button type="button" className="ds-btn" onClick={playAudioSentence} aria-label="Play the audio sentence">
+                🔊 Play audio
               </button>
+              {isSpeaking && <span style={{ color: "var(--ds-muted)" }}>Speaking…</span>}
               {!speechSupported && (
                 <span style={{ color: "var(--ds-muted)" }}>
                   This browser has no built-in speech support — read the question below instead.
@@ -428,7 +431,7 @@ const Quizsession: React.FC = () => {
               )}
             </div>
           )}
-          {question.audioSentence && (
+          {isAudioSession && question.audioSentence && (
             <p
               style={{ color: "var(--ds-muted)", marginTop: 0 }}
               aria-label="Text of the audio sentence"

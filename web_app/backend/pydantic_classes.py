@@ -163,7 +163,9 @@ class QuizStartCreate(BaseModel):
             raise ValueError("questionCount must be at least 1")
         return v
 
-    # Timer option (R13, R29-R33)
+    # Timer option (R13, R29-R33): the checkbox on the configuration screen.
+    # False = no timer at all (the scope/duration below are then unused).
+    timerEnabled: bool = True
     timerScope: str = "per_question"  # 'per_question' | 'per_session'
     timerDurationSeconds: int = 60
 

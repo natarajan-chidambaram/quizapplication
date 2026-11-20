@@ -57,6 +57,7 @@ export const quizApi = {
     mode: string;
     questionOrder: string;
     questionCount: number | null;
+    timerEnabled: boolean;
     timerScope: string;
     timerDurationSeconds: number;
     difficulty: string | null;

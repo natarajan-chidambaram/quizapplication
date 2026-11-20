@@ -528,6 +528,7 @@ async def start_quiz(config: QuizStartCreate, database: Session = Depends(get_db
         requestedQuestionCount=selected_count,
         selectedDifficulty=config.difficulty,
         selectedQuestionType=config.questionType,
+        timerEnabled=config.timerEnabled,
         timerScope=config.timerScope,
         timerDurationSeconds=config.timerDurationSeconds,
         selectedQuestionIds=_json.dumps([question.id for question in selected]),
@@ -620,7 +621,12 @@ async def get_session(attempt_id: str, index: int = None, database: Session = De
             payload["isMarkedCorrect"] = bool(existing.isMarkedCorrect)
 
     return {
-        "attempt": db_attempt,
+        "attempt": {
+            "id": db_attempt.id,
+            "mode": db_attempt.mode,
+            "selectedQuestionType": getattr(db_attempt, "selectedQuestionType", None),
+            "selectedDifficulty": getattr(db_attempt, "selectedDifficulty", None),
+        },
         "mode": db_attempt.mode,
         "totalQuestions": len(question_ids),
         "currentIndex": index,

@@ -714,6 +714,10 @@ def select_questions(
         query.order_by(Question.orderIndex.asc(), Question.id.asc())
         .all()
     )
+    # The requested count was clamped against the UNFILTERED question count;
+    # after the difficulty/audio filters the pool can be smaller. Clamp again
+    # so random.sample never gets a sample larger than the pool.
+    count = min(count, len(pool))
     if order == "random":
         return random.sample(pool, count)
     return pool[:count]
