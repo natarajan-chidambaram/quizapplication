@@ -1,5 +1,5 @@
 {
-  "instructions": "## Assistant's notes (may be inaccurate)\n\nUse these only for choices the user confirmed in the conversation that are missing from their request below. Never add a feature, database, framework, tool or deployment step that is not in the user's request; where these notes disagree with it, the user's request wins.\n\nUpdate the existing generated app with these features: 1) Update the Jerry avatar to look more like Jerry from the Tom and Jerry cartoon. 2) Show elapsed time on the Results page. For a per-question timer, show each question's time and the total; for a per-session timer, show only the total session time. Measure elapsed time even when the countdown timer is off. 3) When the timer reaches 00:00, navigate directly to the Results screen.\n\n## The user's original request, verbatim\n\nThis is the authority. Where the summary above is shorter or differs, this text wins.\n\nDo not rename UploadedDocument to DocumentsPage. Revert it. Let the Documents page have uploading option. QuizSession should allow the user to click which document to base the quiz on and then proceed. Can you regenerate the webapp?\n\n## Subsequent user request, verbatim\n\nThis later request takes precedence where it changes earlier requirements.\n\nCan you modify the class diagram to just include UploadDocument (pdf or json), List of uploaded documents and then QuizSession page with one question per page with question and options processed? Also, it should have an evaluation page that says the score.\n\n## Subsequent user request, verbatim\n\nThis later request takes precedence where it changes earlier requirements.\n\nBuild a simple, responsive, document-based Quiz Application with exactly four screens:\n\n**1. Document Upload**\n- Upload a JSON or PDF file containing multiple-choice questions, answer options, and correct answers.\n- Extract and store the questions for the current session.\n- Validate the document before proceeding.\n\n**2. Quiz Configuration**\n- Choose between Learning Mode and Testing Mode.\n- Select the number of questions.\n- Choose sequential or random question order.\n- Start the quiz.\n\n**3. Quiz Session**\n- Display ONE question per page, with selectable multiple-choice options extracted from the uploaded document.\n- Allow only one answer per question. No skipping.\n- Show progress and a Next button.\n- Learning Mode: Immediately show whether the answer is correct. Show the correct answer and explanation (if available). Use a cheerful Jerry (Tom and Jerry) avatar that claps when the answer is correct.\n- Testing Mode: Do not reveal correctness or answers until the quiz is completed.\n\n**4. Results**\n- Unlock this screen only after all questions have been answered.\n- Show total questions, correct answers, incorrect answers, and percentage score.\n- In Testing Mode, additionally reveal the correct answers.\n- Provide an option to restart the quiz.\n\n**Important constraints:**\n- Create only these four screens.\n- No login, registration, student profiles, dashboards, teacher interfaces, or question-management pages.\n- Never invent questions or options; use only the uploaded document.\n- Maintain quiz state and ensure the entire workflow works end-to-end.\n\nPrioritise functionality and simplicity over visual complexity or additional features.\n\n## Subsequent user request, verbatim\n\nThis later request takes precedence where it changes earlier requirements.\n\nCan you continue with the development?\n\n## Subsequent user request, verbatim\n\nThis later request takes precedence where it changes earlier requirements.\n\nCan you try building the app again? Following is the detailed description.\nBuild a simple, responsive, document-based Quiz Application with exactly four screens:\n\n1. Document Upload\n\nUpload a JSON or PDF file containing multiple-choice questions, answer options, and correct answers.\nExtract and store the questions for the current session.\nValidate the document before proceeding.\n2. Quiz Configuration\n\nChoose between Learning Mode and Testing Mode.\nSelect the number of questions.\nChoose sequential or random question order.\nStart the quiz.\n3. Quiz Session\n\nDisplay ONE question per page, with selectable multiple-choice options extracted from the uploaded document.\nAllow only one answer per question. No skipping.\nShow progress and a Next button.\nLearning Mode: Immediately show whether the answer is correct. Show the correct answer and explanation (if available). Use a cheerful Jerry (Tom and Jerry) avatar that claps when the answer is correct.\nTesting Mode: Do not reveal correctness or answers until the quiz is completed.\n4. Results\n\nUnlock this screen only after all questions have been answered.\nShow total questions, correct answers, incorrect answers, and percentage score.\nIn Testing Mode, additionally reveal the correct answers.\nProvide an option to restart the quiz.\nImportant constraints:\n\nCreate only these four screens.\nNo login, reg\n\n## Subsequent user request, verbatim\n\nThis later request takes precedence where it changes earlier requirements.\n\nI got the following error when executing the application. \n\nweb_app\\backend\\routers\\attempt.py\", line 489, in start_quiz\n    if config.questionCount > available:\n       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nTypeError: '>' not supported between instances of 'NoneType' and 'int'\n\nFix this.\n\n## Subsequent user request, verbatim\n\nThis later request takes precedence where it changes earlier requirements.\n\nThe current code, pulled from GitHub has the bug mentioned in the previous prompt. Fix it.\n\n## Subsequent user request, verbatim\n\nThis later request takes precedence where it changes earlier requirements.\n\nUpdate the app with the following requirments.\n1. Support uploading a word document with questions, options, answer, explanation, difficulty (optional), audio setence (optional).\n2. Support audio (as a read out loud). This audio should be the text in \"audio sentence\" of the question. The browser's built in speech module can be used for this purpose. In the case of listening exercise, the students can listen to this audio and choose an option to fill in the blank.\n3. Add a drop down to quiz configuration page, that shows difficulty to select the questions from the uploaded file accordingly and select question type (audio or MCQ). In case of audio, only the questions with a text in \"audio sentence\" should be played. If MCQ, then all can be selected.\n4. Have a progress bar on the top \"Document upload\", \"Quiz configuration\", \"Quiz session\", \"Results\". The these tabs should be present at the top (not clickable). When user is at Document upload page, only that page should be highlighted and others should be greyed out (not disappear or deleted), when in Quix configuration page, both Document upload and Quiz configuration should be highlighted and other should be greyed out.\n5. Quiz configuration page should have a back button to go back to Document upload page. \n6. Every page should have an Exit button on top left to go to the document upload page at any point of time (even in Quiz session page).\n\n## Subsequent user request, verbatim\n\nThis later request takes precedence where it changes earlier requirements.\n\nMore updates required as follows:\n\n1. Audio should be played only after clicking it, not by default\n2. If MCQ type is chosen, listening should not be possible.\n3. Have a check box for Timer, if it is not selected, timer should not be there. The options below it for excersion or for enitre session should be clickable only when timer is checked (selected).\n4. Missing features form the previous prompt: the exit button on the top left that goes to document upload page from anywhere ending the on going quiz session\n5. Missing feature from the previous prompt: The status bar on top to show which step the user is in.\n\n## Subsequent user request, verbatim\n\nThis later request takes precedence where it changes earlier requirements.\n\n1. The progress bar on top to know which page the user is in, how many more pages are left should be implemented. \"Have a progress bar on the top \"Document upload\", \"Quiz configuration\", \"Quiz session\", \"Results\". The these tabs should be present at the top (not clickable). When user is at Document upload page, only that page should be highlighted and others should be greyed out (not disappear or deleted), when in Quix configuration page, both Document upload and Quiz configuration should be highlighted and other should be greyed out.\"\n\n\n2. Then an exit button that exits the quiz session and all saved states and goes to Document upload page should be implenented as well. This exit button can be present on top left corner.\n\n## Subsequent user request, verbatim\n\nThis later request takes precedence where it changes earlier requirements.\n\nBug in the generated frontend, file web_app/frontend/src/pages/Quizconfig.tsx.\n\nSymptom: on the Quiz Configuration screen I choose Question type = \"Audio (listening)\" and Difficulty = \"easy\". The screen correctly says 1 question matches. But after clicking Start, the Quiz Session has no \"Play audio\" button, and the difficulty filter is not applied.\n\nCause: handleStart is a useCallback that sends difficulty and questionType (and timerEnabled) to quizApi.startQuiz, but its dependency array on the last line of the callback is\n[configure, mode, navigate, questionCount, questionOrder, startAttempt, state.documentId, timerDurationSeconds, timerScope]\nIt is missing difficulty, questionType and timerEnabled. The callback keeps the first-render values (\"all\" and \"mcq\"), so the backend stores selectedQuestionType=\"mcq\" and Quizsession.tsx (isAudioSession) never shows the audio controls.\n\nFix: add difficulty, questionType and timerEnabled to that dependency array. Do not change the backend: select_questions in quiz_workflow.py and start_quiz in attempt.py already filter correctly.\n\nAcceptance: with Audio + easy chosen, POST /attempt/start/ carries questionType=\"audio\" and difficulty=\"easy\"; the attempt has selectedQuestionType=\"audio\"; the session shows the Play audio button for that question.\n\n## Subsequent user request, verbatim\n\nThis later request takes precedence where it changes earlier requirements.\n\nAdd a Progress bar\n\nAdd a step progress bar at the top of every page of the web app, with exactly four steps in this order: \"Document upload\", \"Quiz configuration\", \"Quiz session\", \"Results\".\n- The bar is display only: the steps are not clickable and are not links.\n- Steps up to and including the current page are shown highlighted (active colour). Steps after the current page are shown greyed out. A greyed step must stay visible and never be hidden or removed.\n- Examples: on Document upload only step 1 is highlighted; on Quiz configuration steps 1 and 2; on Quiz session steps 1 to 3; on Results all four.\n- The current step must also be visually distinct from the completed ones (for example bold or underlined).\n- Show it on all four pages and keep it visible at the top of the page.\n\n## Subsequent user request, verbatim\n\nThis later request takes precedence where it changes earlier requirements.\n\n1. The current Jerry Avatar looks like a monkey. Can it be updated to look more like the Jerry from the famous Tom and Jerry cartoon?\n2. On the Results page show the time taken. If the timer scope is \"per question\", show a time for each question and also the total. If it is \"per session\", show only the total session time. Measure the time even when the countdown timer is switched off.\n3. When the timer is done (00:00 seconds remaining), then directly go to the Results screen",
+  "instructions": "## Assistant's notes (may be inaccurate)\n\nUse these only for choices the user confirmed in the conversation that are missing from their request below. Never add a feature, database, framework, tool or deployment step that is not in the user's request; where these notes disagree with it, the user's request wins.\n\nUpdate the existing application so that when the timer expires, the Results page displays results even if some questions were not answered. Add an \u201cUNANSWERED\u201d tile alongside the existing results tiles, showing the number of unanswered questions.\n\n## The user's original request, verbatim\n\nThis is the authority. Where the summary above is shorter or differs, this text wins.\n\nDo not rename UploadedDocument to DocumentsPage. Revert it. Let the Documents page have uploading option. QuizSession should allow the user to click which document to base the quiz on and then proceed. Can you regenerate the webapp?\n\n## Subsequent user request, verbatim\n\nThis later request takes precedence where it changes earlier requirements.\n\nCan you modify the class diagram to just include UploadDocument (pdf or json), List of uploaded documents and then QuizSession page with one question per page with question and options processed? Also, it should have an evaluation page that says the score.\n\n## Subsequent user request, verbatim\n\nThis later request takes precedence where it changes earlier requirements.\n\nBuild a simple, responsive, document-based Quiz Application with exactly four screens:\n\n**1. Document Upload**\n- Upload a JSON or PDF file containing multiple-choice questions, answer options, and correct answers.\n- Extract and store the questions for the current session.\n- Validate the document before proceeding.\n\n**2. Quiz Configuration**\n- Choose between Learning Mode and Testing Mode.\n- Select the number of questions.\n- Choose sequential or random question order.\n- Start the quiz.\n\n**3. Quiz Session**\n- Display ONE question per page, with selectable multiple-choice options extracted from the uploaded document.\n- Allow only one answer per question. No skipping.\n- Show progress and a Next button.\n- Learning Mode: Immediately show whether the answer is correct. Show the correct answer and explanation (if available). Use a cheerful Jerry (Tom and Jerry) avatar that claps when the answer is correct.\n- Testing Mode: Do not reveal correctness or answers until the quiz is completed.\n\n**4. Results**\n- Unlock this screen only after all questions have been answered.\n- Show total questions, correct answers, incorrect answers, and percentage score.\n- In Testing Mode, additionally reveal the correct answers.\n- Provide an option to restart the quiz.\n\n**Important constraints:**\n- Create only these four screens.\n- No login, registration, student profiles, dashboards, teacher interfaces, or question-management pages.\n- Never invent questions or options; use only the uploaded document.\n- Maintain quiz state and ensure the entire workflow works end-to-end.\n\nPrioritise functionality and simplicity over visual complexity or additional features.\n\n## Subsequent user request, verbatim\n\nThis later request takes precedence where it changes earlier requirements.\n\nCan you continue with the development?\n\n## Subsequent user request, verbatim\n\nThis later request takes precedence where it changes earlier requirements.\n\nCan you try building the app again? Following is the detailed description.\nBuild a simple, responsive, document-based Quiz Application with exactly four screens:\n\n1. Document Upload\n\nUpload a JSON or PDF file containing multiple-choice questions, answer options, and correct answers.\nExtract and store the questions for the current session.\nValidate the document before proceeding.\n2. Quiz Configuration\n\nChoose between Learning Mode and Testing Mode.\nSelect the number of questions.\nChoose sequential or random question order.\nStart the quiz.\n3. Quiz Session\n\nDisplay ONE question per page, with selectable multiple-choice options extracted from the uploaded document.\nAllow only one answer per question. No skipping.\nShow progress and a Next button.\nLearning Mode: Immediately show whether the answer is correct. Show the correct answer and explanation (if available). Use a cheerful Jerry (Tom and Jerry) avatar that claps when the answer is correct.\nTesting Mode: Do not reveal correctness or answers until the quiz is completed.\n4. Results\n\nUnlock this screen only after all questions have been answered.\nShow total questions, correct answers, incorrect answers, and percentage score.\nIn Testing Mode, additionally reveal the correct answers.\nProvide an option to restart the quiz.\nImportant constraints:\n\nCreate only these four screens.\nNo login, reg\n\n## Subsequent user request, verbatim\n\nThis later request takes precedence where it changes earlier requirements.\n\nI got the following error when executing the application. \n\nweb_app\\backend\\routers\\attempt.py\", line 489, in start_quiz\n    if config.questionCount > available:\n       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nTypeError: '>' not supported between instances of 'NoneType' and 'int'\n\nFix this.\n\n## Subsequent user request, verbatim\n\nThis later request takes precedence where it changes earlier requirements.\n\nThe current code, pulled from GitHub has the bug mentioned in the previous prompt. Fix it.\n\n## Subsequent user request, verbatim\n\nThis later request takes precedence where it changes earlier requirements.\n\nUpdate the app with the following requirments.\n1. Support uploading a word document with questions, options, answer, explanation, difficulty (optional), audio setence (optional).\n2. Support audio (as a read out loud). This audio should be the text in \"audio sentence\" of the question. The browser's built in speech module can be used for this purpose. In the case of listening exercise, the students can listen to this audio and choose an option to fill in the blank.\n3. Add a drop down to quiz configuration page, that shows difficulty to select the questions from the uploaded file accordingly and select question type (audio or MCQ). In case of audio, only the questions with a text in \"audio sentence\" should be played. If MCQ, then all can be selected.\n4. Have a progress bar on the top \"Document upload\", \"Quiz configuration\", \"Quiz session\", \"Results\". The these tabs should be present at the top (not clickable). When user is at Document upload page, only that page should be highlighted and others should be greyed out (not disappear or deleted), when in Quix configuration page, both Document upload and Quiz configuration should be highlighted and other should be greyed out.\n5. Quiz configuration page should have a back button to go back to Document upload page. \n6. Every page should have an Exit button on top left to go to the document upload page at any point of time (even in Quiz session page).\n\n## Subsequent user request, verbatim\n\nThis later request takes precedence where it changes earlier requirements.\n\nMore updates required as follows:\n\n1. Audio should be played only after clicking it, not by default\n2. If MCQ type is chosen, listening should not be possible.\n3. Have a check box for Timer, if it is not selected, timer should not be there. The options below it for excersion or for enitre session should be clickable only when timer is checked (selected).\n4. Missing features form the previous prompt: the exit button on the top left that goes to document upload page from anywhere ending the on going quiz session\n5. Missing feature from the previous prompt: The status bar on top to show which step the user is in.\n\n## Subsequent user request, verbatim\n\nThis later request takes precedence where it changes earlier requirements.\n\n1. The progress bar on top to know which page the user is in, how many more pages are left should be implemented. \"Have a progress bar on the top \"Document upload\", \"Quiz configuration\", \"Quiz session\", \"Results\". The these tabs should be present at the top (not clickable). When user is at Document upload page, only that page should be highlighted and others should be greyed out (not disappear or deleted), when in Quix configuration page, both Document upload and Quiz configuration should be highlighted and other should be greyed out.\"\n\n\n2. Then an exit button that exits the quiz session and all saved states and goes to Document upload page should be implenented as well. This exit button can be present on top left corner.\n\n## Subsequent user request, verbatim\n\nThis later request takes precedence where it changes earlier requirements.\n\nBug in the generated frontend, file web_app/frontend/src/pages/Quizconfig.tsx.\n\nSymptom: on the Quiz Configuration screen I choose Question type = \"Audio (listening)\" and Difficulty = \"easy\". The screen correctly says 1 question matches. But after clicking Start, the Quiz Session has no \"Play audio\" button, and the difficulty filter is not applied.\n\nCause: handleStart is a useCallback that sends difficulty and questionType (and timerEnabled) to quizApi.startQuiz, but its dependency array on the last line of the callback is\n[configure, mode, navigate, questionCount, questionOrder, startAttempt, state.documentId, timerDurationSeconds, timerScope]\nIt is missing difficulty, questionType and timerEnabled. The callback keeps the first-render values (\"all\" and \"mcq\"), so the backend stores selectedQuestionType=\"mcq\" and Quizsession.tsx (isAudioSession) never shows the audio controls.\n\nFix: add difficulty, questionType and timerEnabled to that dependency array. Do not change the backend: select_questions in quiz_workflow.py and start_quiz in attempt.py already filter correctly.\n\nAcceptance: with Audio + easy chosen, POST /attempt/start/ carries questionType=\"audio\" and difficulty=\"easy\"; the attempt has selectedQuestionType=\"audio\"; the session shows the Play audio button for that question.\n\n## Subsequent user request, verbatim\n\nThis later request takes precedence where it changes earlier requirements.\n\nAdd a Progress bar\n\nAdd a step progress bar at the top of every page of the web app, with exactly four steps in this order: \"Document upload\", \"Quiz configuration\", \"Quiz session\", \"Results\".\n- The bar is display only: the steps are not clickable and are not links.\n- Steps up to and including the current page are shown highlighted (active colour). Steps after the current page are shown greyed out. A greyed step must stay visible and never be hidden or removed.\n- Examples: on Document upload only step 1 is highlighted; on Quiz configuration steps 1 and 2; on Quiz session steps 1 to 3; on Results all four.\n- The current step must also be visually distinct from the completed ones (for example bold or underlined).\n- Show it on all four pages and keep it visible at the top of the page.\n\n## Subsequent user request, verbatim\n\nThis later request takes precedence where it changes earlier requirements.\n\n1. The current Jerry Avatar looks like a monkey. Can it be updated to look more like the Jerry from the famous Tom and Jerry cartoon?\n2. On the Results page show the time taken. If the timer scope is \"per question\", show a time for each question and also the total. If it is \"per session\", show only the total session time. Measure the time even when the countdown timer is switched off.\n3. When the timer is done (00:00 seconds remaining), then directly go to the Results screen\n\n## Subsequent user request, verbatim\n\nThis later request takes precedence where it changes earlier requirements.\n\nBug fix:\nWhen the timer is done, it goes to the results page as expected, but there is a lock in viewing that page that all questions have to be answered. \"\ud83d\udd12 Results are locked: 2 of 3 questions answered\". Expected behaviour: If time is over, then it should go to Results page and display the results. For this add a tile named \"UNANSWERED\" along \"TOTAA QUESTIONS\", \"CORRECT QUESTIONS\" and so on. Once timer is done, the unanswered questions should be reported in this tile.",
   "history": [
     {
       "instructions": "Can you try building the app again? Following is the detailed description.\nBuild a simple, responsive, document-based Quiz Application with exactly four screens:\n\n1. Document Upload\n\nUpload a JSON or PDF file containing multiple-choice questions, answer options, and correct answers.\nExtract and stor",
@@ -140,20 +140,33 @@
         "web_app/frontend/src/pages/Results.tsx"
       ],
       "run_id": "0494db4301004a2589f356064b307875"
+    },
+    {
+      "instructions": "Bug fix:\nWhen the timer is done, it goes to the results page as expected, but there is a lock in viewing that page that all questions have to be answered. \"\ud83d\udd12 Results are locked: 2 of 3 questions answered\". Expected behaviour: If time is over, then it should go to Results page and display the results",
+      "saved_at": "2026-11-20T17:39:28+00:00",
+      "mode": "modify",
+      "files_touched": [
+        "web_app/backend/routers/attempt.py",
+        "web_app/frontend/src/api/quizApi.ts",
+        "web_app/frontend/src/context/QuizStateContext.tsx",
+        "web_app/frontend/src/pages/Quizsession.tsx",
+        "web_app/frontend/src/pages/Results.tsx"
+      ],
+      "run_id": "aed5f93ad4ba4e02a4520b936aab9417"
     }
   ],
   "model": {
     "primary_kind": "class",
     "name": "Class_Diagram_3",
     "classes": [
-      "PDFDocument",
-      "Attempt",
       "User",
-      "Question",
-      "QuizPage",
-      "Option",
       "Response",
-      "Quiz"
+      "Attempt",
+      "PDFDocument",
+      "QuizPage",
+      "Quiz",
+      "Question",
+      "Option"
     ],
     "enumerations": [],
     "associations": 9,
@@ -522,33 +535,172 @@
     "description": "Responsive document-based quiz web app with four screens: Document Upload, Quiz Configuration, Quiz Session, Results",
     "has_user_interface": true
   },
-  "turns": 54,
-  "tool_calls_count": 80,
-  "compactions": 1,
-  "elapsed_seconds": 866.4,
+  "turns": 57,
+  "tool_calls_count": 67,
+  "compactions": 0,
+  "elapsed_seconds": 474.1,
   "max_cost_usd": 5.0,
   "max_runtime_seconds": 2400,
   "adaptive_budget_applied": true,
   "dropped_tasks": [],
-  "tasks": [],
+  "tasks": [
+    {
+      "id": 1,
+      "text": "Timer-expiry Results unlock with UNANSWERED tile",
+      "done": true,
+      "attempts": 0,
+      "blocked": false,
+      "verification": "unverified",
+      "implementation_evidence": [
+        {
+          "path": "web_app/frontend/src/pages/Results.tsx",
+          "quote": "<span className=\"ds-kpi-label\">Unanswered</span>",
+          "sha256": "bbdb7e8734adf0dc13de9c5c3f8dafd0b6eaaa35ce57d51d34870ccbf309750b",
+          "origin": "written"
+        }
+      ]
+    }
+  ],
   "requirements": [],
   "business_rules_stated": null,
   "api_scenarios": [
     {
-      "scenario_id": "health-check",
+      "scenario_id": "timer-expiry-setup",
       "scenario": {
         "requests": [
           {
-            "method": "GET",
-            "path": "/health"
+            "method": "POST",
+            "path": "/user/",
+            "json": {
+              "displayName": "Probe User",
+              "email": "probe@example.com",
+              "username": "probe-timer-1"
+            }
           },
           {
-            "method": "GET",
-            "path": "/pdfdocument/"
+            "method": "POST",
+            "path": "/quiz/",
+            "json": {
+              "createdByUserId": "probe",
+              "description": "timer probe quiz",
+              "isPublished": true,
+              "title": "Timer Probe Quiz"
+            }
           },
           {
-            "method": "GET",
-            "path": "/attempt/count/"
+            "method": "POST",
+            "path": "/question/",
+            "json": {
+              "instructions": "pick one",
+              "orderIndex": 0,
+              "questionType": "mcq",
+              "quizId": "{{1.id}}",
+              "quiz": "{{1.id}}",
+              "text": "Q1 2+2?"
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/question/",
+            "json": {
+              "instructions": "pick one",
+              "orderIndex": 1,
+              "questionType": "mcq",
+              "quizId": "{{1.id}}",
+              "quiz": "{{1.id}}",
+              "text": "Q2 capital?"
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/question/",
+            "json": {
+              "instructions": "pick one",
+              "orderIndex": 2,
+              "questionType": "mcq",
+              "quizId": "{{1.id}}",
+              "quiz": "{{1.id}}",
+              "text": "Q3 color?"
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/option/",
+            "json": {
+              "isCorrect": true,
+              "optionOrder": 0,
+              "optionText": "4",
+              "questionId": "{{2.id}}",
+              "question": "{{2.id}}"
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/option/",
+            "json": {
+              "isCorrect": false,
+              "optionOrder": 1,
+              "optionText": "5",
+              "questionId": "{{2.id}}",
+              "question": "{{2.id}}"
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/option/",
+            "json": {
+              "isCorrect": true,
+              "optionOrder": 0,
+              "optionText": "Paris",
+              "questionId": "{{3.id}}",
+              "question": "{{3.id}}"
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/option/",
+            "json": {
+              "isCorrect": false,
+              "optionOrder": 1,
+              "optionText": "Rome",
+              "questionId": "{{3.id}}",
+              "question": "{{3.id}}"
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/option/",
+            "json": {
+              "isCorrect": true,
+              "optionOrder": 0,
+              "optionText": "Blue",
+              "questionId": "{{4.id}}",
+              "question": "{{4.id}}"
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/option/",
+            "json": {
+              "isCorrect": false,
+              "optionOrder": 1,
+              "optionText": "Red",
+              "questionId": "{{4.id}}",
+              "question": "{{4.id}}"
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/pdfdocument/",
+            "json": {
+              "contentType": "application/json",
+              "fileName": "probe.json",
+              "fileSizeBytes": 10,
+              "storagePath": "probe.json",
+              "uploadDate": "2026-11-20T00:00:00",
+              "uploadedByUserId": "{{0.id}}",
+              "pDFDocumentQuiz": "{{1.id}}"
+            }
           }
         ],
         "backend": null
@@ -560,48 +712,1707 @@
         "responses": [
           {
             "index": 0,
-            "method": "GET",
-            "path": "/health",
+            "method": "POST",
+            "path": "/user/",
             "failures": [],
             "status": 200,
             "json": {
-              "status": "healthy",
-              "timestamp": "2026-11-20T17:05:08.230809",
-              "database": "connected"
+              "user": {
+                "username": "probe-timer-1",
+                "id": "5c2cf32e0c6f4591ac2feae7846ed07c",
+                "email": "probe@example.com",
+                "createdAt": "2026-11-20T17:37:08.573842",
+                "role": null,
+                "displayName": "Probe User"
+              },
+              "attempts_ids": []
             },
             "truncated": false,
-            "reads_back": [],
             "failure_count": 0
           },
           {
             "index": 1,
-            "method": "GET",
-            "path": "/pdfdocument/",
+            "method": "POST",
+            "path": "/quiz/",
             "failures": [],
             "status": 200,
-            "json": [],
+            "json": {
+              "quiz": {
+                "createdAt": "2026-11-20T17:37:08.604009",
+                "title": "Timer Probe Quiz",
+                "description": "timer probe quiz",
+                "createdByUserId": "probe",
+                "id": "13baa184c7af43c7ab339e82cab36d8c",
+                "isPublished": true
+              },
+              "attempts_ids": [],
+              "documents_ids": [],
+              "questions_ids": [],
+              "pages_ids": []
+            },
             "truncated": false,
-            "reads_back": [],
             "failure_count": 0
           },
           {
             "index": 2,
-            "method": "GET",
-            "path": "/attempt/count/",
+            "method": "POST",
+            "path": "/question/",
             "failures": [],
             "status": 200,
             "json": {
-              "count": 0
+              "question": {
+                "instructions": "pick one",
+                "id": "94f5d16f38674f738f6054e33ba7af82",
+                "points": null,
+                "explanation": null,
+                "audioSentence": null,
+                "quizId": "13baa184c7af43c7ab339e82cab36d8c",
+                "text": "Q1 2+2?",
+                "questionType": "mcq",
+                "orderIndex": 0,
+                "difficulty": null,
+                "quiz_id": "13baa184c7af43c7ab339e82cab36d8c"
+              },
+              "attempts_ids": [],
+              "options_ids": []
             },
             "truncated": false,
-            "reads_back": [],
+            "notes": [
+              "`{{1.id}}` resolved as `{{1.quiz.id}}`"
+            ],
+            "failure_count": 0
+          },
+          {
+            "index": 3,
+            "method": "POST",
+            "path": "/question/",
+            "failures": [],
+            "status": 200,
+            "json": {
+              "question": {
+                "instructions": "pick one",
+                "id": "81fdd11104a54155823a56225dfd8a55",
+                "points": null,
+                "explanation": null,
+                "audioSentence": null,
+                "quizId": "13baa184c7af43c7ab339e82cab36d8c",
+                "text": "Q2 capital?",
+                "questionType": "mcq",
+                "orderIndex": 1,
+                "difficulty": null,
+                "quiz_id": "13baa184c7af43c7ab339e82cab36d8c"
+              },
+              "attempts_ids": [],
+              "options_ids": []
+            },
+            "truncated": false,
+            "notes": [
+              "`{{1.id}}` resolved as `{{1.quiz.id}}`"
+            ],
+            "failure_count": 0
+          },
+          {
+            "index": 4,
+            "method": "POST",
+            "path": "/question/",
+            "failures": [],
+            "status": 200,
+            "json": {
+              "question": {
+                "instructions": "pick one",
+                "id": "5778e13dc7b544ce88d8b63218d887bf",
+                "points": null,
+                "explanation": null,
+                "audioSentence": null,
+                "quizId": "13baa184c7af43c7ab339e82cab36d8c",
+                "text": "Q3 color?",
+                "questionType": "mcq",
+                "orderIndex": 2,
+                "difficulty": null,
+                "quiz_id": "13baa184c7af43c7ab339e82cab36d8c"
+              },
+              "attempts_ids": [],
+              "options_ids": []
+            },
+            "truncated": false,
+            "notes": [
+              "`{{1.id}}` resolved as `{{1.quiz.id}}`"
+            ],
+            "failure_count": 0
+          },
+          {
+            "index": 5,
+            "method": "POST",
+            "path": "/option/",
+            "failures": [],
+            "status": 200,
+            "json": {
+              "option": {
+                "id": "78026109661a412aa6321423be0769d3",
+                "questionId": "94f5d16f38674f738f6054e33ba7af82",
+                "optionOrder": 0,
+                "question_id": "94f5d16f38674f738f6054e33ba7af82",
+                "optionText": "4",
+                "isCorrect": true
+              },
+              "responses_ids": []
+            },
+            "truncated": false,
+            "notes": [
+              "`{{2.id}}` resolved as `{{2.question.id}}`"
+            ],
+            "failure_count": 0
+          },
+          {
+            "index": 6,
+            "method": "POST",
+            "path": "/option/",
+            "failures": [],
+            "status": 200,
+            "json": {
+              "option": {
+                "id": "161801e35c5f49dd9c2b3bc727f81b25",
+                "questionId": "94f5d16f38674f738f6054e33ba7af82",
+                "optionOrder": 1,
+                "question_id": "94f5d16f38674f738f6054e33ba7af82",
+                "optionText": "5",
+                "isCorrect": false
+              },
+              "responses_ids": []
+            },
+            "truncated": false,
+            "notes": [
+              "`{{2.id}}` resolved as `{{2.question.id}}`"
+            ],
+            "failure_count": 0
+          },
+          {
+            "index": 7,
+            "method": "POST",
+            "path": "/option/",
+            "failures": [],
+            "status": 200,
+            "json": {
+              "option": {
+                "id": "b515e2e9414541d898b4c73f58d398e3",
+                "questionId": "81fdd11104a54155823a56225dfd8a55",
+                "optionOrder": 0,
+                "question_id": "81fdd11104a54155823a56225dfd8a55",
+                "optionText": "Paris",
+                "isCorrect": true
+              },
+              "responses_ids": []
+            },
+            "truncated": false,
+            "notes": [
+              "`{{3.id}}` resolved as `{{3.question.id}}`"
+            ],
+            "failure_count": 0
+          },
+          {
+            "index": 8,
+            "method": "POST",
+            "path": "/option/",
+            "failures": [],
+            "status": 200,
+            "json": {
+              "option": {
+                "id": "58944b748a9844ba89c5cbe399ecd37c",
+                "questionId": "81fdd11104a54155823a56225dfd8a55",
+                "optionOrder": 1,
+                "question_id": "81fdd11104a54155823a56225dfd8a55",
+                "optionText": "Rome",
+                "isCorrect": false
+              },
+              "responses_ids": []
+            },
+            "truncated": false,
+            "notes": [
+              "`{{3.id}}` resolved as `{{3.question.id}}`"
+            ],
+            "failure_count": 0
+          },
+          {
+            "index": 9,
+            "method": "POST",
+            "path": "/option/",
+            "failures": [],
+            "status": 200,
+            "json": {
+              "option": {
+                "id": "6bc01cca407f4560b5ad89754a2777db",
+                "questionId": "5778e13dc7b544ce88d8b63218d887bf",
+                "optionOrder": 0,
+                "question_id": "5778e13dc7b544ce88d8b63218d887bf",
+                "optionText": "Blue",
+                "isCorrect": true
+              },
+              "responses_ids": []
+            },
+            "truncated": false,
+            "notes": [
+              "`{{4.id}}` resolved as `{{4.question.id}}`"
+            ],
+            "failure_count": 0
+          },
+          {
+            "index": 10,
+            "method": "POST",
+            "path": "/option/",
+            "failures": [],
+            "status": 200,
+            "json": {
+              "option": {
+                "id": "a57200e21ad24f76937e314a93cc4e79",
+                "questionId": "5778e13dc7b544ce88d8b63218d887bf",
+                "optionOrder": 1,
+                "question_id": "5778e13dc7b544ce88d8b63218d887bf",
+                "optionText": "Red",
+                "isCorrect": false
+              },
+              "responses_ids": []
+            },
+            "truncated": false,
+            "notes": [
+              "`{{4.id}}` resolved as `{{4.question.id}}`"
+            ],
+            "failure_count": 0
+          },
+          {
+            "index": 11,
+            "method": "POST",
+            "path": "/pdfdocument/",
+            "failures": [],
+            "status": 200,
+            "json": {
+              "fileName": "probe.json",
+              "contentType": "application/json",
+              "uploadDate": "2026-11-20T00:00:00",
+              "storagePath": "probe.json",
+              "fileSizeBytes": 10,
+              "id": "defd771f960c4b89b968bc103bf009b4",
+              "uploadedByUserId": "5c2cf32e0c6f4591ac2feae7846ed07c",
+              "pDFDocumentQuiz_id": "13baa184c7af43c7ab339e82cab36d8c"
+            },
+            "truncated": false,
+            "notes": [
+              "`{{0.id}}` resolved as `{{0.user.id}}`",
+              "`{{1.id}}` resolved as `{{1.quiz.id}}`"
+            ],
             "failure_count": 0
           }
         ],
         "assertion_failures": [],
         "scope": "Only the submitted scenario was checked; this is not complete specification verification.",
         "backend": "web_app/backend",
-        "scenario_id": "health-check"
+        "scenario_id": "timer-expiry-setup"
+      }
+    },
+    {
+      "scenario_id": "timer-expiry-unanswered",
+      "scenario": {
+        "requests": [
+          {
+            "method": "POST",
+            "path": "/attempt/start/",
+            "json": {
+              "documentId": "{{0.id}}",
+              "mode": "testing",
+              "questionOrder": "sequential",
+              "questionCount": 3,
+              "timerEnabled": true,
+              "timerScope": "per_session",
+              "timerDurationSeconds": 60,
+              "difficulty": null,
+              "questionType": "mcq"
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/attempt/{{0.attempt.id}}/session/?index=0"
+          },
+          {
+            "method": "POST",
+            "path": "/attempt/{{0.attempt.id}}/answer/",
+            "json": {
+              "questionId": "{{1.question.id}}",
+              "selectedOptionId": "{{1.question.options.0.id}}"
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/attempt/{{0.attempt.id}}/results/",
+            "expected_status": 403
+          },
+          {
+            "method": "GET",
+            "path": "/attempt/{{0.attempt.id}}/results/?timerExpired=true",
+            "expected_fields": {
+              "unansweredCount": 2,
+              "totalQuestions": 3,
+              "correctCount": 1,
+              "incorrectCount": 0
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/attempt/{{0.attempt.id}}/results/?allowIncomplete=true",
+            "expected_fields": {
+              "unansweredCount": 2,
+              "totalQuestions": 3
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/attempt/{{0.attempt.id}}/session/?index=1"
+          }
+        ],
+        "backend": null
+      },
+      "correction_history": [],
+      "report": {
+        "status": "failed",
+        "boot": "ok",
+        "responses": [
+          {
+            "index": 0,
+            "method": "POST",
+            "path": "/attempt/start/",
+            "failures": [
+              "ValueError: response 0 has no preceding JSON value to reference"
+            ],
+            "failure_count": 1
+          },
+          {
+            "index": 1,
+            "method": "GET",
+            "path": "/attempt/{{0.attempt.id}}/session/?index=0",
+            "failures": [
+              "ValueError: response 0 has no preceding JSON value to reference"
+            ],
+            "failure_count": 1
+          },
+          {
+            "index": 2,
+            "method": "POST",
+            "path": "/attempt/{{0.attempt.id}}/answer/",
+            "failures": [
+              "ValueError: response 0 has no preceding JSON value to reference"
+            ],
+            "failure_count": 1
+          },
+          {
+            "index": 3,
+            "method": "GET",
+            "path": "/attempt/{{0.attempt.id}}/results/",
+            "failures": [
+              "ValueError: response 0 has no preceding JSON value to reference"
+            ],
+            "failure_count": 1
+          },
+          {
+            "index": 4,
+            "method": "GET",
+            "path": "/attempt/{{0.attempt.id}}/results/?timerExpired=true",
+            "failures": [
+              "ValueError: response 0 has no preceding JSON value to reference"
+            ],
+            "failure_count": 1
+          },
+          {
+            "index": 5,
+            "method": "GET",
+            "path": "/attempt/{{0.attempt.id}}/results/?allowIncomplete=true",
+            "failures": [
+              "ValueError: response 0 has no preceding JSON value to reference"
+            ],
+            "failure_count": 1
+          },
+          {
+            "index": 6,
+            "method": "GET",
+            "path": "/attempt/{{0.attempt.id}}/session/?index=1",
+            "failures": [
+              "ValueError: response 0 has no preceding JSON value to reference"
+            ],
+            "failure_count": 1
+          }
+        ],
+        "assertion_failures": [
+          {
+            "index": 0,
+            "message": "ValueError: response 0 has no preceding JSON value to reference"
+          },
+          {
+            "index": 1,
+            "message": "ValueError: response 0 has no preceding JSON value to reference"
+          },
+          {
+            "index": 2,
+            "message": "ValueError: response 0 has no preceding JSON value to reference"
+          },
+          {
+            "index": 3,
+            "message": "ValueError: response 0 has no preceding JSON value to reference"
+          },
+          {
+            "index": 4,
+            "message": "ValueError: response 0 has no preceding JSON value to reference"
+          },
+          {
+            "index": 5,
+            "message": "ValueError: response 0 has no preceding JSON value to reference"
+          },
+          {
+            "index": 6,
+            "message": "ValueError: response 0 has no preceding JSON value to reference"
+          }
+        ],
+        "scope": "Only the submitted scenario was checked; this is not complete specification verification.",
+        "backend": "web_app/backend",
+        "scenario_id": "timer-expiry-unanswered"
+      }
+    },
+    {
+      "scenario_id": "timer-expiry-unanswered-v2",
+      "scenario": {
+        "requests": [
+          {
+            "json": {
+              "displayName": "Probe User",
+              "email": "probe3@example.com",
+              "username": "probe-timer-3"
+            },
+            "method": "POST",
+            "path": "/user/"
+          },
+          {
+            "json": {
+              "createdByUserId": "probe",
+              "description": "timer probe quiz",
+              "isPublished": true,
+              "title": "Timer Probe Quiz"
+            },
+            "method": "POST",
+            "path": "/quiz/"
+          },
+          {
+            "json": {
+              "instructions": "pick one",
+              "orderIndex": 0,
+              "questionType": "mcq",
+              "quiz": "{{1.quiz.id}}",
+              "quizId": "{{1.quiz.id}}",
+              "text": "Q1 2+2?"
+            },
+            "method": "POST",
+            "path": "/question/"
+          },
+          {
+            "json": {
+              "instructions": "pick one",
+              "orderIndex": 1,
+              "questionType": "mcq",
+              "quiz": "{{1.quiz.id}}",
+              "quizId": "{{1.quiz.id}}",
+              "text": "Q2 capital?"
+            },
+            "method": "POST",
+            "path": "/question/"
+          },
+          {
+            "json": {
+              "instructions": "pick one",
+              "orderIndex": 2,
+              "questionType": "mcq",
+              "quiz": "{{1.quiz.id}}",
+              "quizId": "{{1.quiz.id}}",
+              "text": "Q3 color?"
+            },
+            "method": "POST",
+            "path": "/question/"
+          },
+          {
+            "json": {
+              "isCorrect": true,
+              "optionOrder": 0,
+              "optionText": "4",
+              "question": "{{2.question.id}}",
+              "questionId": "{{2.question.id}}"
+            },
+            "method": "POST",
+            "path": "/option/"
+          },
+          {
+            "json": {
+              "isCorrect": false,
+              "optionOrder": 1,
+              "optionText": "5",
+              "question": "{{2.question.id}}",
+              "questionId": "{{2.question.id}}"
+            },
+            "method": "POST",
+            "path": "/option/"
+          },
+          {
+            "json": {
+              "isCorrect": true,
+              "optionOrder": 0,
+              "optionText": "Paris",
+              "question": "{{3.question.id}}",
+              "questionId": "{{3.question.id}}"
+            },
+            "method": "POST",
+            "path": "/option/"
+          },
+          {
+            "json": {
+              "isCorrect": false,
+              "optionOrder": 1,
+              "optionText": "Rome",
+              "question": "{{3.question.id}}",
+              "questionId": "{{3.question.id}}"
+            },
+            "method": "POST",
+            "path": "/option/"
+          },
+          {
+            "json": {
+              "isCorrect": true,
+              "optionOrder": 0,
+              "optionText": "Blue",
+              "question": "{{4.question.id}}",
+              "questionId": "{{4.question.id}}"
+            },
+            "method": "POST",
+            "path": "/option/"
+          },
+          {
+            "json": {
+              "isCorrect": false,
+              "optionOrder": 1,
+              "optionText": "Red",
+              "question": "{{4.question.id}}",
+              "questionId": "{{4.question.id}}"
+            },
+            "method": "POST",
+            "path": "/option/"
+          },
+          {
+            "json": {
+              "contentType": "application/json",
+              "fileName": "probe.json",
+              "fileSizeBytes": 10,
+              "pDFDocumentQuiz": "{{1.quiz.id}}",
+              "storagePath": "probe.json",
+              "uploadDate": "2026-11-20T00:00:00",
+              "uploadedByUserId": "{{0.user.id}}"
+            },
+            "method": "POST",
+            "path": "/pdfdocument/"
+          },
+          {
+            "json": {
+              "difficulty": null,
+              "documentId": "{{12.id}}",
+              "mode": "testing",
+              "questionCount": 3,
+              "questionOrder": "sequential",
+              "questionType": "mcq",
+              "timerDurationSeconds": 60,
+              "timerEnabled": true,
+              "timerScope": "per_session"
+            },
+            "method": "POST",
+            "path": "/attempt/start/"
+          },
+          {
+            "json": {
+              "questionId": "{{2.question.id}}",
+              "selectedOptionId": "{{6.option.id}}"
+            },
+            "method": "POST",
+            "path": "/attempt/{{13.attempt.id}}/answer/"
+          },
+          {
+            "method": "GET",
+            "path": "/attempt/{{13.attempt.id}}/results/",
+            "expected_status": 403
+          },
+          {
+            "method": "GET",
+            "path": "/attempt/{{13.attempt.id}}/results/?timerExpired=true",
+            "expected_fields": {
+              "totalQuestions": 3,
+              "unansweredCount": 2,
+              "correctCount": 1,
+              "incorrectCount": 0
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/attempt/{{13.attempt.id}}/results/?allowIncomplete=true",
+            "expected_fields": {
+              "totalQuestions": 3,
+              "unansweredCount": 2
+            }
+          }
+        ],
+        "backend": null
+      },
+      "correction_history": [],
+      "report": {
+        "status": "failed",
+        "boot": "ok",
+        "responses": [
+          {
+            "index": 0,
+            "method": "POST",
+            "path": "/user/",
+            "failures": [],
+            "status": 200,
+            "json": {
+              "user": {
+                "username": "probe-timer-3",
+                "id": "156147ddaef24845867bfa89d567eedc",
+                "email": "probe3@example.com",
+                "createdAt": "2026-11-20T17:37:46.866565",
+                "role": null,
+                "displayName": "Probe User"
+              },
+              "attempts_ids": []
+            },
+            "truncated": false,
+            "failure_count": 0
+          },
+          {
+            "index": 1,
+            "method": "POST",
+            "path": "/quiz/",
+            "failures": [],
+            "status": 200,
+            "json": {
+              "quiz": {
+                "createdAt": "2026-11-20T17:37:46.898212",
+                "title": "Timer Probe Quiz",
+                "description": "timer probe quiz",
+                "id": "5f12bb91fac541f6a448cb8bff71ef7d",
+                "createdByUserId": "probe",
+                "isPublished": true
+              },
+              "attempts_ids": [],
+              "documents_ids": [],
+              "questions_ids": [],
+              "pages_ids": []
+            },
+            "truncated": false,
+            "failure_count": 0
+          },
+          {
+            "index": 2,
+            "method": "POST",
+            "path": "/question/",
+            "failures": [],
+            "status": 200,
+            "json": {
+              "question": {
+                "id": "4edd26cfb30444a989eb281e0234c4ad",
+                "instructions": "pick one",
+                "points": null,
+                "explanation": null,
+                "audioSentence": null,
+                "quizId": "5f12bb91fac541f6a448cb8bff71ef7d",
+                "text": "Q1 2+2?",
+                "questionType": "mcq",
+                "orderIndex": 0,
+                "difficulty": null,
+                "quiz_id": "5f12bb91fac541f6a448cb8bff71ef7d"
+              },
+              "attempts_ids": [],
+              "options_ids": []
+            },
+            "truncated": false,
+            "failure_count": 0
+          },
+          {
+            "index": 3,
+            "method": "POST",
+            "path": "/question/",
+            "failures": [],
+            "status": 200,
+            "json": {
+              "question": {
+                "id": "261ce14130e34891a0a2c23c9c096c10",
+                "instructions": "pick one",
+                "points": null,
+                "explanation": null,
+                "audioSentence": null,
+                "quizId": "5f12bb91fac541f6a448cb8bff71ef7d",
+                "text": "Q2 capital?",
+                "questionType": "mcq",
+                "orderIndex": 1,
+                "difficulty": null,
+                "quiz_id": "5f12bb91fac541f6a448cb8bff71ef7d"
+              },
+              "attempts_ids": [],
+              "options_ids": []
+            },
+            "truncated": false,
+            "failure_count": 0
+          },
+          {
+            "index": 4,
+            "method": "POST",
+            "path": "/question/",
+            "failures": [],
+            "status": 200,
+            "json": {
+              "question": {
+                "id": "7e954d928b594bbcbcf8dbacb1099cab",
+                "instructions": "pick one",
+                "points": null,
+                "explanation": null,
+                "audioSentence": null,
+                "quizId": "5f12bb91fac541f6a448cb8bff71ef7d",
+                "text": "Q3 color?",
+                "questionType": "mcq",
+                "orderIndex": 2,
+                "difficulty": null,
+                "quiz_id": "5f12bb91fac541f6a448cb8bff71ef7d"
+              },
+              "attempts_ids": [],
+              "options_ids": []
+            },
+            "truncated": false,
+            "failure_count": 0
+          },
+          {
+            "index": 5,
+            "method": "POST",
+            "path": "/option/",
+            "failures": [],
+            "status": 200,
+            "json": {
+              "option": {
+                "optionOrder": 0,
+                "id": "129f25aa6540478eb4f14019eee72f34",
+                "questionId": "4edd26cfb30444a989eb281e0234c4ad",
+                "question_id": "4edd26cfb30444a989eb281e0234c4ad",
+                "isCorrect": true,
+                "optionText": "4"
+              },
+              "responses_ids": []
+            },
+            "truncated": false,
+            "failure_count": 0
+          },
+          {
+            "index": 6,
+            "method": "POST",
+            "path": "/option/",
+            "failures": [],
+            "status": 200,
+            "json": {
+              "option": {
+                "optionOrder": 1,
+                "id": "454ec230e403487786ad3edf13f4f61d",
+                "questionId": "4edd26cfb30444a989eb281e0234c4ad",
+                "question_id": "4edd26cfb30444a989eb281e0234c4ad",
+                "isCorrect": false,
+                "optionText": "5"
+              },
+              "responses_ids": []
+            },
+            "truncated": false,
+            "failure_count": 0
+          },
+          {
+            "index": 7,
+            "method": "POST",
+            "path": "/option/",
+            "failures": [],
+            "status": 200,
+            "json": {
+              "option": {
+                "optionOrder": 0,
+                "id": "ee1177ca93ce46dcb91d7ad11831d428",
+                "questionId": "261ce14130e34891a0a2c23c9c096c10",
+                "question_id": "261ce14130e34891a0a2c23c9c096c10",
+                "isCorrect": true,
+                "optionText": "Paris"
+              },
+              "responses_ids": []
+            },
+            "truncated": false,
+            "failure_count": 0
+          },
+          {
+            "index": 8,
+            "method": "POST",
+            "path": "/option/",
+            "failures": [],
+            "status": 200,
+            "json": {
+              "option": {
+                "optionOrder": 1,
+                "id": "3310be9aff6d4f5fb256430905b81a4a",
+                "questionId": "261ce14130e34891a0a2c23c9c096c10",
+                "question_id": "261ce14130e34891a0a2c23c9c096c10",
+                "isCorrect": false,
+                "optionText": "Rome"
+              },
+              "responses_ids": []
+            },
+            "truncated": false,
+            "failure_count": 0
+          },
+          {
+            "index": 9,
+            "method": "POST",
+            "path": "/option/",
+            "failures": [],
+            "status": 200,
+            "json": {
+              "option": {
+                "optionOrder": 0,
+                "id": "734473a0febb4763a28dadb013608916",
+                "questionId": "7e954d928b594bbcbcf8dbacb1099cab",
+                "question_id": "7e954d928b594bbcbcf8dbacb1099cab",
+                "isCorrect": true,
+                "optionText": "Blue"
+              },
+              "responses_ids": []
+            },
+            "truncated": false,
+            "failure_count": 0
+          },
+          {
+            "index": 10,
+            "method": "POST",
+            "path": "/option/",
+            "failures": [],
+            "status": 200,
+            "json": {
+              "option": {
+                "optionOrder": 1,
+                "id": "518b961e60e745718f889ee206444dd4",
+                "questionId": "7e954d928b594bbcbcf8dbacb1099cab",
+                "question_id": "7e954d928b594bbcbcf8dbacb1099cab",
+                "isCorrect": false,
+                "optionText": "Red"
+              },
+              "responses_ids": []
+            },
+            "truncated": false,
+            "failure_count": 0
+          },
+          {
+            "index": 11,
+            "method": "POST",
+            "path": "/pdfdocument/",
+            "failures": [],
+            "status": 200,
+            "json": {
+              "fileName": "probe.json",
+              "contentType": "application/json",
+              "uploadDate": "2026-11-20T00:00:00",
+              "storagePath": "probe.json",
+              "id": "786fb880abd74d0489a0591fe1c636b7",
+              "fileSizeBytes": 10,
+              "uploadedByUserId": "156147ddaef24845867bfa89d567eedc",
+              "pDFDocumentQuiz_id": "5f12bb91fac541f6a448cb8bff71ef7d"
+            },
+            "truncated": false,
+            "failure_count": 0
+          },
+          {
+            "index": 12,
+            "method": "POST",
+            "path": "/attempt/start/",
+            "failures": [
+              "ValueError: response 12 has no preceding JSON value to reference"
+            ],
+            "failure_count": 1
+          },
+          {
+            "index": 13,
+            "method": "POST",
+            "path": "/attempt/{{13.attempt.id}}/answer/",
+            "failures": [
+              "ValueError: response 13 has no preceding JSON value to reference"
+            ],
+            "failure_count": 1
+          },
+          {
+            "index": 14,
+            "method": "GET",
+            "path": "/attempt/{{13.attempt.id}}/results/",
+            "failures": [
+              "ValueError: response 13 has no preceding JSON value to reference"
+            ],
+            "failure_count": 1
+          },
+          {
+            "index": 15,
+            "method": "GET",
+            "path": "/attempt/{{13.attempt.id}}/results/?timerExpired=true",
+            "failures": [
+              "ValueError: response 13 has no preceding JSON value to reference"
+            ],
+            "failure_count": 1
+          },
+          {
+            "index": 16,
+            "method": "GET",
+            "path": "/attempt/{{13.attempt.id}}/results/?allowIncomplete=true",
+            "failures": [
+              "ValueError: response 13 has no preceding JSON value to reference"
+            ],
+            "failure_count": 1
+          }
+        ],
+        "assertion_failures": [
+          {
+            "index": 12,
+            "message": "ValueError: response 12 has no preceding JSON value to reference"
+          },
+          {
+            "index": 13,
+            "message": "ValueError: response 13 has no preceding JSON value to reference"
+          },
+          {
+            "index": 14,
+            "message": "ValueError: response 13 has no preceding JSON value to reference"
+          },
+          {
+            "index": 15,
+            "message": "ValueError: response 13 has no preceding JSON value to reference"
+          },
+          {
+            "index": 16,
+            "message": "ValueError: response 13 has no preceding JSON value to reference"
+          }
+        ],
+        "scope": "Only the submitted scenario was checked; this is not complete specification verification.",
+        "backend": "web_app/backend",
+        "scenario_id": "timer-expiry-unanswered-v2"
+      }
+    },
+    {
+      "scenario_id": "timer-expiry-unanswered-v3",
+      "scenario": {
+        "requests": [
+          {
+            "json": {
+              "displayName": "Probe User",
+              "email": "probe4@example.com",
+              "username": "probe-timer-4"
+            },
+            "method": "POST",
+            "path": "/user/"
+          },
+          {
+            "json": {
+              "createdByUserId": "probe",
+              "description": "timer probe quiz",
+              "isPublished": true,
+              "title": "Timer Probe Quiz"
+            },
+            "method": "POST",
+            "path": "/quiz/"
+          },
+          {
+            "json": {
+              "instructions": "pick one",
+              "orderIndex": 0,
+              "questionType": "mcq",
+              "quiz": "{{1.quiz.id}}",
+              "quizId": "{{1.quiz.id}}",
+              "text": "Q1 2+2?"
+            },
+            "method": "POST",
+            "path": "/question/"
+          },
+          {
+            "json": {
+              "instructions": "pick one",
+              "orderIndex": 1,
+              "questionType": "mcq",
+              "quiz": "{{1.quiz.id}}",
+              "quizId": "{{1.quiz.id}}",
+              "text": "Q2 capital?"
+            },
+            "method": "POST",
+            "path": "/question/"
+          },
+          {
+            "json": {
+              "instructions": "pick one",
+              "orderIndex": 2,
+              "questionType": "mcq",
+              "quiz": "{{1.quiz.id}}",
+              "quizId": "{{1.quiz.id}}",
+              "text": "Q3 color?"
+            },
+            "method": "POST",
+            "path": "/question/"
+          },
+          {
+            "json": {
+              "isCorrect": true,
+              "optionOrder": 0,
+              "optionText": "4",
+              "question": "{{2.question.id}}",
+              "questionId": "{{2.question.id}}"
+            },
+            "method": "POST",
+            "path": "/option/"
+          },
+          {
+            "json": {
+              "isCorrect": false,
+              "optionOrder": 1,
+              "optionText": "5",
+              "question": "{{2.question.id}}",
+              "questionId": "{{2.question.id}}"
+            },
+            "method": "POST",
+            "path": "/option/"
+          },
+          {
+            "json": {
+              "isCorrect": true,
+              "optionOrder": 0,
+              "optionText": "Paris",
+              "question": "{{3.question.id}}",
+              "questionId": "{{3.question.id}}"
+            },
+            "method": "POST",
+            "path": "/option/"
+          },
+          {
+            "json": {
+              "isCorrect": false,
+              "optionOrder": 1,
+              "optionText": "Rome",
+              "question": "{{3.question.id}}",
+              "questionId": "{{3.question.id}}"
+            },
+            "method": "POST",
+            "path": "/option/"
+          },
+          {
+            "json": {
+              "isCorrect": true,
+              "optionOrder": 0,
+              "optionText": "Blue",
+              "question": "{{4.question.id}}",
+              "questionId": "{{4.question.id}}"
+            },
+            "method": "POST",
+            "path": "/option/"
+          },
+          {
+            "json": {
+              "isCorrect": false,
+              "optionOrder": 1,
+              "optionText": "Red",
+              "question": "{{4.question.id}}",
+              "questionId": "{{4.question.id}}"
+            },
+            "method": "POST",
+            "path": "/option/"
+          },
+          {
+            "json": {
+              "contentType": "application/json",
+              "fileName": "probe.json",
+              "fileSizeBytes": 10,
+              "pDFDocumentQuiz": "{{1.quiz.id}}",
+              "storagePath": "probe.json",
+              "uploadDate": "2026-11-20T00:00:00",
+              "uploadedByUserId": "{{0.user.id}}"
+            },
+            "method": "POST",
+            "path": "/pdfdocument/"
+          },
+          {
+            "json": {
+              "difficulty": null,
+              "documentId": "{{11.id}}",
+              "mode": "testing",
+              "questionCount": 3,
+              "questionOrder": "sequential",
+              "questionType": "mcq",
+              "timerDurationSeconds": 60,
+              "timerEnabled": true,
+              "timerScope": "per_session"
+            },
+            "method": "POST",
+            "path": "/attempt/start/"
+          },
+          {
+            "json": {
+              "questionId": "{{2.question.id}}",
+              "selectedOptionId": "{{5.option.id}}"
+            },
+            "method": "POST",
+            "path": "/attempt/{{12.attempt.id}}/answer/"
+          },
+          {
+            "method": "GET",
+            "path": "/attempt/{{12.attempt.id}}/results/",
+            "expected_status": 403
+          },
+          {
+            "method": "GET",
+            "path": "/attempt/{{12.attempt.id}}/results/?timerExpired=true",
+            "expected_fields": {
+              "totalQuestions": 3,
+              "unansweredCount": 2,
+              "correctCount": 1,
+              "incorrectCount": 0
+            }
+          },
+          {
+            "method": "GET",
+            "path": "/attempt/{{12.attempt.id}}/results/?allowIncomplete=true",
+            "expected_fields": {
+              "totalQuestions": 3,
+              "unansweredCount": 2
+            }
+          }
+        ],
+        "backend": null
+      },
+      "correction_history": [],
+      "report": {
+        "status": "passed",
+        "boot": "ok",
+        "responses": [
+          {
+            "index": 0,
+            "method": "POST",
+            "path": "/user/",
+            "failures": [],
+            "status": 200,
+            "json": {
+              "user": {
+                "username": "probe-timer-4",
+                "id": "6eedc9a45d07421ebd43a6206567e461",
+                "email": "probe4@example.com",
+                "createdAt": "2026-11-20T17:38:01.456343",
+                "role": null,
+                "displayName": "Probe User"
+              },
+              "attempts_ids": []
+            },
+            "truncated": false,
+            "failure_count": 0
+          },
+          {
+            "index": 1,
+            "method": "POST",
+            "path": "/quiz/",
+            "failures": [],
+            "status": 200,
+            "json": {
+              "quiz": {
+                "createdAt": "2026-11-20T17:38:01.501351",
+                "title": "Timer Probe Quiz",
+                "description": "timer probe quiz",
+                "id": "2a9a8786bff9464fa77b53c466800927",
+                "createdByUserId": "probe",
+                "isPublished": true
+              },
+              "attempts_ids": [],
+              "documents_ids": [],
+              "questions_ids": [],
+              "pages_ids": []
+            },
+            "truncated": false,
+            "failure_count": 0
+          },
+          {
+            "index": 2,
+            "method": "POST",
+            "path": "/question/",
+            "failures": [],
+            "status": 200,
+            "json": {
+              "question": {
+                "instructions": "pick one",
+                "id": "5fffe5f9f7024c43b989ee8ae92feafd",
+                "points": null,
+                "explanation": null,
+                "audioSentence": null,
+                "quizId": "2a9a8786bff9464fa77b53c466800927",
+                "text": "Q1 2+2?",
+                "questionType": "mcq",
+                "orderIndex": 0,
+                "difficulty": null,
+                "quiz_id": "2a9a8786bff9464fa77b53c466800927"
+              },
+              "attempts_ids": [],
+              "options_ids": []
+            },
+            "truncated": false,
+            "failure_count": 0
+          },
+          {
+            "index": 3,
+            "method": "POST",
+            "path": "/question/",
+            "failures": [],
+            "status": 200,
+            "json": {
+              "question": {
+                "instructions": "pick one",
+                "id": "7b0bbb1794aa48ceb0a54e82b24b4ea4",
+                "points": null,
+                "explanation": null,
+                "audioSentence": null,
+                "quizId": "2a9a8786bff9464fa77b53c466800927",
+                "text": "Q2 capital?",
+                "questionType": "mcq",
+                "orderIndex": 1,
+                "difficulty": null,
+                "quiz_id": "2a9a8786bff9464fa77b53c466800927"
+              },
+              "attempts_ids": [],
+              "options_ids": []
+            },
+            "truncated": false,
+            "failure_count": 0
+          },
+          {
+            "index": 4,
+            "method": "POST",
+            "path": "/question/",
+            "failures": [],
+            "status": 200,
+            "json": {
+              "question": {
+                "instructions": "pick one",
+                "id": "e87c5840912e43cfb6cac50ba61eb443",
+                "points": null,
+                "explanation": null,
+                "audioSentence": null,
+                "quizId": "2a9a8786bff9464fa77b53c466800927",
+                "text": "Q3 color?",
+                "questionType": "mcq",
+                "orderIndex": 2,
+                "difficulty": null,
+                "quiz_id": "2a9a8786bff9464fa77b53c466800927"
+              },
+              "attempts_ids": [],
+              "options_ids": []
+            },
+            "truncated": false,
+            "failure_count": 0
+          },
+          {
+            "index": 5,
+            "method": "POST",
+            "path": "/option/",
+            "failures": [],
+            "status": 200,
+            "json": {
+              "option": {
+                "id": "c8abf255829c4ef8b60505ef97462e13",
+                "questionId": "5fffe5f9f7024c43b989ee8ae92feafd",
+                "optionOrder": 0,
+                "question_id": "5fffe5f9f7024c43b989ee8ae92feafd",
+                "isCorrect": true,
+                "optionText": "4"
+              },
+              "responses_ids": []
+            },
+            "truncated": false,
+            "failure_count": 0
+          },
+          {
+            "index": 6,
+            "method": "POST",
+            "path": "/option/",
+            "failures": [],
+            "status": 200,
+            "json": {
+              "option": {
+                "id": "c6a4b57d15c643b4a715e5be78a88f4f",
+                "questionId": "5fffe5f9f7024c43b989ee8ae92feafd",
+                "optionOrder": 1,
+                "question_id": "5fffe5f9f7024c43b989ee8ae92feafd",
+                "isCorrect": false,
+                "optionText": "5"
+              },
+              "responses_ids": []
+            },
+            "truncated": false,
+            "failure_count": 0
+          },
+          {
+            "index": 7,
+            "method": "POST",
+            "path": "/option/",
+            "failures": [],
+            "status": 200,
+            "json": {
+              "option": {
+                "id": "7a13394c2b304723a65561e677937345",
+                "questionId": "7b0bbb1794aa48ceb0a54e82b24b4ea4",
+                "optionOrder": 0,
+                "question_id": "7b0bbb1794aa48ceb0a54e82b24b4ea4",
+                "isCorrect": true,
+                "optionText": "Paris"
+              },
+              "responses_ids": []
+            },
+            "truncated": false,
+            "failure_count": 0
+          },
+          {
+            "index": 8,
+            "method": "POST",
+            "path": "/option/",
+            "failures": [],
+            "status": 200,
+            "json": {
+              "option": {
+                "id": "764df846f7fd407f8ee7737501d9d261",
+                "questionId": "7b0bbb1794aa48ceb0a54e82b24b4ea4",
+                "optionOrder": 1,
+                "question_id": "7b0bbb1794aa48ceb0a54e82b24b4ea4",
+                "isCorrect": false,
+                "optionText": "Rome"
+              },
+              "responses_ids": []
+            },
+            "truncated": false,
+            "failure_count": 0
+          },
+          {
+            "index": 9,
+            "method": "POST",
+            "path": "/option/",
+            "failures": [],
+            "status": 200,
+            "json": {
+              "option": {
+                "id": "8f484d87d0404e828caca70fae111167",
+                "questionId": "e87c5840912e43cfb6cac50ba61eb443",
+                "optionOrder": 0,
+                "question_id": "e87c5840912e43cfb6cac50ba61eb443",
+                "isCorrect": true,
+                "optionText": "Blue"
+              },
+              "responses_ids": []
+            },
+            "truncated": false,
+            "failure_count": 0
+          },
+          {
+            "index": 10,
+            "method": "POST",
+            "path": "/option/",
+            "failures": [],
+            "status": 200,
+            "json": {
+              "option": {
+                "id": "58034e3927174b74bf61f8054bdf1b2e",
+                "questionId": "e87c5840912e43cfb6cac50ba61eb443",
+                "optionOrder": 1,
+                "question_id": "e87c5840912e43cfb6cac50ba61eb443",
+                "isCorrect": false,
+                "optionText": "Red"
+              },
+              "responses_ids": []
+            },
+            "truncated": false,
+            "failure_count": 0
+          },
+          {
+            "index": 11,
+            "method": "POST",
+            "path": "/pdfdocument/",
+            "failures": [],
+            "status": 200,
+            "json": {
+              "fileName": "probe.json",
+              "contentType": "application/json",
+              "uploadDate": "2026-11-20T00:00:00",
+              "storagePath": "probe.json",
+              "id": "99d46902796b45a3840885df4e7895c7",
+              "fileSizeBytes": 10,
+              "uploadedByUserId": "6eedc9a45d07421ebd43a6206567e461",
+              "pDFDocumentQuiz_id": "2a9a8786bff9464fa77b53c466800927"
+            },
+            "truncated": false,
+            "failure_count": 0
+          },
+          {
+            "index": 12,
+            "method": "POST",
+            "path": "/attempt/start/",
+            "failures": [],
+            "status": 200,
+            "json": {
+              "attempt": {
+                "mode": "testing",
+                "selectedQuestionIds": "[\"5fffe5f9f7024c43b989ee8ae92feafd\", \"7b0bbb1794aa48ceb0a54e82b24b4ea4\", \"e87c5840912e43cfb6cac50ba61eb443\"]",
+                "quizId": "2a9a8786bff9464fa77b53c466800927",
+                "questionOrder": "sequential",
+                "attemptQuiz_id": "2a9a8786bff9464fa77b53c466800927",
+                "id": "50a0b7c96a4348bda049211e8bf0a896",
+                "requestedQuestionCount": 3,
+                "user_id": "9761c0a2dc6147f990bcfe83e7658513",
+                "userId": "9761c0a2dc6147f990bcfe83e7658513",
+                "selectedDifficulty": null,
+                "startedAt": "2026-11-20T17:38:01.675843",
+                "selectedQuestionType": "mcq",
+                "finishedAt": null,
+                "timerEnabled": true,
+                "status": "in_progress",
+                "timerScope": "per_session",
+                "score": null,
+                "timerDurationSeconds": 60
+              },
+              "documentId": "99d46902796b45a3840885df4e7895c7",
+              "documentName": "probe.json",
+              "mode": "testing",
+              "questionOrder": "sequential",
+              "questionIds": [
+                "5fffe5f9f7024c43b989ee8ae92feafd",
+                "7b0bbb1794aa48ceb0a54e82b24b4ea4",
+                "e87c5840912e43cfb6cac50ba61eb443"
+              ],
+              "timer": {
+                "enabled": true,
+                "scope": "per_session",
+                "durationSeconds": 60
+              }
+            },
+            "truncated": false,
+            "failure_count": 0
+          },
+          {
+            "index": 13,
+            "method": "POST",
+            "path": "/attempt/50a0b7c96a4348bda049211e8bf0a896/answer/",
+            "failures": [],
+            "status": 200,
+            "json": {
+              "response": {
+                "attempts_id": "50a0b7c96a4348bda049211e8bf0a896",
+                "attemptId": "50a0b7c96a4348bda049211e8bf0a896",
+                "option_id": null,
+                "selectedOptionId": "c8abf255829c4ef8b60505ef97462e13",
+                "answeredAt": "2026-11-20T17:38:01.702221",
+                "id": "2e9d31e01e2d4d37941288b78fb0bbfc",
+                "attemptQuestion_id": "5fffe5f9f7024c43b989ee8ae92feafd",
+                "questionId": "5fffe5f9f7024c43b989ee8ae92feafd",
+                "selectedOptionIds": "c8abf255829c4ef8b60505ef97462e13",
+                "isMarkedCorrect": true
+              },
+              "answeredCount": 1,
+              "totalQuestions": 3,
+              "quizCompleted": false
+            },
+            "truncated": false,
+            "failure_count": 0
+          },
+          {
+            "index": 14,
+            "method": "GET",
+            "path": "/attempt/50a0b7c96a4348bda049211e8bf0a896/results/",
+            "failures": [],
+            "status": 403,
+            "json": {
+              "error": "Results are locked: 1 of 3 questions answered",
+              "message": "Results are locked: 1 of 3 questions answered",
+              "detail": "Results are locked: 1 of 3 questions answered"
+            },
+            "truncated": false,
+            "reads_back": [],
+            "failure_count": 0
+          },
+          {
+            "index": 15,
+            "method": "GET",
+            "path": "/attempt/50a0b7c96a4348bda049211e8bf0a896/results/?timerExpired=true",
+            "failures": [],
+            "status": 200,
+            "json": {
+              "attempt": {
+                "mode": "testing",
+                "selectedQuestionIds": "[\"5fffe5f9f7024c43b989ee8ae92feafd\", \"7b0bbb1794aa48ceb0a54e82b24b4ea4\", \"e87c5840912e43cfb6cac50ba61eb443\"]",
+                "quizId": "2a9a8786bff9464fa77b53c466800927",
+                "questionOrder": "sequential",
+                "attemptQuiz_id": "2a9a8786bff9464fa77b53c466800927",
+                "id": "50a0b7c96a4348bda049211e8bf0a896",
+                "requestedQuestionCount": 3,
+                "user_id": "9761c0a2dc6147f990bcfe83e7658513",
+                "userId": "9761c0a2dc6147f990bcfe83e7658513",
+                "selectedDifficulty": null,
+                "startedAt": "2026-11-20T17:38:01.675843",
+                "selectedQuestionType": "mcq",
+                "finishedAt": "2026-11-20T17:38:01.723898",
+                "timerEnabled": true,
+                "status": "completed",
+                "timerScope": "per_session",
+                "score": 33.33,
+                "timerDurationSeconds": 60
+              },
+              "mode": "testing",
+              "totalQuestions": 3,
+              "correctCount": 1,
+              "incorrectCount": 0,
+              "unansweredCount": 2,
+              "answeredCount": 1,
+              "timerExpired": true,
+              "percentageScore": 33.33,
+              "details": [
+                {
+                  "questionId": "5fffe5f9f7024c43b989ee8ae92feafd",
+                  "questionText": "Q1 2+2?",
+                  "explanation": null,
+                  "selectedOptionId": "c8abf255829c4ef8b60505ef97462e13",
+                  "selectedOptionText": "4",
+                  "correctOptionId": "c8abf255829c4ef8b60505ef97462e13",
+                  "correctOptionText": "4",
+                  "isCorrect": true,
+                  "answered": true,
+                  "elapsedSeconds": 0
+                },
+                {
+                  "questionId": "7b0bbb1794aa48ceb0a54e82b24b4ea4",
+                  "questionText": "Q2 capital?",
+                  "explanation": null,
+                  "selectedOptionId": null,
+                  "selectedOptionText": null,
+                  "correctOptionId": "7a13394c2b304723a65561e677937345",
+                  "correctOptionText": "Paris",
+                  "isCorrect": false,
+                  "answered": false,
+                  "elapsedSeconds": 0
+                },
+                {
+                  "questionId": "e87c5840912e43cfb6cac50ba61eb443",
+                  "questionText": "Q3 color?",
+                  "explanation": null,
+                  "selectedOptionId": null,
+                  "selectedOptionText": null,
+                  "correctOptionId": "8f484d87d0404e828caca70fae111167",
+                  "correctOptionText": "Blue",
+                  "isCorrect": false,
+                  "answered": false,
+                  "elapsedSeconds": 0
+                }
+              ],
+              "timer": {
+                "enabled": true,
+                "scope": "per_session",
+                "durationSeconds": 60
+              },
+              "totalElapsedSeconds": 0
+            },
+            "truncated": false,
+            "reads_back": [
+              12
+            ],
+            "failure_count": 0
+          },
+          {
+            "index": 16,
+            "method": "GET",
+            "path": "/attempt/50a0b7c96a4348bda049211e8bf0a896/results/?allowIncomplete=true",
+            "failures": [],
+            "status": 200,
+            "json": {
+              "attempt": {
+                "mode": "testing",
+                "selectedQuestionIds": "[\"5fffe5f9f7024c43b989ee8ae92feafd\", \"7b0bbb1794aa48ceb0a54e82b24b4ea4\", \"e87c5840912e43cfb6cac50ba61eb443\"]",
+                "quizId": "2a9a8786bff9464fa77b53c466800927",
+                "questionOrder": "sequential",
+                "attemptQuiz_id": "2a9a8786bff9464fa77b53c466800927",
+                "id": "50a0b7c96a4348bda049211e8bf0a896",
+                "requestedQuestionCount": 3,
+                "user_id": "9761c0a2dc6147f990bcfe83e7658513",
+                "userId": "9761c0a2dc6147f990bcfe83e7658513",
+                "selectedDifficulty": null,
+                "startedAt": "2026-11-20T17:38:01.675843",
+                "selectedQuestionType": "mcq",
+                "finishedAt": "2026-11-20T17:38:01.723898",
+                "timerEnabled": true,
+                "status": "completed",
+                "timerScope": "per_session",
+                "score": 33.33,
+                "timerDurationSeconds": 60
+              },
+              "mode": "testing",
+              "totalQuestions": 3,
+              "correctCount": 1,
+              "incorrectCount": 0,
+              "unansweredCount": 2,
+              "answeredCount": 1,
+              "timerExpired": true,
+              "percentageScore": 33.33,
+              "details": [
+                {
+                  "questionId": "5fffe5f9f7024c43b989ee8ae92feafd",
+                  "questionText": "Q1 2+2?",
+                  "explanation": null,
+                  "selectedOptionId": "c8abf255829c4ef8b60505ef97462e13",
+                  "selectedOptionText": "4",
+                  "correctOptionId": "c8abf255829c4ef8b60505ef97462e13",
+                  "correctOptionText": "4",
+                  "isCorrect": true,
+                  "answered": true,
+                  "elapsedSeconds": 0
+                },
+                {
+                  "questionId": "7b0bbb1794aa48ceb0a54e82b24b4ea4",
+                  "questionText": "Q2 capital?",
+                  "explanation": null,
+                  "selectedOptionId": null,
+                  "selectedOptionText": null,
+                  "correctOptionId": "7a13394c2b304723a65561e677937345",
+                  "correctOptionText": "Paris",
+                  "isCorrect": false,
+                  "answered": false,
+                  "elapsedSeconds": 0
+                },
+                {
+                  "questionId": "e87c5840912e43cfb6cac50ba61eb443",
+                  "questionText": "Q3 color?",
+                  "explanation": null,
+                  "selectedOptionId": null,
+                  "selectedOptionText": null,
+                  "correctOptionId": "8f484d87d0404e828caca70fae111167",
+                  "correctOptionText": "Blue",
+                  "isCorrect": false,
+                  "answered": false,
+                  "elapsedSeconds": 0
+                }
+              ],
+              "timer": {
+                "enabled": true,
+                "scope": "per_session",
+                "durationSeconds": 60
+              },
+              "totalElapsedSeconds": 0
+            },
+            "truncated": false,
+            "reads_back": [
+              12
+            ],
+            "failure_count": 0
+          }
+        ],
+        "assertion_failures": [],
+        "scope": "Only the submitted scenario was checked; this is not complete specification verification.",
+        "backend": "web_app/backend",
+        "scenario_id": "timer-expiry-unanswered-v3"
       }
     }
   ],
@@ -609,13 +2420,13 @@
   "model_conversion_issues": [],
   "model_assembly_issues": [],
   "usage": {
-    "api_calls": 54,
-    "input_tokens": 447304,
-    "output_tokens": 57734,
+    "api_calls": 57,
+    "input_tokens": 297488,
+    "output_tokens": 33130,
     "cache_creation_tokens": 0,
-    "cache_read_tokens": 2535284,
-    "total_tokens": 3040322,
-    "estimated_cost_usd": 1.1848,
+    "cache_read_tokens": 2686633,
+    "total_tokens": 3017251,
+    "estimated_cost_usd": 0.9157,
     "billed_to_user": false,
     "model": "free"
   },
@@ -637,6 +2448,14 @@
       "message": "acceptance: entity QuizPage \u2014 no frontend page/component references it; no frontend create path found (no POST call, no api-client create resolved to it, and no TableBlock bound to it with editable form fields)"
     },
     {
+      "severity": "blocker",
+      "message": "api scenario: timer-expiry-unanswered failed: {\"assertion_failures\": [{\"index\": 0, \"message\": \"ValueError: response 0 has no preceding JSON value to reference\"}, {\"index\": 1, \"message\": \"ValueError: response 0 has no preceding JSON value to reference\"}, {\"index\": 2, \"message\": \"ValueError: response 0 has no preceding JSON value to reference\"}, {\"index\": 3, \"message\": \"ValueError: response 0 has no preceding JSON value to reference\"}, {\"index\": 4, \"message\": \"ValueError: response 0 has no preceding JSON value to reference\"}, {\"index\": 5, \"message\": \"ValueError: response 0 has no preceding JSON value to reference\"}, {\"index\": 6, \"message\": \"ValueError: response 0 has no preceding JSON value to reference\"}], \"request_errors\": []}. Inspect its exact requests and expected values with test_api(action='get', scenario_id='timer-expiry-unanswered'). The original specification is authoritative: fix the application if its behavior is wrong; if the generated test is wrong, resubmit this scenario with correction_reason grounded in the specification; if another scenario replaced it, retire it with test_api(action='retire', scenario_id='timer-expiry-unanswered', correction_reason=...)."
+    },
+    {
+      "severity": "blocker",
+      "message": "api scenario: timer-expiry-unanswered-v2 failed: {\"assertion_failures\": [{\"index\": 12, \"message\": \"ValueError: response 12 has no preceding JSON value to reference\"}, {\"index\": 13, \"message\": \"ValueError: response 13 has no preceding JSON value to reference\"}, {\"index\": 14, \"message\": \"ValueError: response 13 has no preceding JSON value to reference\"}, {\"index\": 15, \"message\": \"ValueError: response 13 has no preceding JSON value to reference\"}, {\"index\": 16, \"message\": \"ValueError: response 13 has no preceding JSON value to reference\"}], \"request_errors\": []}. Inspect its exact requests and expected values with test_api(action='get', scenario_id='timer-expiry-unanswered-v2'). The original specification is authoritative: fix the application if its behavior is wrong; if the generated test is wrong, resubmit this scenario with correction_reason grounded in the specification; if another scenario replaced it, retire it with test_api(action='retire', scenario_id='timer-expiry-unanswered-v2', correction_reason=...)."
+    },
+    {
       "severity": "warning",
       "message": "ruff: web_app/backend/database.py:58:9: F601 Dictionary key literal `\"attempt\"` repeated"
     },
@@ -646,11 +2465,43 @@
     },
     {
       "severity": "warning",
-      "message": "validation: the requirements ledger did not run (2 extraction attempt(s) on meta/muse-spark-1.3 returned nothing) - its checks were SKIPPED, so this result does not cover them"
+      "message": "tsc-advisory [web_app/frontend]: 1447 type error(s) reported without node_modules installed \u2014 package imports and their types cannot resolve, so these are advisory, not blockers. Run npm install before trusting them."
+    },
+    {
+      "severity": "warning",
+      "message": "tsc-advisory [web_app/frontend]: src/App.tsx(1,19): error TS2307: Cannot find module 'react' or its corresponding type declarations."
+    },
+    {
+      "severity": "warning",
+      "message": "tsc-advisory [web_app/frontend]: src/App.tsx(16,5): error TS2875: This JSX tag requires the module path 'react/jsx-runtime' to exist, but none could be found. Make sure you have types for the appropriate package installed."
+    },
+    {
+      "severity": "warning",
+      "message": "tsc-advisory [web_app/frontend]: src/App.tsx(17,7): error TS7026: JSX element implicitly has type 'any' because no interface 'JSX.IntrinsicElements' exists."
+    },
+    {
+      "severity": "warning",
+      "message": "tsc-advisory [web_app/frontend]: src/App.tsx(19,9): error TS7026: JSX element implicitly has type 'any' because no interface 'JSX.IntrinsicElements' exists."
+    },
+    {
+      "severity": "warning",
+      "message": "tsc-advisory [web_app/frontend]: src/App.tsx(2,41): error TS2307: Cannot find module 'react-router-dom' or its corresponding type declarations."
+    },
+    {
+      "severity": "warning",
+      "message": "validation: business-requirement judgment deferred until startup/data-entry blockers are fixed"
+    },
+    {
+      "severity": "warning",
+      "message": "validation: the requirements ledger did not run (1 extraction attempt(s) on meta/muse-spark-1.3 returned nothing) - its checks were SKIPPED, so this result does not cover them"
     },
     {
       "severity": "blocker",
-      "message": "requirement unverified: requirement extraction failed; the original specification has not been checked. Do not treat this as an empty requirement list or verified completion."
+      "message": "verification setup: frontend build [web_app/frontend] requires installed project dependencies. Toolchain and shell tools are enabled and npm is available. Use install_dependencies with working_dir='web_app/frontend' to install the declared dependencies, then call validate_app to run the required checks. Do not edit application code solely to satisfy this verification prerequisite."
+    },
+    {
+      "severity": "blocker",
+      "message": "verification setup: tsc [web_app/frontend] requires installed project dependencies. Toolchain and shell tools are enabled and npm is available. Use install_dependencies with working_dir='web_app/frontend' to install the declared dependencies, then call validate_app to run the required checks. Do not edit application code solely to satisfy this verification prerequisite."
     }
   ],
   "acceptance_matrix": {
@@ -702,6 +2553,11 @@
   "runtime_files_not_removed_count": 0,
   "runtime_files_note": "",
   "output_files": [
+    {
+      "path": ".agent-trace/0494db4301004a2589f356064b307875.json",
+      "size": 135813,
+      "source": "llm"
+    },
     {
       "path": ".agent-trace/25acedc5c2a54ed4bddf507839176185.json",
       "size": 126230,
@@ -938,7 +2794,7 @@
     },
     {
       "path": "web_app/backend/routers/attempt.py",
-      "size": 36938,
+      "size": 37477,
       "source": "generator",
       "llm_modified": true
     },
@@ -1034,8 +2890,9 @@
     },
     {
       "path": "web_app/frontend/src/api/quizApi.ts",
-      "size": 2767,
-      "source": "llm"
+      "size": 2836,
+      "source": "llm",
+      "llm_modified": true
     },
     {
       "path": "web_app/frontend/src/components/InputComponents.tsx",
@@ -1045,8 +2902,7 @@
     {
       "path": "web_app/frontend/src/components/JerryAvatar.tsx",
       "size": 4307,
-      "source": "llm",
-      "llm_modified": true
+      "source": "llm"
     },
     {
       "path": "web_app/frontend/src/components/MethodButton.tsx",
@@ -1165,8 +3021,9 @@
     },
     {
       "path": "web_app/frontend/src/context/QuizStateContext.tsx",
-      "size": 5320,
-      "source": "llm"
+      "size": 5779,
+      "source": "llm",
+      "llm_modified": true
     },
     {
       "path": "web_app/frontend/src/contexts/TableContext.tsx",
@@ -1176,8 +3033,7 @@
     {
       "path": "web_app/frontend/src/design-overrides.css",
       "size": 4409,
-      "source": "llm",
-      "llm_modified": true
+      "source": "llm"
     },
     {
       "path": "web_app/frontend/src/design.css",
@@ -1217,7 +3073,7 @@
     },
     {
       "path": "web_app/frontend/src/pages/Quizsession.tsx",
-      "size": 21577,
+      "size": 21697,
       "source": "generator",
       "llm_modified": true
     },
@@ -1228,7 +3084,7 @@
     },
     {
       "path": "web_app/frontend/src/pages/Results.tsx",
-      "size": 7280,
+      "size": 8179,
       "source": "llm",
       "llm_modified": true
     },
@@ -1254,85 +3110,26 @@
     }
   ],
   "output_summary": {
-    "total_files": 107,
+    "total_files": 108,
     "from_generator": 63,
-    "from_llm": 44,
+    "from_llm": 45,
     "generator_files_edited_by_llm": 12,
-    "total_bytes": 2434912
+    "total_bytes": 2572811
   },
   "tool_calls": [
     {
       "turn": 1,
-      "tool": "read_file",
-      "input": {
-        "limit": 100,
-        "offset": 0,
-        "path": "web_app/frontend/src/components/JerryAvatar.tsx"
-      },
+      "tool": "list_files",
+      "input": {},
       "success": true,
       "status": "ok"
     },
     {
-      "turn": 1,
-      "tool": "read_file",
-      "input": {
-        "limit": 150,
-        "offset": 0,
-        "path": "web_app/frontend/src/pages/Results.tsx"
-      },
-      "success": true,
-      "status": "ok"
-    },
-    {
-      "turn": 1,
-      "tool": "read_file",
-      "input": {
-        "limit": 150,
-        "offset": 0,
-        "path": "web_app/frontend/src/pages/Quizsession.tsx"
-      },
-      "success": true,
-      "status": "ok"
-    },
-    {
-      "turn": 1,
+      "turn": 2,
       "tool": "read_file",
       "input": {
         "limit": 200,
         "offset": 0,
-        "path": "web_app/frontend/src/context/QuizStateContext.tsx"
-      },
-      "success": true,
-      "status": "ok"
-    },
-    {
-      "turn": 2,
-      "tool": "read_file",
-      "input": {
-        "limit": 100,
-        "offset": 0,
-        "path": "web_app/frontend/src/api/quizApi.ts"
-      },
-      "success": true,
-      "status": "ok"
-    },
-    {
-      "turn": 2,
-      "tool": "read_file",
-      "input": {
-        "limit": 120,
-        "offset": 0,
-        "path": "web_app/frontend/src/design-overrides.css"
-      },
-      "success": true,
-      "status": "ok"
-    },
-    {
-      "turn": 2,
-      "tool": "read_file",
-      "input": {
-        "limit": 380,
-        "offset": 150,
         "path": "web_app/frontend/src/pages/Quizsession.tsx"
       },
       "success": true,
@@ -1342,42 +3139,30 @@
       "turn": 2,
       "tool": "read_file",
       "input": {
-        "limit": 20,
-        "offset": 150,
+        "limit": 200,
+        "offset": 0,
         "path": "web_app/frontend/src/pages/Results.tsx"
       },
       "success": true,
       "status": "ok"
     },
     {
-      "turn": 3,
-      "tool": "read_file",
-      "input": {
-        "limit": 150,
-        "offset": 0,
-        "path": "web_app/frontend/src/pages/Quizconfig.tsx"
-      },
-      "success": true,
-      "status": "ok"
-    },
-    {
-      "turn": 3,
-      "tool": "read_file",
-      "input": {
-        "limit": 250,
-        "offset": 550,
-        "path": "web_app/backend/routers/attempt.py"
-      },
-      "success": true,
-      "status": "ok"
-    },
-    {
-      "turn": 4,
+      "turn": 2,
       "tool": "read_file",
       "input": {
         "limit": 120,
-        "offset": 1,
+        "offset": 0,
         "path": "web_app/backend/routers/attempt.py"
+      },
+      "success": true,
+      "status": "ok"
+    },
+    {
+      "turn": 3,
+      "tool": "search_in_files",
+      "input": {
+        "file_glob": "*.py",
+        "pattern": "results|locked|unanswered|timeUp|finished|timer_expired"
       },
       "success": true,
       "status": "ok"
@@ -1387,7 +3172,18 @@
       "tool": "read_file",
       "input": {
         "limit": 330,
-        "offset": 270,
+        "offset": 200,
+        "path": "web_app/frontend/src/pages/Quizsession.tsx"
+      },
+      "success": true,
+      "status": "ok"
+    },
+    {
+      "turn": 4,
+      "tool": "read_file",
+      "input": {
+        "limit": 220,
+        "offset": 600,
         "path": "web_app/backend/routers/attempt.py"
       },
       "success": true,
@@ -1398,19 +3194,8 @@
       "tool": "read_file",
       "input": {
         "limit": 120,
-        "offset": 130,
-        "path": "web_app/backend/sql_alchemy.py"
-      },
-      "success": true,
-      "status": "ok"
-    },
-    {
-      "turn": 5,
-      "tool": "read_file",
-      "input": {
-        "limit": 200,
         "offset": 0,
-        "path": "web_app/backend/quiz_workflow.py"
+        "path": "web_app/frontend/src/context/QuizStateContext.tsx"
       },
       "success": true,
       "status": "ok"
@@ -1419,20 +3204,42 @@
       "turn": 5,
       "tool": "read_file",
       "input": {
-        "limit": 60,
-        "offset": 120,
-        "path": "web_app/frontend/src/design-overrides.css"
+        "limit": 180,
+        "offset": 440,
+        "path": "web_app/backend/routers/attempt.py"
+      },
+      "success": true,
+      "status": "ok"
+    },
+    {
+      "turn": 5,
+      "tool": "read_file",
+      "input": {
+        "limit": 120,
+        "offset": 0,
+        "path": "web_app/frontend/src/api/quizApi.ts"
       },
       "success": true,
       "status": "ok"
     },
     {
       "turn": 6,
-      "tool": "modify_file",
+      "tool": "read_file",
       "input": {
-        "new_text": "    score = _finish_attempt(db_attempt, database)\n    responses_by_question = {response.attemptQuestion_id: response for response in responses}\n    # Elapsed-time measurement (R-extra): always derived from startedAt /\n    # answeredAt / finishedAt, so it works even when the countdown timer is\n    # switched off. Per-question time is the gap between consecutive answers\n    # (first question measured from startedAt); total is finishedAt-startedAt.\n    _started = db_attempt.startedAt\n    _finished \n<<truncated 740 of 1240 chars, sha256 424ada4638d2>>",
-        "old_text": "    score = _finish_attempt(db_attempt, database)\n    responses_by_question = {response.attemptQuestion_id: response for response in responses}\n    correct = 0\n    details = []\n    for qid in question_ids:",
-        "path": "web_app/backend/routers/attempt.py"
+        "limit": 70,
+        "offset": 120,
+        "path": "web_app/frontend/src/context/QuizStateContext.tsx"
+      },
+      "success": true,
+      "status": "ok"
+    },
+    {
+      "turn": 6,
+      "tool": "read_file",
+      "input": {
+        "limit": 80,
+        "offset": 130,
+        "path": "web_app/backend/sql_alchemy.py"
       },
       "success": true,
       "status": "ok"
@@ -1441,8 +3248,19 @@
       "turn": 7,
       "tool": "read_file",
       "input": {
-        "limit": 45,
-        "offset": 770,
+        "limit": 50,
+        "offset": 1,
+        "path": "web_app/frontend/src/App.tsx"
+      },
+      "success": true,
+      "status": "ok"
+    },
+    {
+      "turn": 7,
+      "tool": "read_file",
+      "input": {
+        "limit": 60,
+        "offset": 728,
         "path": "web_app/backend/routers/attempt.py"
       },
       "success": true,
@@ -1450,10 +3268,10 @@
     },
     {
       "turn": 8,
-      "tool": "modify_file",
+      "tool": "read_file",
       "input": {
-        "new_text": "        details.append(\n            {\n                \"questionId\": qid,\n                \"questionText\": question.text if question else None,\n                \"explanation\": question.explanation if question else None,\n                \"selectedOptionId\": response.selectedOptionId if response else None,\n                \"selectedOptionText\": selected_option.optionText if selected_option else None,\n                \"correctOptionId\": correct_option.id if correct_option else None,\n                \"corr\n<<truncated 711 of 1211 chars, sha256 bb56a9a76074>>",
-        "old_text": "        details.append(\n            {\n                \"questionId\": qid,\n                \"questionText\": question.text if question else None,\n                \"explanation\": question.explanation if question else None,\n                \"selectedOptionId\": response.selectedOptionId if response else None,\n                \"selectedOptionText\": selected_option.optionText if selected_option else None,\n                \"correctOptionId\": correct_option.id if correct_option else None,\n                \"corr\n<<truncated 415 of 915 chars, sha256 f950ff6560bc>>",
+        "limit": 30,
+        "offset": 786,
         "path": "web_app/backend/routers/attempt.py"
       },
       "success": true,
@@ -1463,54 +3281,35 @@
       "turn": 9,
       "tool": "read_file",
       "input": {
-        "limit": 50,
-        "offset": 44,
-        "path": "web_app/frontend/src/pages/Quizsession.tsx"
+        "limit": 110,
+        "offset": 713,
+        "path": "web_app/backend/routers/attempt.py"
       },
       "success": true,
       "status": "ok"
     },
     {
       "turn": 10,
-      "tool": "replace_file_lines",
+      "tool": "modify_file",
       "input": {
-        "end_line": 74,
-        "new_text": "/**\n * Cheerful Jerry avatar in the style of Jerry from the Tom & Jerry cartoon:\n * warm orange-brown fur, oversized round ears with peachy-pink insides, a\n * little hair tuft, big expressive eyes, tiny black nose, buck-tooth grin,\n * whiskers, cream muzzle/belly and a long curvy tail. When `clapping` is\n * true he bounces with joy and his paws clap together (Learning Mode).\n */\nconst JerryAvatar: React.FC<JerryAvatarProps> = ({ clapping = false, size = 96 }) => (\n  <div\n    className={`jerry-av\n<<truncated 3611 of 4111 chars, sha256 928eabdce05d>>",
-        "path": "web_app/frontend/src/components/JerryAvatar.tsx",
-        "read_id": "28bc1ae4f2e0:1",
-        "start_line": 9
+        "path": "web_app/backend/routers/attempt.py"
       },
       "success": true,
       "status": "ok"
     },
     {
       "turn": 11,
-      "tool": "read_file",
+      "tool": "modify_file",
       "input": {
-        "limit": 170,
-        "offset": 0,
-        "path": "web_app/frontend/src/pages/Results.tsx"
+        "path": "web_app/backend/routers/attempt.py"
       },
       "success": true,
       "status": "ok"
     },
     {
       "turn": 12,
-      "tool": "read_file",
+      "tool": "modify_file",
       "input": {
-        "limit": 30,
-        "offset": 94,
-        "path": "web_app/frontend/src/pages/Quizsession.tsx"
-      },
-      "success": true,
-      "status": "ok"
-    },
-    {
-      "turn": 12,
-      "tool": "read_file",
-      "input": {
-        "limit": 90,
-        "offset": 728,
         "path": "web_app/backend/routers/attempt.py"
       },
       "success": true,
@@ -1520,62 +3319,45 @@
       "turn": 13,
       "tool": "read_file",
       "input": {
-        "limit": 80,
-        "offset": 100,
-        "path": "web_app/backend/pydantic_classes.py"
+        "limit": 190,
+        "offset": 0,
+        "path": "web_app/frontend/src/context/QuizStateContext.tsx"
       },
       "success": true,
       "status": "ok"
     },
     {
       "turn": 14,
-      "tool": "read_file",
+      "tool": "modify_file",
       "input": {
-        "limit": 60,
-        "offset": 16,
-        "path": "web_app/frontend/src/pages/Quizsession.tsx"
+        "path": "web_app/frontend/src/context/QuizStateContext.tsx"
       },
       "success": true,
       "status": "ok"
     },
     {
       "turn": 15,
-      "tool": "search_in_files",
+      "tool": "modify_file",
       "input": {
-        "file_glob": "*",
-        "pattern": "jerry-hand|jerry-avatar"
+        "path": "web_app/frontend/src/context/QuizStateContext.tsx"
       },
       "success": true,
       "status": "ok"
     },
     {
       "turn": 16,
-      "tool": "search_in_files",
+      "tool": "modify_file",
       "input": {
-        "file_glob": "*",
-        "pattern": "markCompleted|timeUp"
+        "path": "web_app/frontend/src/context/QuizStateContext.tsx"
       },
       "success": true,
       "status": "ok"
     },
     {
       "turn": 17,
-      "tool": "read_file",
+      "tool": "modify_file",
       "input": {
-        "limit": 40,
-        "offset": 228,
-        "path": "web_app/frontend/src/pages/Quizsession.tsx"
-      },
-      "success": true,
-      "status": "ok"
-    },
-    {
-      "turn": 17,
-      "tool": "read_file",
-      "input": {
-        "limit": 70,
-        "offset": 59,
-        "path": "web_app/frontend/src/pages/Quizsession.tsx"
+        "path": "web_app/frontend/src/context/QuizStateContext.tsx"
       },
       "success": true,
       "status": "ok"
@@ -1584,20 +3366,16 @@
       "turn": 18,
       "tool": "modify_file",
       "input": {
-        "new_text": "  const isTesting = results?.mode === \"testing\";\n  // Elapsed time (request #2): always measured by the backend from\n  // startedAt/answeredAt/finishedAt, so it is shown even when the countdown\n  // timer was switched off. Per-question scope shows each question's time\n  // plus the total; per-session scope shows only the total session time.\n  const timerScope = (results?.timer?.scope as string | undefined) ?? state.timerScope ?? \"per_question\";\n  const showPerQuestionTime = timerScope !== \"per_s\n<<truncated 1027 of 1527 chars, sha256 3a2cf52756f5>>",
-        "old_text": "  const isTesting = results?.mode === \"testing\";\n\n  return (\n    <div className=\"ds-section\">\n      <h1 className=\"ds-heading\">Results</h1>\n      <p style={{ color: \"var(--ds-muted)\", marginTop: 0 }}>\n        <span className=\"ds-badge\">{isTesting ? \"Testing Mode\" : \"Learning Mode\"}</span>\n      </p>\n\n      <div className=\"ds-grid-2\" style={{ maxWidth: \"720px\" }}>",
-        "path": "web_app/frontend/src/pages/Results.tsx"
+        "path": "web_app/frontend/src/context/QuizStateContext.tsx"
       },
       "success": true,
       "status": "ok"
     },
     {
       "turn": 19,
-      "tool": "read_file",
+      "tool": "modify_file",
       "input": {
-        "limit": 50,
-        "offset": 135,
-        "path": "web_app/frontend/src/pages/Results.tsx"
+        "path": "web_app/frontend/src/api/quizApi.ts"
       },
       "success": true,
       "status": "ok"
@@ -1606,19 +3384,18 @@
       "turn": 20,
       "tool": "modify_file",
       "input": {
-        "new_text": "            {detail.explanation && (\n              <p style={{ margin: \"0.25rem 0\", color: \"var(--ds-muted)\" }}>Explanation: {detail.explanation}</p>\n            )}\n            {showPerQuestionTime && typeof detail.elapsedSeconds === \"number\" && (\n              <p style={{ margin: \"0.25rem 0\", color: \"var(--ds-muted)\" }} title=\"Time spent on this question, measured from the previous answer\">\n                \u23f1 Time taken: {formatElapsed(detail.elapsedSeconds)}\n              </p>\n            )}\n  \n<<truncated 26 of 526 chars, sha256 97416fb570c2>>",
-        "old_text": "            {detail.explanation && (\n              <p style={{ margin: \"0.25rem 0\", color: \"var(--ds-muted)\" }}>Explanation: {detail.explanation}</p>\n            )}\n          </div>\n        ))}",
-        "path": "web_app/frontend/src/pages/Results.tsx"
+        "old_text": "  const { state, recordAnswer, nextQuestion, markCompleted } = useQuizState();",
+        "path": "web_app/frontend/src/pages/Quizsession.tsx"
       },
-      "success": true,
-      "status": "ok"
+      "success": false,
+      "status": "error"
     },
     {
       "turn": 21,
-      "tool": "modify_file",
+      "tool": "read_file",
       "input": {
-        "new_text": "  const navigate = useNavigate();\n  const { state, recordAnswer, nextQuestion, markCompleted, selectDocument } = useQuizState();",
-        "old_text": "  const navigate = useNavigate();\n  const { state, recordAnswer, nextQuestion, selectDocument } = useQuizState();",
+        "limit": 15,
+        "offset": 16,
         "path": "web_app/frontend/src/pages/Quizsession.tsx"
       },
       "success": true,
@@ -1626,10 +3403,10 @@
     },
     {
       "turn": 22,
-      "tool": "modify_file",
+      "tool": "read_file",
       "input": {
-        "new_text": "  const handleNext = useCallback(() => {\n    if (!alreadyAnswered) return;\n    nextQuestion(); // the context sets completed=true after the last question\n    if (currentIndex + 1 >= state.totalQuestions) {\n      markCompleted();\n      navigate(\"/results\");\n    }\n  }, [alreadyAnswered, currentIndex, markCompleted, navigate, nextQuestion, state.totalQuestions]);\n\n  // Timer expiry (request #3): when the countdown reaches 00:00, go directly\n  // to the Results screen instead of leaving the user str\n<<truncated 2045 of 2545 chars, sha256 8a815a408f33>>",
-        "old_text": "  const handleNext = useCallback(() => {\n    if (!alreadyAnswered) return;\n    nextQuestion(); // the context sets completed=true after the last question\n    if (currentIndex + 1 >= state.totalQuestions) {\n      navigate(\"/results\");\n    }\n  }, [alreadyAnswered, currentIndex, navigate, nextQuestion, state.totalQuestions]);",
+        "limit": 30,
+        "offset": 258,
         "path": "web_app/frontend/src/pages/Quizsession.tsx"
       },
       "success": true,
@@ -1637,10 +3414,8 @@
     },
     {
       "turn": 23,
-      "tool": "read_file",
+      "tool": "modify_file",
       "input": {
-        "limit": 75,
-        "offset": 259,
         "path": "web_app/frontend/src/pages/Quizsession.tsx"
       },
       "success": true,
@@ -1648,10 +3423,9 @@
     },
     {
       "turn": 24,
-      "tool": "search_in_files",
+      "tool": "modify_file",
       "input": {
-        "file_glob": "*",
-        "pattern": "completed"
+        "path": "web_app/frontend/src/pages/Quizsession.tsx"
       },
       "success": true,
       "status": "ok"
@@ -1660,20 +3434,16 @@
       "turn": 25,
       "tool": "modify_file",
       "input": {
-        "new_text": "  // Timer expiry (request #3): when the countdown reaches 00:00, go directly\n  // to the Results screen. This fires for either scope (per-question or\n  // per-session) as soon as the visible timer hits 00:00.\n  useEffect(() => {\n    if (!timeUp || !attemptId) return;\n    markCompleted();\n    navigate(\"/results\");\n  }, [timeUp, attemptId, markCompleted, navigate]);",
-        "old_text": "  // Timer expiry (request #3): when the countdown reaches 00:00, go directly\n  // to the Results screen instead of leaving the user stranded on a locked\n  // question. The timeout auto-answer only records what the user already\n  // selected so single-answer/no-skip behaviour is preserved; per-question\n  // expiry moves on, per-session expiry finishes the quiz.\n  useEffect(() => {\n    if (!timeUp || !attemptId) return;\n    if (alreadyAnswered) {\n      nextQuestion();\n      if (currentIndex + 1 >\n<<truncated 1681 of 2181 chars, sha256 095b6bcfb389>>",
-        "path": "web_app/frontend/src/pages/Quizsession.tsx"
+        "path": "web_app/frontend/src/pages/Results.tsx"
       },
       "success": true,
       "status": "ok"
     },
     {
       "turn": 26,
-      "tool": "read_file",
+      "tool": "modify_file",
       "input": {
-        "limit": 40,
-        "offset": 0,
-        "path": "web_app/frontend/src/design-overrides.css"
+        "path": "web_app/frontend/src/pages/Results.tsx"
       },
       "success": true,
       "status": "ok"
@@ -1682,30 +3452,24 @@
       "turn": 27,
       "tool": "modify_file",
       "input": {
-        "new_text": ".jerry-avatar--cheer {\n  border-color: var(--ds-accent);\n  animation: jerry-clap 0.5s ease-in-out infinite alternate;\n}\n\n.jerry-avatar svg {\n  overflow: visible;\n}\n\n.jerry-avatar--cheer svg {\n  animation: jerry-bounce 0.5s ease-in-out infinite alternate;\n  transform-origin: 50% 85%;\n}\n\n.jerry-hand {\n  transform-box: fill-box;\n  transform-origin: center;\n}\n\n.jerry-avatar--cheer .jerry-hand--left {\n  animation: jerry-clap-left 0.35s ease-in-out infinite alternate;\n}\n\n.jerry-avatar--cheer .jerry-ha\n<<truncated 593 of 1093 chars, sha256 31ada94a0824>>",
-        "old_text": ".jerry-avatar--cheer {\n  border-color: var(--ds-accent);\n  animation: jerry-clap 0.5s ease-in-out infinite alternate;\n}\n\n@keyframes jerry-clap {\n  from {\n    transform: rotate(-6deg) scale(1);\n  }\n  to {\n    transform: rotate(6deg) scale(1.12);\n  }\n}",
-        "path": "web_app/frontend/src/design-overrides.css"
+        "path": "web_app/frontend/src/pages/Results.tsx"
       },
       "success": true,
       "status": "ok"
     },
     {
       "turn": 28,
-      "tool": "run_command",
+      "tool": "modify_file",
       "input": {
-        "command": "python .besser_probe.py up",
-        "working_dir": "."
+        "path": "web_app/frontend/src/pages/Results.tsx"
       },
       "success": true,
       "status": "ok"
     },
     {
       "turn": 29,
-      "tool": "run_command",
-      "input": {
-        "command": "python .besser_probe.py routes 2>&1 | head -80; echo ---; python .besser_probe.py req GET /health 2>&1 | head -20",
-        "working_dir": "."
-      },
+      "tool": "validate_app",
+      "input": {},
       "success": true,
       "status": "ok"
     },
@@ -1713,8 +3477,8 @@
       "turn": 30,
       "tool": "run_command",
       "input": {
-        "command": "ls web_app/backend/data/uploads/ 2>/dev/null | head; echo ---; python - <<'EOF'\nimport json\nd=json.load(open('web_app/backend/data/uploads/26625604e32647c0837ab2861e0c1aa3_quiz_doc.json'))\nprint(json.dumps(d, indent=1)[:2500])\nEOF",
-        "working_dir": "."
+        "command": "python .besser_probe.py up",
+        "timeout": 120
       },
       "success": true,
       "status": "ok"
@@ -1723,269 +3487,171 @@
       "turn": 31,
       "tool": "run_command",
       "input": {
-        "command": "python .besser_probe.py req GET /pdfdocument/ 2>&1 | head -30",
-        "working_dir": "."
+        "command": "python .besser_probe.py routes; python .besser_probe.py req GET /health",
+        "timeout": 120
       },
       "success": true,
       "status": "ok"
     },
     {
       "turn": 32,
-      "tool": "read_file",
+      "tool": "test_api",
       "input": {
-        "limit": 105,
-        "offset": 1,
-        "path": "web_app/backend/routers/pdfdocument.py"
+        "scenario_id": "timer-expiry-results"
       },
-      "success": true,
-      "status": "ok"
+      "success": false,
+      "status": "error"
     },
     {
       "turn": 33,
       "tool": "test_api",
       "input": {
-        "action": "run",
-        "requests": [
-          {
-            "method": "GET",
-            "path": "/health"
-          },
-          {
-            "method": "GET",
-            "path": "/pdfdocument/"
-          },
-          {
-            "method": "GET",
-            "path": "/attempt/count/"
-          }
-        ],
-        "scenario_id": "health-check"
+        "action": "list"
+      },
+      "success": true,
+      "status": "ok"
+    },
+    {
+      "turn": 34,
+      "tool": "run_command",
+      "input": {
+        "timeout": 60
       },
       "success": true,
       "status": "ok"
     },
     {
       "turn": 35,
-      "tool": "read_file",
+      "tool": "search_in_files",
       "input": {
-        "path": "web_app/frontend/src/components/JerryAvatar.tsx"
-      },
-      "success": true,
-      "status": "ok"
-    },
-    {
-      "turn": 35,
-      "tool": "read_file",
-      "input": {
-        "path": "web_app/frontend/src/pages/Quizsession.tsx"
+        "file_glob": "*.py",
+        "pattern": "def select_questions|def load_question_ids|def get_or_create_quiz_user"
       },
       "success": true,
       "status": "ok"
     },
     {
       "turn": 36,
-      "tool": "modify_file",
-      "input": {
-        "new_text": "      {/* feet */}\n      <ellipse cx=\"49\" cy=\"110\" rx=\"9\" ry=\"5\" fill=\"#f9d8ae\" stroke=\"#8a4f1c\" strokeWidth=\"1.4\" />\n      <ellipse cx=\"71\" cy=\"110\" rx=\"9\" ry=\"5\" fill=\"#f9d8ae\" stroke=\"#8a4f1c\" strokeWidth=\"1.4\" />\n    </svg>\n  </div>\n);\n\nexport default JerryAvatar;",
-        "old_text": "      {/* feet */}\n      <ellipse cx=\"49\" cy=\"110\" rx=\"9\" ry=\"5\" fill=\"#f9d8ae\" stroke=\"#8a4f1c\" strokeWidth=\"1.4\" />\n      <ellipse cx=\"71\" cy=\"110\" rx=\"9\" ry=\"5\" fill=\"#f9d8ae\" stroke=\"#8a4f1c\" strokeWidth=\"1.4\" />\n    </svg>\n  </div>\n);",
-        "path": "web_app/frontend/src/components/JerryAvatar.tsx"
-      },
-      "success": true,
-      "status": "ok"
-    },
-    {
-      "turn": 37,
-      "tool": "install_dependencies",
-      "input": {
-        "working_dir": "web_app/frontend"
-      },
-      "success": true,
-      "status": "ok"
-    },
-    {
-      "turn": 38,
-      "tool": "run_command",
-      "input": {
-        "command": "npx tsc --noEmit",
-        "working_dir": "web_app/frontend"
-      },
-      "success": true,
-      "status": "ok"
-    },
-    {
-      "turn": 39,
       "tool": "read_file",
       "input": {
-        "path": "web_app/frontend/src/pages/Results.tsx"
-      },
-      "success": true,
-      "status": "ok"
-    },
-    {
-      "turn": 40,
-      "tool": "read_file",
-      "input": {
-        "path": "web_app/frontend/src/pages/Quizconfig.tsx"
-      },
-      "success": true,
-      "status": "ok"
-    },
-    {
-      "turn": 40,
-      "tool": "search_in_files",
-      "input": {
-        "file_glob": "*.py",
-        "pattern": "totalElapsedSeconds|elapsedSeconds|total_elapsed"
-      },
-      "success": true,
-      "status": "ok"
-    },
-    {
-      "turn": 41,
-      "tool": "read_file",
-      "input": {
-        "limit": 120,
-        "offset": 700,
-        "path": "web_app/backend/routers/attempt.py"
-      },
-      "success": true,
-      "status": "ok"
-    },
-    {
-      "turn": 42,
-      "tool": "validate_app",
-      "input": {},
-      "success": true,
-      "status": "ok"
-    },
-    {
-      "turn": 43,
-      "tool": "task_list",
-      "input": {
-        "action": "list"
-      },
-      "success": true,
-      "status": "ok"
-    },
-    {
-      "turn": 44,
-      "tool": "search_in_files",
-      "input": {
-        "file_glob": "*.tsx",
-        "pattern": "StepProgress|ProgressBar|progress-steps|Document upload.*Quiz configuration|Exit"
-      },
-      "success": true,
-      "status": "ok"
-    },
-    {
-      "turn": 45,
-      "tool": "list_files",
-      "input": {},
-      "success": true,
-      "status": "ok"
-    },
-    {
-      "turn": 46,
-      "tool": "read_file",
-      "input": {
-        "path": "web_app/frontend/src/components/JerryAvatar.tsx"
-      },
-      "success": true,
-      "status": "ok"
-    },
-    {
-      "turn": 46,
-      "tool": "read_file",
-      "input": {
-        "path": "web_app/frontend/src/pages/Results.tsx"
-      },
-      "success": true,
-      "status": "ok"
-    },
-    {
-      "turn": 46,
-      "tool": "read_file",
-      "input": {
-        "path": "web_app/frontend/src/pages/Quizsession.tsx"
-      },
-      "success": true,
-      "status": "ok"
-    },
-    {
-      "turn": 46,
-      "tool": "read_file",
-      "input": {
-        "path": "web_app/frontend/src/pages/Quizconfig.tsx"
-      },
-      "success": true,
-      "status": "ok"
-    },
-    {
-      "turn": 46,
-      "tool": "read_file",
-      "input": {
-        "path": "web_app/frontend/src/api/quizApi.ts"
-      },
-      "success": true,
-      "status": "ok"
-    },
-    {
-      "turn": 47,
-      "tool": "read_file",
-      "input": {
-        "path": "web_app/frontend/src/components/QuizNav.tsx"
-      },
-      "success": true,
-      "status": "ok"
-    },
-    {
-      "turn": 47,
-      "tool": "read_file",
-      "input": {
-        "path": "web_app/frontend/src/App.tsx"
-      },
-      "success": true,
-      "status": "ok"
-    },
-    {
-      "turn": 47,
-      "tool": "read_file",
-      "input": {
-        "path": "web_app/frontend/src/context/QuizStateContext.tsx"
-      },
-      "success": true,
-      "status": "ok"
-    },
-    {
-      "turn": 47,
-      "tool": "read_file",
-      "input": {
-        "path": "web_app/backend/routers/attempt.py"
-      },
-      "success": true,
-      "status": "ok"
-    },
-    {
-      "turn": 48,
-      "tool": "validate_app",
-      "input": {},
-      "success": true,
-      "status": "ok"
-    },
-    {
-      "turn": 49,
-      "tool": "read_file",
-      "input": {
+        "limit": 80,
+        "offset": 655,
         "path": "web_app/backend/quiz_workflow.py"
       },
       "success": true,
       "status": "ok"
     },
     {
-      "turn": 49,
+      "turn": 37,
+      "tool": "test_api",
+      "input": {
+        "scenario_id": "timer-expiry-setup"
+      },
+      "success": true,
+      "status": "ok"
+    },
+    {
+      "turn": 38,
+      "tool": "test_api",
+      "input": {
+        "scenario_id": "timer-expiry-unanswered"
+      },
+      "success": true,
+      "status": "ok"
+    },
+    {
+      "turn": 39,
+      "tool": "run_command",
+      "input": {
+        "timeout": 60
+      },
+      "success": true,
+      "status": "ok"
+    },
+    {
+      "turn": 40,
+      "tool": "test_api",
+      "input": {
+        "scenario_id": "timer-expiry-unanswered"
+      },
+      "success": false,
+      "status": "error"
+    },
+    {
+      "turn": 41,
+      "tool": "test_api",
+      "input": {
+        "scenario_id": "timer-expiry-unanswered-v2"
+      },
+      "success": true,
+      "status": "ok"
+    },
+    {
+      "turn": 42,
+      "tool": "test_api",
+      "input": {
+        "scenario_id": "timer-expiry-unanswered-v3"
+      },
+      "success": true,
+      "status": "ok"
+    },
+    {
+      "turn": 43,
+      "tool": "run_command",
+      "input": {
+        "command": "npx tsc --noEmit 2>&1 | head -n 40; echo EXIT:$?",
+        "timeout": 120,
+        "working_dir": "web_app/frontend"
+      },
+      "success": true,
+      "status": "ok"
+    },
+    {
+      "turn": 44,
       "tool": "read_file",
       "input": {
-        "path": "web_app/frontend/src/design-overrides.css"
+        "limit": 50,
+        "offset": 110,
+        "path": "web_app/frontend/src/pages/Results.tsx"
+      },
+      "success": true,
+      "status": "ok"
+    },
+    {
+      "turn": 44,
+      "tool": "run_command",
+      "input": {
+        "command": "python .besser_probe.py down 2>&1 | tail -2",
+        "timeout": 60
+      },
+      "success": true,
+      "status": "ok"
+    },
+    {
+      "turn": 45,
+      "tool": "task_list",
+      "input": {
+        "action": "add"
+      },
+      "success": true,
+      "status": "ok"
+    },
+    {
+      "turn": 46,
+      "tool": "task_list",
+      "input": {
+        "action": "done"
+      },
+      "success": true,
+      "status": "ok"
+    },
+    {
+      "turn": 48,
+      "tool": "read_file",
+      "input": {
+        "limit": 100,
+        "offset": 0,
+        "path": "web_app/frontend/src/pages/Results.tsx"
       },
       "success": true,
       "status": "ok"
@@ -1994,43 +3660,41 @@
       "turn": 49,
       "tool": "read_file",
       "input": {
-        "path": "web_app/frontend/src/design.css"
+        "limit": 120,
+        "offset": 100,
+        "path": "web_app/frontend/src/pages/Results.tsx"
       },
       "success": true,
       "status": "ok"
     },
     {
       "turn": 50,
-      "tool": "read_file",
+      "tool": "search_in_files",
       "input": {
-        "path": "web_app/backend/routers/pdfdocument.py"
-      },
-      "success": true,
-      "status": "ok"
-    },
-    {
-      "turn": 50,
-      "tool": "read_file",
-      "input": {
-        "path": "web_app/backend/pydantic_classes.py"
-      },
-      "success": true,
-      "status": "ok"
-    },
-    {
-      "turn": 50,
-      "tool": "read_file",
-      "input": {
-        "path": "web_app/backend/sql_alchemy.py"
+        "file_glob": "*.py",
+        "pattern": "unanswered|timerExpired|timer_expired|results|finish|locked"
       },
       "success": true,
       "status": "ok"
     },
     {
       "turn": 51,
-      "tool": "test_api",
+      "tool": "read_file",
       "input": {
-        "action": "list"
+        "limit": 60,
+        "offset": 1,
+        "path": "web_app/frontend/src/api/quizApi.ts"
+      },
+      "success": true,
+      "status": "ok"
+    },
+    {
+      "turn": 51,
+      "tool": "read_file",
+      "input": {
+        "limit": 220,
+        "offset": 640,
+        "path": "web_app/backend/routers/attempt.py"
       },
       "success": true,
       "status": "ok"
@@ -2048,7 +3712,9 @@
       "turn": 53,
       "tool": "read_file",
       "input": {
-        "path": "web_app/backend/routers/quiz.py"
+        "limit": 120,
+        "offset": 1,
+        "path": "web_app/frontend/src/pages/Quizsession.tsx"
       },
       "success": true,
       "status": "ok"
@@ -2057,7 +3723,9 @@
       "turn": 53,
       "tool": "read_file",
       "input": {
-        "path": "web_app/backend/routers/question.py"
+        "limit": 100,
+        "offset": 1,
+        "path": "web_app/frontend/src/context/QuizStateContext.tsx"
       },
       "success": true,
       "status": "ok"
@@ -2066,15 +3734,50 @@
       "turn": 53,
       "tool": "read_file",
       "input": {
-        "path": "web_app/backend/routers/option.py"
+        "limit": 60,
+        "offset": 61,
+        "path": "web_app/frontend/src/api/quizApi.ts"
       },
       "success": true,
       "status": "ok"
     },
     {
       "turn": 54,
-      "tool": "list_files",
-      "input": {},
+      "tool": "read_file",
+      "input": {
+        "limit": 200,
+        "offset": 120,
+        "path": "web_app/frontend/src/pages/Quizsession.tsx"
+      },
+      "success": true,
+      "status": "ok"
+    },
+    {
+      "turn": 55,
+      "tool": "test_api",
+      "input": {
+        "action": "list"
+      },
+      "success": true,
+      "status": "ok"
+    },
+    {
+      "turn": 56,
+      "tool": "test_api",
+      "input": {
+        "action": "get",
+        "scenario_id": "timer-expiry-unanswered"
+      },
+      "success": true,
+      "status": "ok"
+    },
+    {
+      "turn": 57,
+      "tool": "test_api",
+      "input": {
+        "action": "get",
+        "scenario_id": "timer-expiry-unanswered-v3"
+      },
       "success": true,
       "status": "ok"
     }
@@ -2090,11 +3793,19 @@
     "renamed": [],
     "changes": []
   },
+  "recipe_shortened": {
+    "bytes_before": 163793,
+    "budget_bytes": 131072,
+    "tool_call_inputs_cut": 26,
+    "api_bodies_cut": 0,
+    "tool_calls_dropped": 0,
+    "api_workflows_cut": 0
+  },
   "secret_findings": 0,
   "run": {
     "mode": "modify",
     "mode_reason": "edit of a previous result",
-    "base_run_id": "2b3f72a94aec45cab2f1ab1acb7e1798",
+    "base_run_id": "0494db4301004a2589f356064b307875",
     "target": "web_app",
     "target_decided_by": "not decided",
     "frontend_requested": true,
@@ -2108,59 +3819,73 @@
       "cost_usd": 5.0,
       "turns": 120
     },
-    "stopped_by": "finished",
-    "stop_message": null,
+    "stopped_by": "handed off to validation",
+    "stop_message": "The customization loop handed off to validation before finishing every requested change.",
     "outcome": "completed_with_blockers",
     "warnings": [],
-    "duration_seconds": 867.5,
+    "duration_seconds": 475.1,
     "phase_seconds": {
-      "select": 6.9,
-      "plan": 5.2,
-      "customise": 671.6,
-      "validate": 183.6
+      "select": 5.7,
+      "plan": 3.6,
+      "customise": 412.0,
+      "validate": 53.7
     },
-    "estimated_cost_usd": 1.1848,
+    "estimated_cost_usd": 0.9157,
     "counts": {
-      "turns": 54,
-      "tool_calls": 80,
+      "turns": 57,
+      "tool_calls": 67,
       "files_written": 0,
       "files_edited": 5,
-      "blockers": 1
+      "blockers": 4
     },
     "besser_version": "8.10.1",
     "besser_build": "9deaedacf",
-    "request_chars": 11518
+    "request_chars": 11916
   },
   "verification": {
     "verified": [
       {
         "kind": "api_workflow",
-        "id": "health-check",
-        "what": "Test workflow 'health-check'",
-        "how": "3 request(s) run against the app: GET /health, GET /pdfdocument/, GET /attempt/count/",
+        "id": "timer-expiry-setup",
+        "what": "Test workflow 'timer-expiry-setup'",
+        "how": "12 request(s) run against the app: POST /user/, POST /quiz/, POST /question/, POST /question/, POST /question/, POST /option/, POST /option/, POST /option/, POST /option/, POST /option/, POST /option/, POST /pdfdocument/",
+        "why": null
+      },
+      {
+        "kind": "api_workflow",
+        "id": "timer-expiry-unanswered-v3",
+        "what": "Test workflow 'timer-expiry-unanswered-v3'",
+        "how": "17 request(s) run against the app: POST /user/, POST /quiz/, POST /question/, POST /question/, POST /question/, POST /option/, POST /option/, POST /option/, POST /option/, POST /option/, POST /option/, POST /pdfdocument/, POST /attempt/start/, POST /attempt/{{12.attempt.id}}/answer/, GET \u2026[truncated]",
         "why": null
       }
     ],
     "notVerified": [
       {
-        "kind": "check",
-        "id": "",
-        "what": "the requirements ledger",
+        "kind": "api_workflow",
+        "id": "timer-expiry-unanswered",
+        "what": "Test workflow 'timer-expiry-unanswered'",
         "how": null,
-        "why": "the check did not run (2 extraction attempt(s), so this result does not cover it"
+        "why": "a test the agent wrote ran against the app and failed; it is not a rule from your request, and the test or the app may be wrong"
+      },
+      {
+        "kind": "api_workflow",
+        "id": "timer-expiry-unanswered-v2",
+        "what": "Test workflow 'timer-expiry-unanswered-v2'",
+        "how": null,
+        "why": "a test the agent wrote ran against the app and failed; it is not a rule from your request, and the test or the app may be wrong"
       },
       {
         "kind": "check",
         "id": "",
-        "what": "original-specification coverage",
+        "what": "the requirements ledger",
         "how": null,
-        "why": "Your request could not be turned into checkable requirements, so the result was not checked against it."
+        "why": "the check did not run (1 extraction attempt(s), so this result does not cover it"
       }
     ],
     "shippedUnenforced": [],
     "counts": {
-      "verified": 1,
-      "notVerified": 2,
+      "verified": 2,
+      "notVerified": 3,
       "shippedUnenforced": 0
     }
   },

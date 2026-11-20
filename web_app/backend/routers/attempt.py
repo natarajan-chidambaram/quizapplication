@@ -726,10 +726,17 @@ def _finish_attempt(db_attempt: Attempt, database: Session) -> float:
 
 
 @router.get("/attempt/{attempt_id}/results/", response_model=None, tags=["Attempt"])
-async def get_results(attempt_id: str, database: Session = Depends(get_db)):
+async def get_results(
+    attempt_id: str,
+    allowIncomplete: bool = False,
+    timerExpired: bool = False,
+    database: Session = Depends(get_db),
+):
     """The Results screen data (R21-R24).
 
-    Locked with 403 until every question of the session has an answer.
+    Locked with 403 until every question of the session has an answer,
+    unless the countdown timer expired (allowIncomplete/timerExpired=true),
+    in which case unanswered questions are reported via unansweredCount.
     The score is computed from the recorded Responses (R23), never typed in.
     In Testing Mode the correct answers are revealed here only (R24).
     """
@@ -737,7 +744,8 @@ async def get_results(attempt_id: str, database: Session = Depends(get_db)):
     question_ids = load_question_ids(db_attempt)
     responses = database.query(Response).filter(Response.attempts_id == attempt_id).all()
     answered_count = len(responses)
-    if answered_count < len(question_ids):
+    timer_finished = bool(allowIncomplete or timerExpired)
+    if answered_count < len(question_ids) and not timer_finished:
         raise HTTPException(
             status_code=403,
             detail=f"Results are locked: {answered_count} of {len(question_ids)} questions answered",
@@ -795,6 +803,7 @@ async def get_results(attempt_id: str, database: Session = Depends(get_db)):
                 "correctOptionId": correct_option.id if correct_option else None,
                 "correctOptionText": correct_option.optionText if correct_option else None,
                 "isCorrect": was_correct,
+                "answered": response is not None,
                 "elapsedSeconds": _elapsed_by_qid.get(qid, 0),
             }
         )
@@ -804,7 +813,10 @@ async def get_results(attempt_id: str, database: Session = Depends(get_db)):
         "mode": db_attempt.mode,
         "totalQuestions": len(question_ids),
         "correctCount": correct,
-        "incorrectCount": len(question_ids) - correct,
+        "incorrectCount": answered_count - correct,
+        "unansweredCount": len(question_ids) - answered_count,
+        "answeredCount": answered_count,
+        "timerExpired": timer_finished and answered_count < len(question_ids),
         "percentageScore": score,
         "details": details,
         "timer": {

@@ -27,6 +27,7 @@ export interface QuizState {
   currentIndex: number;
   answers: Record<string, QuizAnswer>;
   completed: boolean;
+  timerExpired: boolean;
 }
 
 const STORAGE_KEY = "quizAppState";
@@ -44,6 +45,7 @@ const EMPTY_STATE: QuizState = {
   currentIndex: 0,
   answers: {},
   completed: false,
+  timerExpired: false,
 };
 
 function loadState(): QuizState {
@@ -76,6 +78,7 @@ interface QuizStateContextValue {
   recordAnswer: (answer: QuizAnswer) => void;
   nextQuestion: () => void;
   markCompleted: () => void;
+  markTimerExpired: () => void;
   resetSession: () => void;
 }
 
@@ -125,6 +128,7 @@ export const QuizStateProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         currentIndex: 0,
         answers: {},
         completed: false,
+        timerExpired: false,
       }));
     },
     []
@@ -150,6 +154,12 @@ export const QuizStateProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     setState((previous) => ({ ...previous, completed: true }));
   }, []);
 
+  // Timer expiry: the countdown hit 00:00, so Results must open even with
+  // unanswered questions (they are reported in the UNANSWERED tile).
+  const markTimerExpired = useCallback(() => {
+    setState((previous) => ({ ...previous, completed: true, timerExpired: true }));
+  }, []);
+
   const resetSession = useCallback(() => {
     // Restart (R25): keep only the chosen document, go back to configuration.
     setState((previous) => ({
@@ -165,12 +175,13 @@ export const QuizStateProvider: React.FC<{ children: React.ReactNode }> = ({ chi
       currentIndex: 0,
       answers: {},
       completed: false,
+      timerExpired: false,
     }));
   }, []);
 
   const value = useMemo(
-    () => ({ state, selectDocument, configure, startAttempt, recordAnswer, nextQuestion, markCompleted, resetSession }),
-    [state, selectDocument, configure, startAttempt, recordAnswer, nextQuestion, markCompleted, resetSession]
+    () => ({ state, selectDocument, configure, startAttempt, recordAnswer, nextQuestion, markCompleted, markTimerExpired, resetSession }),
+    [state, selectDocument, configure, startAttempt, recordAnswer, nextQuestion, markCompleted, markTimerExpired, resetSession]
   );
 
   return <QuizStateContext.Provider value={value}>{children}</QuizStateContext.Provider>;

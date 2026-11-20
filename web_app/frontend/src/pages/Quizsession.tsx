@@ -15,7 +15,7 @@ import { useQuizState, QuizAnswer } from "../context/QuizStateContext";
  */
 const Quizsession: React.FC = () => {
   const navigate = useNavigate();
-  const { state, recordAnswer, nextQuestion, markCompleted, selectDocument } = useQuizState();
+  const { state, recordAnswer, nextQuestion, markCompleted, markTimerExpired, selectDocument } = useQuizState();
   const attemptId = state.attemptId;
   const currentIndex = state.currentIndex;
   const mode = state.mode;
@@ -267,12 +267,13 @@ const Quizsession: React.FC = () => {
 
   // Timer expiry (request #3): when the countdown reaches 00:00, go directly
   // to the Results screen. This fires for either scope (per-question or
-  // per-session) as soon as the visible timer hits 00:00.
+  // per-session) as soon as the visible timer hits 00:00. The expired flag
+  // lets Results open with unanswered questions shown in the UNANSWERED tile.
   useEffect(() => {
     if (!timeUp || !attemptId) return;
-    markCompleted();
+    markTimerExpired();
     navigate("/results");
-  }, [timeUp, attemptId, markCompleted, navigate]);
+  }, [timeUp, attemptId, markTimerExpired, navigate]);
 
   if (!attemptId) {
     return (

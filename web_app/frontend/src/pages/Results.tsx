@@ -15,6 +15,9 @@ const Results: React.FC = () => {
   const navigate = useNavigate();
   const { state, resetSession } = useQuizState();
   const attemptId = state.attemptId;
+  // Set when the countdown hit 00:00 on the Quiz Session screen: Results must
+  // open even though some questions were never answered.
+  const timerExpiredFlag = state.timerExpired;
 
   const [results, setResults] = useState<any>(null);
   const [loading, setLoading] = useState(true);
@@ -30,7 +33,7 @@ const Results: React.FC = () => {
     let cancelled = false;
     setLoading(true);
     quizApi
-      .getResults(attemptId)
+      .getResults(attemptId, timerExpiredFlag)
       .then((data) => {
         if (!cancelled) {
           setResults(data);
@@ -53,7 +56,7 @@ const Results: React.FC = () => {
     return () => {
       cancelled = true;
     };
-  }, [attemptId]);
+  }, [attemptId, timerExpiredFlag]);
 
   const handleRestart = useCallback(() => {
     resetSession(); // clears attempt, answers and progress (R25)
@@ -136,7 +139,18 @@ const Results: React.FC = () => {
           <span className="ds-kpi-value">{results.incorrectCount}</span>
           <span className="ds-kpi-label">Incorrect answers</span>
         </div>
+        <div className="ds-kpi">
+          <span className="ds-kpi-value">{results.unansweredCount ?? 0}</span>
+          <span className="ds-kpi-label">Unanswered</span>
+        </div>
       </div>
+
+      {(results.timerExpired || (results.unansweredCount ?? 0) > 0) && (
+        <div className="ds-notice" role="status" style={{ maxWidth: "720px", marginTop: "1rem" }}>
+          ⏱ The timer expired before every question was answered — unanswered
+          questions are counted above and left blank below.
+        </div>
+      )}
 
       <section style={{ marginTop: "1.5rem", maxWidth: "720px" }}>
         <h2 className="ds-heading" style={{ fontSize: "1.2rem" }}>
@@ -146,12 +160,12 @@ const Results: React.FC = () => {
           <div key={detail.questionId} className="ds-card" style={{ padding: "1rem", marginBottom: "0.75rem" }}>
             <p style={{ fontWeight: 700, marginTop: 0 }}>
               {index + 1}. {detail.questionText}{" "}
-              <span className="ds-badge" style={{ background: detail.isCorrect ? "rgba(16,185,129,0.15)" : "rgba(244,63,94,0.15)" }}>
-                {detail.isCorrect ? "Correct" : "Incorrect"}
+              <span className="ds-badge" style={{ background: detail.answered === false ? "rgba(100,116,139,0.18)" : detail.isCorrect ? "rgba(16,185,129,0.15)" : "rgba(244,63,94,0.15)" }}>
+                {detail.answered === false ? "Unanswered" : detail.isCorrect ? "Correct" : "Incorrect"}
               </span>
             </p>
             <p style={{ margin: "0.25rem 0" }}>
-              Your answer: {detail.selectedOptionText ?? "—"}
+              Your answer: {detail.answered === false ? "— (no answer given)" : (detail.selectedOptionText ?? "—")}
             </p>
             {(isTesting || !detail.isCorrect) && (
               <p style={{ margin: "0.25rem 0" }}>

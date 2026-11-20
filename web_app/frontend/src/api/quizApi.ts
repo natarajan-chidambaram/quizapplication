@@ -77,7 +77,8 @@ export const quizApi = {
     }),
 
   /** Results (R21-R24) */
-  getResults: (attemptId: string) => request(`/attempt/${attemptId}/results/`),
+  getResults: (attemptId: string, timerExpired = false) =>
+    request(`/attempt/${attemptId}/results/${timerExpired ? "?timerExpired=true" : ""}`),
 };
 
 export default quizApi;
