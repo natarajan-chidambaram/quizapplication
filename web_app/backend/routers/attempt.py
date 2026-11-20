@@ -486,13 +486,19 @@ async def start_quiz(config: QuizStartCreate, database: Session = Depends(get_db
     )
     if available == 0:
         raise HTTPException(status_code=422, detail="This document has no extracted questions")
-    if config.questionCount > available:
-        raise HTTPException(
-            status_code=422,
-            detail=f"This document has only {available} questions; you selected {config.questionCount}",
-        )
 
-    selected = select_questions(database, document.pDFDocumentQuiz_id, config.questionOrder, config.questionCount)
+    # R10: questionCount may be None (not provided) -- default it to all
+    # available questions instead of comparing None > int (TypeError).
+    requested = (
+        config.questionCount
+        if config.questionCount is not None and config.questionCount > 0
+        else available
+    )
+    # R11: requesting more than the document has must not crash -- clamp the
+    # selection to all available questions and proceed with the quiz.
+    selected_count = min(requested, available)
+
+    selected = select_questions(database, document.pDFDocumentQuiz_id, config.questionOrder, selected_count)
     user = get_or_create_quiz_user(database)
 
     db_attempt = Attempt(
@@ -502,8 +508,7 @@ async def start_quiz(config: QuizStartCreate, database: Session = Depends(get_db
         status="in_progress",
         mode=config.mode,
         questionOrder=config.questionOrder,
-        requestedQuestionCount=config.questionCount,
-        timerEnabled=True,
+        requestedQuestionCount=selected_count,
         timerScope=config.timerScope,
         timerDurationSeconds=config.timerDurationSeconds,
         selectedQuestionIds=_json.dumps([question.id for question in selected]),
@@ -653,15 +658,16 @@ async def submit_answer(attempt_id: str, answer: AnswerSubmitCreate, database: S
     database.refresh(db_response)
 
     answered_count = database.query(Response).filter(Response.attempts_id == attempt_id).count()
-    correct = bool(selected_option.isCorrect)
     result = {
         "response": db_response,
-        "isMarkedCorrect": correct,
         "answeredCount": answered_count,
         "totalQuestions": len(question_ids),
         "quizCompleted": answered_count >= len(question_ids),
     }
     if db_attempt.mode == "learning":
+        # R21: correctness is only revealed in Learning Mode; Testing Mode
+        # answers are withheld until the quiz is completed (Results screen).
+        result["isMarkedCorrect"] = bool(selected_option.isCorrect)
         # Learning Mode feedback (R17-R18): correct answer + explanation immediately
         correct_option = (
             database.query(Option)

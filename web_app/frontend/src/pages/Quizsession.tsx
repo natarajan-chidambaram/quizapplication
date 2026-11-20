@@ -14,7 +14,7 @@ import { useQuizState, QuizAnswer } from "../context/QuizStateContext";
  */
 const Quizsession: React.FC = () => {
   const navigate = useNavigate();
-  const { state, recordAnswer, nextQuestion } = useQuizState();
+  const { state, recordAnswer, nextQuestion, selectDocument } = useQuizState();
   const attemptId = state.attemptId;
   const currentIndex = state.currentIndex;
   const mode = state.mode;
@@ -25,6 +25,11 @@ const Quizsession: React.FC = () => {
   const [selectedOptionId, setSelectedOptionId] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [answerResult, setAnswerResult] = useState<any>(null);
+  // Document picker (R34): the user clicks which uploaded document the quiz
+  // is based on, directly on the Quiz Session screen, then proceeds.
+  const [documents, setDocuments] = useState<any[]>([]);
+  const [selectedDocId, setSelectedDocId] = useState<string | null>(state.documentId);
+  const [docsLoading, setDocsLoading] = useState(false);
 
   // Timer (R29-R33): driven by the TimerSetting chosen on the configuration
   // screen and persisted with the attempt. "per_question" restarts for every
@@ -138,6 +143,34 @@ const Quizsession: React.FC = () => {
     loadSession(currentIndex, attemptId);
   }, [attemptId, currentIndex, loadSession]);
 
+  // Document picker (R34): load the uploaded documents when no quiz is running.
+  useEffect(() => {
+    if (attemptId) return;
+    let cancelled = false;
+    setDocsLoading(true);
+    quizApi
+      .listDocuments()
+      .then((data: any) => {
+        if (!cancelled) setDocuments(Array.isArray(data) ? data : data?.data ?? []);
+      })
+      .catch(() => undefined)
+      .finally(() => {
+        if (!cancelled) setDocsLoading(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [attemptId]);
+
+  // Document picker (R34): click a document to base the quiz on and proceed
+  // to Quiz Configuration, which starts the session for that document.
+  const proceedToConfiguration = useCallback(() => {
+    if (!selectedDocId) return;
+    const doc = documents.find((item) => item.id === selectedDocId);
+    selectDocument(selectedDocId, doc?.fileName ?? "document");
+    navigate("/configure");
+  }, [documents, navigate, selectDocument, selectedDocId]);
+
   const alreadyAnswered = Boolean(session?.answered);
 
   const handleSelect = (optionId: string) => {
@@ -189,11 +222,50 @@ const Quizsession: React.FC = () => {
       <div className="ds-section">
         <h1 className="ds-heading">Quiz Session</h1>
         <div className="ds-notice" role="alert">
-          No quiz in progress. Configure and start a quiz first.
+          No quiz in progress. Pick an uploaded document to base the quiz on.
         </div>
-        <button type="button" className="ds-btn ds-btn-primary" style={{ marginTop: "1rem" }} onClick={() => navigate("/configure")}>
-          Go to Quiz Configuration
-        </button>
+
+        {/* Document picker (R34): click which document to base the quiz on. */}
+        <section className="ds-card" style={{ marginTop: "1rem", padding: "1.25rem", maxWidth: "720px" }}>
+          <h2 className="ds-heading" style={{ fontSize: "1.2rem" }}>
+            Choose the document for this quiz
+          </h2>
+          {docsLoading ? (
+            <p style={{ color: "var(--ds-muted)" }}>Loading documents…</p>
+          ) : documents.length === 0 ? (
+            <p style={{ color: "var(--ds-muted)" }}>
+              No documents uploaded yet — upload one on the Document Upload screen first.
+            </p>
+          ) : (
+            <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+              {documents.map((doc) => (
+                <button
+                  key={doc.id}
+                  type="button"
+                  className={`quiz-option ${selectedDocId === doc.id ? "quiz-option--selected" : ""}`}
+                  onClick={() => setSelectedDocId(doc.id)}
+                  aria-pressed={selectedDocId === doc.id}
+                >
+                  <span>{selectedDocId === doc.id ? "🔘" : "⚪"}</span>
+                  <span>{doc.fileName}</span>
+                </button>
+              ))}
+            </div>
+          )}
+          <div style={{ display: "flex", gap: "0.75rem", marginTop: "1rem", flexWrap: "wrap" }}>
+            <button
+              type="button"
+              className="ds-btn ds-btn-primary"
+              onClick={proceedToConfiguration}
+              disabled={!selectedDocId}
+            >
+              Proceed to Quiz Configuration →
+            </button>
+            <button type="button" className="ds-btn" onClick={() => navigate("/")}>
+              Upload a document instead
+            </button>
+          </div>
+        </section>
       </div>
     );
   }

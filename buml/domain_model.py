@@ -140,7 +140,7 @@ attemptQuiz: BinaryAssociation = BinaryAssociation(
 option: BinaryAssociation = BinaryAssociation(
     name="option",
     ends={
-        Property(name="responses", type="Response", multiplicity=Multiplicity(0, 9999)),
+        Property(name="responses", type=Response, multiplicity=Multiplicity(0, 9999)),
         Property(name="option", type=Option, multiplicity=Multiplicity(0, 1))
     }
 )

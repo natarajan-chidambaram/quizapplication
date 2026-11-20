@@ -117,7 +117,7 @@ class QuizStartCreate(BaseModel):
     documentId: str
     mode: str  # 'learning' | 'testing'
     questionOrder: str  # 'sequential' | 'random'
-    questionCount: int
+    questionCount: Optional[int] = None
 
     @field_validator("mode")
     @classmethod
@@ -135,9 +135,17 @@ class QuizStartCreate(BaseModel):
 
     @field_validator("questionCount")
     @classmethod
-    def _count_valid(cls, v: int) -> int:
+    def _count_valid(cls, v: Optional[int]) -> Optional[int]:
+        # R10: a missing questionCount is allowed; the backend defaults it to
+        # the document's available question count. If a value IS given it must
+        # be a positive integer (R7), and the validator MUST return it --
+        # returning nothing made Pydantic turn even a valid count into None,
+        # which is what reached start_quiz as a NoneType.
+        if v is None:
+            return None
         if v < 1:
             raise ValueError("questionCount must be at least 1")
+        return v
 
     # Timer option (R13, R29-R33)
     timerScope: str = "per_question"  # 'per_question' | 'per_session'

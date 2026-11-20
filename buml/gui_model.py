@@ -140,7 +140,7 @@ attemptQuiz: BinaryAssociation = BinaryAssociation(
 option: BinaryAssociation = BinaryAssociation(
     name="option",
     ends={
-        Property(name="responses", type="Response", multiplicity=Multiplicity(0, 9999)),
+        Property(name="responses", type=Response, multiplicity=Multiplicity(0, 9999)),
         Property(name="option", type=Option, multiplicity=Multiplicity(0, 1))
     }
 )
@@ -198,7 +198,7 @@ from besser.BUML.metamodel.gui.dashboard import (
     Map, MapLayer, MapLayerType, WorldMap, LocationMap, MetricCard, Series
 )
 from besser.BUML.metamodel.gui.events_actions import (
-    Event, EventType, Transition, Create, Read, Update, Delete
+    Event, EventType, Transition, Create, Read, Update, Delete, Parameter
 )
 from besser.BUML.metamodel.gui.binding import DataBinding
 from besser.utilities.buml_code_builder.common import (
