@@ -3,26 +3,43 @@ import { Link, useLocation } from "react-router-dom";
 import { useQuizState } from "../context/QuizStateContext";
 
 /**
- * Nav bar on every screen (design-system classes). Results is visible but
- * guarded on the screen itself: it is only unlocked after all questions
- * are answered (R21).
+ * Non-clickable four-tab progress bar (R32-R34) shown on every screen:
+ * 'Document upload', 'Quiz configuration', 'Quiz session', 'Results'.
+ * Completed and current steps are highlighted; later steps stay visible but
+ * greyed out. The tabs are plain labels — navigation happens only through
+ * the in-screen buttons, never by clicking a tab. An Exit button on the top
+ * left returns to the Document Upload page at any point (R35).
  */
 const steps = [
-  { to: "/", label: "Document Upload" },
-  { to: "/configure", label: "Quiz Configuration" },
-  { to: "/quiz", label: "Quiz Session" },
-  { to: "/results", label: "Results" },
+  { label: "Document upload" },
+  { label: "Quiz configuration" },
+  { label: "Quiz session" },
+  { label: "Results" },
 ];
+
+const order: Record<string, number> = { "/": 0, "/configure": 1, "/quiz": 2, "/results": 3 };
 
 const QuizNav: React.FC = () => {
   const location = useLocation();
-  const { state } = useQuizState();
-  const order: Record<string, number> = { "/": 0, "/configure": 1, "/quiz": 2, "/results": 3 };
+  const { resetSession } = useQuizState();
   const currentStep = order[location.pathname] ?? 0;
+
+  const handleExit = () => {
+    resetSession(); // an exit abandons the running quiz (R35)
+    window.location.assign("/");
+  };
 
   return (
     <header className="ds-nav">
       <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", minWidth: 0 }}>
+        <button
+          type="button"
+          className="ds-btn quiz-nav-exit"
+          onClick={handleExit}
+          aria-label="Exit to the Document Upload page"
+        >
+          Exit
+        </button>
         <span style={{ fontSize: "1.4rem" }} role="img" aria-label="quiz">
           📝
         </span>
@@ -30,29 +47,32 @@ const QuizNav: React.FC = () => {
           Document Quiz
         </Link>
       </div>
-      <nav style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem", alignItems: "center" }}>
+      <nav
+        aria-label="Quiz progress"
+        style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem", alignItems: "center" }}
+      >
         {steps.map((step, stepIndex) => {
-          const locked = stepIndex === 3 && !state.completed;
+          const done = stepIndex < currentStep;
           const active = stepIndex === currentStep;
+          const upcoming = stepIndex > currentStep;
           return (
-            <Link
-              key={step.to}
-              to={step.to}
-              aria-current={active ? "page" : undefined}
-              title={locked ? "Results unlock after all questions are answered" : step.label}
-              style={{
-                color: "#fff",
-                textDecoration: locked ? "none" : "none",
-                opacity: locked ? 0.55 : active ? 1 : 0.8,
-                fontWeight: active ? 700 : 500,
-                padding: "0.25rem 0.6rem",
-                borderRadius: "var(--ds-radius)",
-                background: active ? "rgba(255,255,255,0.18)" : "transparent",
-              }}
+            <span
+              key={step.label}
+              aria-current={active ? "step" : undefined}
+              className={`quiz-tab ${done ? "quiz-tab--done" : ""} ${active ? "quiz-tab--active" : ""} ${
+                upcoming ? "quiz-tab--upcoming" : ""
+              }`}
+              title={
+                done
+                  ? `${step.label} (completed)`
+                  : active
+                    ? `${step.label} (current step)`
+                    : `${step.label} (not reached yet)`
+              }
             >
-              {locked ? "🔒 " : ""}
+              {done ? "✓ " : ""}
               {step.label}
-            </Link>
+            </span>
           );
         })}
       </nav>

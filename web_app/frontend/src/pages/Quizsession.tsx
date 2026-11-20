@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import quizApi, { ApiError } from "../api/quizApi";
+import JerryAvatar from "../components/JerryAvatar";
 import { useQuizState, QuizAnswer } from "../context/QuizStateContext";
 
 /**
@@ -30,6 +31,12 @@ const Quizsession: React.FC = () => {
   const [documents, setDocuments] = useState<any[]>([]);
   const [selectedDocId, setSelectedDocId] = useState<string | null>(state.documentId);
   const [docsLoading, setDocsLoading] = useState(false);
+
+  // Speech (R26-R27): the question's audio sentence is read out loud with the
+  // browser's built-in speechSynthesis, and can be replayed.
+  const [speechSupported, setSpeechSupported] = useState(true);
+  const [speechError, setSpeechError] = useState<string | null>(null);
+  const speechSentences = useRef<string>("");
 
   // Timer (R29-R33): driven by the TimerSetting chosen on the configuration
   // screen and persisted with the attempt. "per_question" restarts for every
@@ -115,6 +122,44 @@ const Quizsession: React.FC = () => {
   };
   // Red once 75% of the allotted time has elapsed (R33).
   const timerWarning = remainingSeconds <= Math.ceil(allottedSeconds * 0.25);
+
+  // Speech (R26): read the audio sentence of the current question aloud with
+  // the browser's built-in speechSynthesis. Fires once per question and can
+  // be replayed by the student.
+  useEffect(() => {
+    const supported =
+      typeof window !== "undefined" && "speechSynthesis" in window && typeof window.SpeechSynthesisUtterance !== "undefined";
+    setSpeechSupported(supported);
+    if (!supported || !session?.question) return;
+    const audioSentence = session.question.audioSentence as string | null | undefined;
+    const isAudioQuestion = Boolean(audioSentence);
+    if (!isAudioQuestion) {
+      window.speechSynthesis.cancel();
+      speechSentences.current = "";
+      return;
+    }
+    const sentence = audioSentence as string;
+    if (speechSentences.current === sentence) return; // same question: no repeat
+    speechSentences.current = sentence;
+    window.speechSynthesis.cancel();
+    const utterance = new window.SpeechSynthesisUtterance(sentence);
+    utterance.lang = window.navigator.language || "en-US";
+    window.speechSynthesis.speak(utterance);
+  }, [session?.question?.id, session?.question?.audioSentence]);
+
+  const replayAudioSentence = useCallback(() => {
+    if (typeof window === "undefined" || !("speechSynthesis" in window)) return;
+    setSpeechError(null);
+    const sentence =
+      (speechSentences.current as string) || ((session?.question?.audioSentence as string) ?? "");
+    if (!sentence) return;
+    window.speechSynthesis.cancel();
+    const utterance = new window.SpeechSynthesisUtterance(sentence);
+    utterance.lang = window.navigator.language || "en-US";
+    const failure = window.setTimeout(() => setSpeechError("The browser could not play the audio."), 4000);
+    utterance.onstart = () => window.clearTimeout(failure);
+    window.speechSynthesis.speak(utterance);
+  }, [session?.question?.audioSentence]);
 
   const loadSession = useCallback(
     async (index: number, attempt: string) => {
@@ -344,7 +389,53 @@ const Quizsession: React.FC = () => {
 
       {question && (
         <section className="ds-card" style={{ padding: "1.25rem", maxWidth: "720px" }}>
-          <p style={{ fontWeight: 700, fontSize: "1.15rem", marginTop: 0 }}>{question.text}</p>
+          {question.difficulty && (
+            <span
+              className="ds-badge"
+              style={{ marginRight: "0.5rem", fontSize: "0.75rem" }}
+              title="Difficulty from the uploaded document"
+            >
+              Difficulty: {question.difficulty}
+            </span>
+          )}
+          <p style={{ fontWeight: 700, fontSize: "1.15rem", marginTop: 0 }}>
+            {question.questionType === "audio" || question.audioSentence ? (
+              <span
+                className="ds-badge"
+                style={{ marginRight: "0.5rem", fontSize: "0.75rem" }}
+                title="Listening exercise: listen and fill in the blank"
+              >
+                🎧 Listening
+              </span>
+            ) : null}
+            {question.text}
+          </p>
+
+          {(question.audioSentence || question.questionType === "audio") && (
+            <div className="quiz-speech-controls">
+              <button type="button" className="ds-btn" onClick={replayAudioSentence} aria-label="Replay the audio sentence">
+                🔊 Listen again
+              </button>
+              {!speechSupported && (
+                <span style={{ color: "var(--ds-muted)" }}>
+                  This browser has no built-in speech support — read the question below instead.
+                </span>
+              )}
+              {speechError && (
+                <span style={{ color: "#f43f5e" }} role="alert">
+                  {speechError}
+                </span>
+              )}
+            </div>
+          )}
+          {question.audioSentence && (
+            <p
+              style={{ color: "var(--ds-muted)", marginTop: 0 }}
+              aria-label="Text of the audio sentence"
+            >
+              Audio sentence: <em>{question.audioSentence}</em>
+            </p>
+          )}
 
           <div>
             {question.options.map((option: any) => {
@@ -372,20 +463,12 @@ const Quizsession: React.FC = () => {
 
           {isLearning && alreadyAnswered && (
             <div style={{ display: "flex", gap: "0.75rem", alignItems: "center", marginTop: "1rem", flexWrap: "wrap" }}>
-              <div
-                className={`jerry-avatar ${isCorrect ? "jerry-avatar--cheer" : ""}`}
-                role="img"
-                aria-label={isCorrect ? "Jerry the mouse clapping" : "Jerry the mouse"}
-              >
-                {isCorrect ? "🐭👏" : "🐭"}
-              </div>
+              <JerryAvatar clapping={isCorrect} size={96} />
               <div>
                 {isCorrect && (
-                  <>
-                    <p className="feedback-correct" style={{ margin: 0 }}>
-                      Correct answer! Jerry is clapping for you 🎉
-                    </p>
-                  </>
+                  <p className="feedback-correct" style={{ margin: 0 }}>
+                    Correct answer! Jerry is clapping for you 🎉
+                  </p>
                 )}
                 {isWrong && (
                   <p className="feedback-incorrect" style={{ margin: 0 }}>

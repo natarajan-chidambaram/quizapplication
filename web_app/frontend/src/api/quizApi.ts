@@ -56,9 +56,11 @@ export const quizApi = {
     documentId: string;
     mode: string;
     questionOrder: string;
-    questionCount: number;
+    questionCount: number | null;
     timerScope: string;
     timerDurationSeconds: number;
+    difficulty: string | null;
+    questionType: "audio" | "mcq";
   }) =>
     request("/attempt/start/", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) }),
 

@@ -19,7 +19,18 @@ const Quizconfig: React.FC = () => {
   const [questionOrder, setQuestionOrder] = useState<"sequential" | "random">(state.questionOrder ?? "sequential");
   const [timerScope, setTimerScope] = useState<"per_question" | "per_session">(state.timerScope ?? "per_question");
   const [timerDurationSeconds, setTimerDurationSeconds] = useState<number>(state.timerDurationSeconds || 60);
-  const [questionCount, setQuestionCount] = useState<number>(1);
+  const [questionCount, setQuestionCount] = useState<number | null>(null);
+  const [difficulty, setDifficulty] = useState<string>("all");
+  const [questionType, setQuestionType] = useState<"audio" | "mcq">("mcq");
+  const difficulties = Array.from(
+    new Set(questions.map((question: any) => question?.difficulty).filter(Boolean) as string[])
+  ).sort();
+  // How many questions survive the difficulty + question-type filters (R11-R14)
+  const availableCount = questions.filter((question: any) => {
+    const matchesDifficulty = difficulty === "all" || question?.difficulty === difficulty;
+    const matchesType = questionType === "mcq" || Boolean(question?.audioSentence);
+    return matchesDifficulty && matchesType;
+  }).length;
 
   useEffect(() => {
     if (!state.documentId) {
@@ -33,8 +44,9 @@ const Quizconfig: React.FC = () => {
       .documentQuestions(state.documentId)
       .then((data) => {
         if (!cancelled) {
-          setQuestions(Array.isArray(data) ? data : []);
-          setQuestionCount(Math.min(1, data.length) || 1);
+          const loaded = Array.isArray(data) ? data : [];
+          setQuestions(loaded);
+          setQuestionCount(null); // R15: an unset count means 'use all questions'
         }
       })
       .catch((err: any) => {
@@ -60,6 +72,8 @@ const Quizconfig: React.FC = () => {
         questionCount,
         timerScope,
         timerDurationSeconds,
+        difficulty: difficulty === "all" ? null : difficulty,
+        questionType,
       });
       configure(mode, questionOrder, timerScope, timerDurationSeconds);
       startAttempt(
@@ -142,15 +156,62 @@ const Quizconfig: React.FC = () => {
           </div>
 
           <div className="ds-field">
+            <label className="ds-label" htmlFor="question-type">
+              Question type
+            </label>
+            <select
+              id="question-type"
+              className="ds-input"
+              value={questionType}
+              onChange={(event) => setQuestionType(event.target.value as "audio" | "mcq")}
+            >
+              <option value="mcq">MCQ — all questions</option>
+              <option value="audio">Audio (listening) — questions with an audio sentence</option>
+            </select>
+            <span style={{ color: "var(--ds-muted)", fontSize: "0.85rem" }}>
+              {questionType === "audio"
+                ? "Only the questions whose document carries an 'audio sentence' are played, read aloud by the browser."
+                : "All questions of the document can be selected."}
+            </span>
+          </div>
+
+          <div className="ds-field">
+            <label className="ds-label" htmlFor="difficulty">
+              Difficulty
+            </label>
+            <select
+              id="difficulty"
+              className="ds-input"
+              value={difficulty}
+              onChange={(event) => setDifficulty(event.target.value)}
+            >
+              <option value="all">All difficulties</option>
+              {difficulties.map((value) => (
+                <option key={value} value={value}>
+                  {value}
+                </option>
+              ))}
+            </select>
+            <span style={{ color: "var(--ds-muted)", fontSize: "0.85rem" }}>
+              {difficulties.length === 0
+                ? "This document has no difficulty tags, so every question stays available."
+                : `Only the questions tagged with the chosen difficulty are used.`}
+            </span>
+          </div>
+
+          <div className="ds-field">
             <label className="ds-label" htmlFor="question-count">
-              Number of questions ({questions.length} available)
+              Number of questions ({availableCount} match the filters, {questions.length} in the document)
             </label>
             <select
               id="question-count"
               className="ds-input"
-              value={questionCount}
-              onChange={(event) => setQuestionCount(Number(event.target.value))}
+              value={questionCount === null ? "all" : String(questionCount)}
+              onChange={(event) =>
+                setQuestionCount(event.target.value === "all" ? null : Number(event.target.value))
+              }
             >
+              <option value="all">All matching questions</option>
               {questions.map((_, index) => (
                 <option key={index + 1} value={index + 1}>
                   {index + 1}
@@ -239,9 +300,19 @@ const Quizconfig: React.FC = () => {
             </div>
           )}
 
-          <button type="button" className="ds-btn ds-btn-primary" onClick={handleStart} disabled={starting}>
-            {starting ? "Starting the quiz…" : "Start the quiz"}
-          </button>
+          <div style={{ display: "flex", gap: "0.75rem", flexWrap: "wrap" }}>
+            <button
+              type="button"
+              className="ds-btn"
+              onClick={() => navigate("/")}
+              aria-label="Back to the Document Upload page"
+            >
+              ← Back to Document Upload
+            </button>
+            <button type="button" className="ds-btn ds-btn-primary" onClick={handleStart} disabled={starting}>
+              {starting ? "Starting the quiz…" : "Start the quiz"}
+            </button>
+          </div>
         </section>
       )}
     </div>

@@ -5,9 +5,9 @@ import { useQuizState } from "../context/QuizStateContext";
 
 /**
  * Screen 1 — Document Upload (R3-R6).
- * Upload a JSON or PDF file of MCQs, see validation errors, list uploaded
- * documents, and click one to base the quiz on it (proceeds to Quiz
- * Configuration).
+ * Upload a JSON, PDF or Word (.docx) file of MCQs, see validation errors,
+ * list uploaded documents, and click one to base the quiz on it (proceeds
+ * to Quiz Configuration).
  */
 const Documentspage: React.FC = () => {
   const navigate = useNavigate();
@@ -45,8 +45,11 @@ const Documentspage: React.FC = () => {
       if (!file) return;
       const isJson = /\.json$/i.test(file.name) || file.type === "application/json";
       const isPdf = /\.pdf$/i.test(file.name) || file.type === "application/pdf";
-      if (!isJson && !isPdf) {
-        setError("Only JSON or PDF files are accepted");
+      const isWord =
+        /\.docx$/i.test(file.name) ||
+        file.type === "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+      if (!isJson && !isPdf && !isWord) {
+        setError("Only JSON, PDF or Word (.docx) files are accepted");
         return;
       }
       setUploading(true);
@@ -97,7 +100,8 @@ const Documentspage: React.FC = () => {
     <div className="ds-section">
       <h1 className="ds-heading">Document Upload</h1>
       <p style={{ color: "var(--ds-muted)", marginTop: 0 }}>
-        Upload a JSON or PDF file that contains multiple-choice questions, answer options and correct answers.
+        Upload a JSON, PDF or Word (.docx) file that contains multiple-choice questions, answer options and correct
+        answers. A Word document may also carry an explanation, a difficulty and an audio sentence per question.
       </p>
 
       {error && (
@@ -117,14 +121,14 @@ const Documentspage: React.FC = () => {
         </h2>
         <div className="ds-field">
           <label className="ds-label" htmlFor="quiz-file-input">
-            File (JSON or PDF)
+            File (JSON, PDF or Word)
           </label>
           <input
             id="quiz-file-input"
             ref={inputRef}
             type="file"
             className="ds-input"
-            accept=".json,.pdf,application/json,application/pdf"
+            accept=".json,.pdf,.docx,application/json,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
             onChange={handleFileChange}
             disabled={uploading}
           />
@@ -150,7 +154,7 @@ const Documentspage: React.FC = () => {
         {loading ? (
           <p style={{ color: "var(--ds-muted)" }}>Loading documents…</p>
         ) : documents.length === 0 ? (
-          <p style={{ color: "var(--ds-muted)" }}>No documents uploaded yet. Start by uploading a JSON or PDF file.</p>
+          <p style={{ color: "var(--ds-muted)" }}>No documents uploaded yet. Start by uploading a JSON, PDF or Word file.</p>
         ) : (
           <div className="ds-table-wrap">
             <table className="ds-table">

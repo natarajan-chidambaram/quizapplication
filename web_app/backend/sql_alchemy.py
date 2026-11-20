@@ -104,6 +104,10 @@ class Question(Base):
     orderIndex: Mapped_[int] = mapped_column(Integer_)
     # Explanation extracted from the uploaded document (R18: shown in Learning Mode when present)
     explanation: Mapped_[Optional_[str]] = mapped_column(Text_, nullable=True)
+    # Word-document extras (R5, R11-R13): optional difficulty tag and the audio
+    # sentence read out loud for listening exercises (R26-R27).
+    difficulty: Mapped_[Optional_[str]] = mapped_column(String_(100), nullable=True)
+    audioSentence: Mapped_[Optional_[str]] = mapped_column(Text_, nullable=True)
     quiz_id: Mapped_[str] = mapped_column(ForeignKey_("quiz.id"))
 
 class PDFDocument(Base):
@@ -139,6 +143,9 @@ class Attempt(Base):
     mode: Mapped_[str] = mapped_column(String_(20), default="learning")
     questionOrder: Mapped_[str] = mapped_column(String_(20), default="sequential")
     requestedQuestionCount: Mapped_[int] = mapped_column(Integer_, default=0)
+    # Word-document extras (R5, R11-R13): the configuration chosen at start
+    selectedDifficulty: Mapped_[Optional_[str]] = mapped_column(String_(100), nullable=True)
+    selectedQuestionType: Mapped_[Optional_[str]] = mapped_column(String_(20), nullable=True)
     # Timer option (R13, R29-R33): chosen on the Quiz Configuration screen
     timerEnabled: Mapped_[bool] = mapped_column(Boolean_, default=True)
     timerScope: Mapped_[str] = mapped_column(String_(20), default="per_question")

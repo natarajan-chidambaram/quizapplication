@@ -73,6 +73,9 @@ class QuestionCreate(BaseModel):
     quizId: str
     text: str
     explanation: Optional[str] = None
+    # Word-document extras (R5): optional difficulty tag and audio sentence
+    difficulty: Optional[str] = None
+    audioSentence: Optional[str] = None
     attempts: Optional[List[Union["ResponseLinkCreate", str]]] = None  # via association class (optional)
     options: Optional[List[str]] = None  # 1:N Relationship
     quiz: str  # N:1 Relationship (mandatory)
@@ -113,11 +116,24 @@ class AttemptCreate(BaseModel):
 
 
 class QuizStartCreate(BaseModel):
-    """Quiz Configuration screen payload (R8-R11)."""
+    """Quiz Configuration screen payload (R8-R13)."""
     documentId: str
     mode: str  # 'learning' | 'testing'
     questionOrder: str  # 'sequential' | 'random'
     questionCount: Optional[int] = None
+    # Difficulty and question-type filters (R11-R14): 'audio' keeps only the
+    # questions that carry an audio sentence, 'mcq' keeps all of them.
+    difficulty: Optional[str] = None  # None/'all' = no difficulty filter
+    questionType: Optional[str] = None  # None/'mcq' = all questions, 'audio' = listening only
+
+    @field_validator("questionType")
+    @classmethod
+    def _question_type_valid(cls, v: Optional[str]) -> Optional[str]:
+        if v is None:
+            return None
+        if v not in ("audio", "mcq"):
+            raise ValueError("questionType must be 'audio' or 'mcq'")
+        return v
 
     @field_validator("mode")
     @classmethod

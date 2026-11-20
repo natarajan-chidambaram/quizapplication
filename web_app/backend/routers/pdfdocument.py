@@ -83,6 +83,8 @@ def get_pdfdocument_questions(pdfdocument_id: str, database: Session = Depends(g
             "id": q.id,
             "text": q.text,
             "explanation": q.explanation,
+            "difficulty": getattr(q, "difficulty", None),
+            "audioSentence": getattr(q, "audioSentence", None),
             "orderIndex": q.orderIndex,
             "options": [
                 {

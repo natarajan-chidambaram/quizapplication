@@ -498,7 +498,24 @@ async def start_quiz(config: QuizStartCreate, database: Session = Depends(get_db
     # selection to all available questions and proceed with the quiz.
     selected_count = min(requested, available)
 
-    selected = select_questions(database, document.pDFDocumentQuiz_id, config.questionOrder, selected_count)
+    selected = select_questions(
+        database,
+        document.pDFDocumentQuiz_id,
+        config.questionOrder,
+        selected_count,
+        difficulty=config.difficulty,
+        question_type=config.questionType,
+    )
+    if not selected:
+        raise HTTPException(
+            status_code=422,
+            detail=(
+                "No questions match the selected filters"
+                + (f" (difficulty: {config.difficulty})" if config.difficulty else "")
+                + (f" (type: audio)" if config.questionType == "audio" else "")
+                + " — choose different settings or upload another document"
+            ),
+        )
     user = get_or_create_quiz_user(database)
 
     db_attempt = Attempt(
@@ -509,6 +526,8 @@ async def start_quiz(config: QuizStartCreate, database: Session = Depends(get_db
         mode=config.mode,
         questionOrder=config.questionOrder,
         requestedQuestionCount=selected_count,
+        selectedDifficulty=config.difficulty,
+        selectedQuestionType=config.questionType,
         timerScope=config.timerScope,
         timerDurationSeconds=config.timerDurationSeconds,
         selectedQuestionIds=_json.dumps([question.id for question in selected]),
@@ -550,16 +569,19 @@ def _question_dict(q: Question, reveal: bool, database: Session) -> dict:
         {"id": o.id, "optionText": o.optionText, "optionOrder": o.optionOrder}
         for o in options
     ]
+    payload = {
+        "id": q.id,
+        "text": q.text,
+        "explanation": q.explanation,
+        "difficulty": getattr(q, "difficulty", None),
+        "audioSentence": getattr(q, "audioSentence", None),
+        "questionType": getattr(q, "questionType", None),
+        "options": option_payload,
+    }
     if reveal:
         correct = [o for o in options if o.isCorrect]
-        return {
-            "id": q.id,
-            "text": q.text,
-            "explanation": q.explanation,
-            "options": option_payload,
-            "correctOptionId": correct[0].id if correct else None,
-        }
-    return {"id": q.id, "text": q.text, "explanation": q.explanation, "options": option_payload}
+        payload["correctOptionId"] = correct[0].id if correct else None
+    return payload
 
 
 @router.get("/attempt/{attempt_id}/session/", response_model=None, tags=["Attempt"])

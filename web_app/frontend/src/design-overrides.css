@@ -121,3 +121,50 @@
   color: #f43f5e;
   background: rgba(244, 63, 94, 0.08);
 }
+
+/* Non-clickable four-tab progress bar (R32-R34) */
+.quiz-tab {
+  padding: 0.3rem 0.7rem;
+  border-radius: var(--ds-radius);
+  font-size: 0.85rem;
+  color: #fff;
+  background: transparent;
+  border: 1px solid transparent;
+  user-select: none;
+}
+
+.quiz-tab--active {
+  background: rgba(255, 255, 255, 0.22);
+  border-color: rgba(255, 255, 255, 0.45);
+  font-weight: 700;
+}
+
+.quiz-tab--done {
+  font-weight: 600;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.quiz-tab--upcoming {
+  opacity: 0.55;
+}
+
+/* Top-left Exit button (R35) */
+.quiz-nav-exit {
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.5);
+  background: transparent;
+  padding: 0.25rem 0.75rem;
+}
+
+.quiz-nav-exit:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+/* Speech controls of the listening exercise (R26-R27) */
+.quiz-speech-controls {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 0.75rem;
+}

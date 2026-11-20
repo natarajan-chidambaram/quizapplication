@@ -42,19 +42,33 @@ def _add_missing_sqlite_columns(engine) -> None:
     """Light migration for existing SQLite files: SQLite's ALTER TABLE can
     only ADD COLUMN, so columns introduced after the first run (the Attempt
     timer columns) are added here when create_all left them out."""
-    attempt_columns = {
-        "timerEnabled": "BOOLEAN DEFAULT 1",
-        "timerScope": "VARCHAR(20) DEFAULT 'per_question'",
-        "timerDurationSeconds": "INTEGER DEFAULT 60",
+    # Word-document extras (R5) and the explanation column may be missing in
+    # databases created before they were introduced.
+    column_plans = {
+        "attempt": {
+            "timerEnabled": "BOOLEAN DEFAULT 1",
+            "timerScope": "VARCHAR(20) DEFAULT 'per_question'",
+            "timerDurationSeconds": "INTEGER DEFAULT 60",
+        },
+        "question": {
+            "explanation": "TEXT",
+            "difficulty": "VARCHAR(100)",
+            "audioSentence": "TEXT",
+        },
+        "attempt": {
+            "selectedDifficulty": "VARCHAR(100)",
+            "selectedQuestionType": "VARCHAR(20)",
+        },
     }
     with engine.connect() as connection:
-        try:
-            existing = {row[1] for row in connection.execute(text("PRAGMA table_info(attempt)"))}
-        except Exception:
-            existing = set()
-        for column_name, column_ddl in attempt_columns.items():
-            if column_name not in existing:
-                connection.execute(text(f"ALTER TABLE attempt ADD COLUMN {column_name} {column_ddl}"))
+        for table_name, table_columns in column_plans.items():
+            try:
+                existing = {row[1] for row in connection.execute(text(f"PRAGMA table_info({table_name})"))}
+            except Exception:
+                existing = set()
+            for column_name, column_ddl in table_columns.items():
+                if column_name not in existing:
+                    connection.execute(text(f"ALTER TABLE {table_name} ADD COLUMN {column_name} {column_ddl}"))
         connection.commit()
 
 # Initialize database session

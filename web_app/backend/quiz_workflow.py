@@ -18,8 +18,13 @@ from typing import Any, List, Optional
 
 UPLOAD_DIR = os.path.join("data", "uploads")
 
-ALLOWED_EXTENSIONS = {".json", ".pdf"}
-ALLOWED_CONTENT_TYPES = {"application/json", "application/pdf"}
+ALLOWED_EXTENSIONS = {".json", ".pdf", ".docx"}
+ALLOWED_CONTENT_TYPES = {
+    "application/json",
+    "application/pdf",
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+}
+_WORD_CONTENT_TYPE = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
 
 
 class DocumentValidationError(ValueError):
@@ -38,18 +43,28 @@ def _first(mapping: Any, *names: str) -> Any:
 
 
 def detect_kind(filename: str, content_type: str) -> str:
-    """'json' or 'pdf', from the extension first and the content type second."""
+    """'json', 'pdf' or 'word', from the extension first and the content type second."""
     ext = os.path.splitext(filename or "")[1].lower()
     if ext in ALLOWED_EXTENSIONS:
+        if ext == ".docx":
+            return "word"
         return "pdf" if ext == ".pdf" else "json"
-    if (content_type or "").lower() in ALLOWED_CONTENT_TYPES:
-        return "pdf" if "pdf" in content_type.lower() else "json"
-    raise DocumentValidationError("Only JSON or PDF files can be uploaded")
+    lowered = (content_type or "").lower()
+    if lowered in ALLOWED_CONTENT_TYPES:
+        if lowered == _WORD_CONTENT_TYPE:
+            return "word"
+        return "pdf" if "pdf" in lowered else "json"
+    raise DocumentValidationError("Only JSON, PDF or Word (.docx) files can be uploaded")
 
 
 def parse_document(kind: str, raw: bytes) -> dict:
-    """Parse raw bytes into {'questions': [{text, explanation, options: [{text, isCorrect}]}]}."""
-    questions = _parse_json(raw) if kind == "json" else _parse_pdf(raw)
+    """Parse raw bytes into {'questions': [{text, explanation, difficulty, audioSentence, options: [{text, isCorrect}]}]}."""
+    if kind == "word":
+        questions = _parse_word(raw)
+    elif kind == "json":
+        questions = _parse_json(raw)
+    else:
+        questions = _parse_pdf(raw)
     return _finalize(questions)
 
 
@@ -102,6 +117,8 @@ def _parse_json(raw: bytes) -> List[dict]:
             {
                 "text": text,
                 "explanation": explanation,
+                "difficulty": _norm(_first(item, "difficulty", "level")) or None,
+                "audioSentence": _norm(_first(item, "audioSentence", "audio_sentence", "audio")) or None,
                 "options": options,
                 "correctToken": _first(
                     item, "correctAnswer", "answer", "answerKey", "correct_option"
@@ -124,6 +141,231 @@ def _extract_question_list(data: Any) -> Optional[list]:
         ):
             return [data]
     return None
+
+
+############################################
+# Word (.docx) parsing (R5)
+############################################
+
+# A Word row / labelled line counts as a question when it carries these.
+_QUESTION_LABEL = re.compile(r"^question\s*[:\-]?\s*(.*)$", re.IGNORECASE)
+_OPTION_LABEL = re.compile(r"^(?:option|choice)\s*([A-Ha-h])?\s*[:\-]?\s*(.*)$", re.IGNORECASE)
+_ANSWER_LABEL = re.compile(r"^(?:answer|correct\s*answer)\s*[:\-]?\s*(.*)$", re.IGNORECASE)
+_EXPLANATION_LABEL = re.compile(r"^explanation\s*[:\-]?\s*(.*)$", re.IGNORECASE)
+_DIFFICULTY_LABEL = re.compile(r"^difficulty\s*[:\-]?\s*(.*)$", re.IGNORECASE)
+_AUDIO_LABEL = re.compile(r"^(?:audio\s*sentence|audio)\s*[:\-]?\s*(.*)$", re.IGNORECASE)
+_NUMBERED_QUESTION = re.compile(r"^(?:Q(?:uestion)?\s*)?(\d{1,3})\s*[.):\]]\s*(.+)$", re.IGNORECASE)
+_LETTERED_OPTION = re.compile(r"^\(?([A-Ha-h])\s*[).:\]]\s*(.+)$")
+_ANSWER_LINE = re.compile(r"^(?:correct\s*answers?|answers?|ans|key)\s*[:\-]\s*(.+)$", re.IGNORECASE)
+_EXPLANATION_LINE = re.compile(r"^explanation\s*[:\-]\s*(.*)$", re.IGNORECASE)
+_DIFFICULTY_LINE = re.compile(r"^difficulty\s*[:\-]\s*(.*)$", re.IGNORECASE)
+_AUDIO_LINE = re.compile(r"^(?:audio\s*sentence|audio)\s*[:\-]\s*(.*)$", re.IGNORECASE)
+
+
+def _parse_word(raw: bytes) -> List[dict]:
+    """Parse a .docx upload (R2, R5): one question per table row or per
+    labelled paragraph block. Every question carries question, options,
+    answer, and optional explanation, difficulty and audio sentence. Nothing
+    is invented: rows without question text or two options are rejected by
+    the shared validation in _finalize."""
+    try:
+        from docx import Document as DocxDocument
+    except ImportError as exc:  # pragma: no cover - dependency is declared
+        raise DocumentValidationError("Word document support is not available on the server")
+    try:
+        import io as _io
+
+        doc = DocxDocument(_io.BytesIO(raw))
+    except Exception as exc:
+        raise DocumentValidationError(f"The Word document could not be read: {exc}")
+
+    parsed: List[dict] = []
+
+    # 1) Tables: one row (or one row per field, label + value) per question.
+    for table in doc.tables:
+        rows = [[cell.text.strip() for cell in row.cells] for row in table.rows]
+        if not rows:
+            continue
+        header = [cell.lower() for cell in rows[0]]
+        header_map = {}
+        for position, name in enumerate(header):
+            normalized = re.sub(r"[^a-z]", "", name)
+            if normalized in ("question", "questiontext", "questiontitle"):
+                header_map["question"] = position
+            elif normalized in ("options", "choices", "answeroptions"):
+                header_map["options"] = position
+            elif normalized in ("answer", "correctanswer", "answerkey"):
+                header_map["answer"] = position
+            elif normalized in ("explanation", "rationale"):
+                header_map["explanation"] = position
+            elif normalized == "difficulty":
+                header_map["difficulty"] = position
+            elif normalized in ("audiosentence", "audio"):
+                header_map["audioSentence"] = position
+        if {"question", "options", "answer"} <= header_map.keys():
+            for row in rows[1:]:
+                item = _parse_word_field_row(row, header_map)
+                if item is not None:
+                    parsed.append(item)
+            if parsed:
+                return _finalize_word_blocks(parsed)
+        else:
+            for row in rows:
+                item = _parse_word_label_row(row)
+                if item is not None:
+                    parsed.append(item)
+            if parsed:
+                return _finalize_word_blocks(parsed)
+
+    # 2) Paragraphs: a numbered 'Question: ...' or '1. ...' starts a block;
+    #    'Option A: ...', 'Answer: B', 'Explanation:', 'Difficulty:' and
+    #    'Audio sentence:' lines fill it in.
+    current: Optional[dict] = None
+    for raw_line in doc.paragraphs:
+        line = raw_line.text.strip()
+        if not line:
+            continue
+        match = _QUESTION_LABEL.match(line)
+        if not match:
+            numbered = _NUMBERED_QUESTION.match(line)
+            if numbered:
+                current = _new_word_question(_norm(numbered.group(2)))
+                parsed.append(current)
+                continue
+            if current is not None and _LETTERED_OPTION.match(line):
+                option_match = _LETTERED_OPTION.match(line)
+                current["options"].append(
+                    {"raw": _norm(option_match.group(2))}
+                )
+                continue
+        elif current is None or current.get("sealed"):
+            current = _new_word_question(_norm(match.group(1)))
+            parsed.append(current)
+            continue
+        elif current is not None:
+            # A second 'Question:' line without a separator continues the text
+            current["text"] = _norm(f"{current['text']} {match.group(1)}")
+            continue
+        if current is None:
+            continue
+        answer_match = _ANSWER_LABEL.match(line)
+        explanation_match = _EXPLANATION_LABEL.match(line)
+        difficulty_match = _DIFFICULTY_LABEL.match(line)
+        audio_match = _AUDIO_LABEL.match(line)
+        option_match = _OPTION_LABEL.match(line)
+        if answer_match and current["options"]:
+            current["correctToken"] = _norm(answer_match.group(1))
+            current["sealed"] = True
+        elif explanation_match:
+            current["explanation"] = _norm(explanation_match.group(1)) or None
+        elif difficulty_match:
+            current["difficulty"] = _norm(difficulty_match.group(1)) or None
+        elif audio_match:
+            current["audioSentence"] = _norm(audio_match.group(1)) or None
+        elif option_match:
+            current["options"].append({"raw": _norm(option_match.group(2))})
+        else:
+            current["text"] = _norm(f"{current['text']} {line}")
+    return _finalize_word_blocks(parsed)
+
+
+def _new_word_question(text: str) -> dict:
+    return {
+        "text": text,
+        "explanation": None,
+        "difficulty": None,
+        "audioSentence": None,
+        "options": [],
+        "correctToken": None,
+        "sealed": False,
+    }
+
+
+def _parse_word_field_row(row: List[str], header_map: dict) -> Optional[dict]:
+    value = lambda key: row[header_map[key]].strip() if header_map.get(key) is not None and len(row) > header_map[key] else ""
+    text = _norm(value("question"))
+    if not text:
+        return None
+    options = []
+    for part in re.split(r"[;|\n]", value("options")):
+        part = part.strip()
+        if not part:
+            continue
+        lettered = _LETTERED_OPTION.match(part)
+        options.append({"raw": _norm(lettered.group(2) if lettered else part)})
+    item = _new_word_question(text)
+    item["options"] = options
+    item["correctToken"] = _norm(value("answer")) or None
+    item["explanation"] = _norm(value("explanation")) or None
+    item["difficulty"] = _norm(value("difficulty")) or None
+    item["audioSentence"] = _norm(value("audioSentence")) or None
+    return item
+
+
+def _parse_word_label_row(row: List[str]) -> Optional[dict]:
+    """A two-column row of 'label, value' pairs forming one question."""
+    if len(row) < 2:
+        return None
+    label = re.sub(r"[^a-z]", "", row[0].lower())
+    value_text = row[1].strip()
+    item = _new_word_question("")
+    for position in range(0, len(row) - 1, 2):
+        label = re.sub(r"[^a-z]", "", row[position].lower())
+        value_text = row[position + 1].strip()
+        if label in ("question", "questiontext", "questiontitle"):
+            item["text"] = _norm(value_text)
+        elif label in ("options", "choices", "answeroptions"):
+            for part in re.split(r"[;|\n]", value_text):
+                part = part.strip()
+                if not part:
+                    continue
+                lettered = _LETTERED_OPTION.match(part)
+                item["options"].append({"raw": _norm(lettered.group(2) if lettered else part)})
+        elif label in ("answer", "correctanswer", "answerkey"):
+            item["correctToken"] = _norm(value_text) or None
+        elif label in ("explanation", "rationale"):
+            item["explanation"] = _norm(value_text) or None
+        elif label == "difficulty":
+            item["difficulty"] = _norm(value_text) or None
+        elif label in ("audiosentence", "audio"):
+            item["audioSentence"] = _norm(value_text) or None
+    if not item["text"] or not item["options"]:
+        return None
+    return item
+
+
+def _finalize_word_blocks(parsed: List[dict]) -> List[dict]:
+    """Turn the raw Word blocks into the shared shape (_finalize consumes)."""
+    blocks = []
+    for item in parsed:
+        if not item["text"] or not item["options"]:
+            raise DocumentValidationError(
+                f"The Word document question '{item['text'][:60] or '?'}' has no question text or no options"
+            )
+        options = []
+        for option in item["options"]:
+            text = option["raw"]
+            correct = False
+            if text.startswith("*") or text.startswith("\u2713"):
+                correct = True
+                text = text.lstrip("*\u2713 ")
+            options.append({"text": _norm(text), "isCorrect": correct})
+        blocks.append(
+            {
+                "text": item["text"],
+                "explanation": item.get("explanation"),
+                "difficulty": item.get("difficulty"),
+                "audioSentence": item.get("audioSentence"),
+                "options": options,
+                "correctToken": item.get("correctToken"),
+            }
+        )
+    if not blocks:
+        raise DocumentValidationError(
+            "No multiple-choice questions were found in the Word document (expected a table with "
+            "question/options/answer columns, or 'Question:', 'Option A:', 'Answer: B' lines)"
+        )
+    return blocks
 
 
 ############################################
@@ -219,6 +461,8 @@ def _parse_pdf(raw: bytes) -> List[dict]:
             {
                 "text": item["text"],
                 "explanation": item["explanation"],
+                "difficulty": None,
+                "audioSentence": None,
                 "options": options,
                 "correctToken": item["correctToken"],
             }
@@ -297,6 +541,8 @@ def _finalize(questions: List[dict]) -> dict:
             {
                 "text": item["text"],
                 "explanation": item.get("explanation") or None,
+                "difficulty": item.get("difficulty") or None,
+                "audioSentence": item.get("audioSentence") or None,
                 "options": [
                     {"text": option["text"], "isCorrect": option["isCorrect"]}
                     for option in options
@@ -322,14 +568,19 @@ def _resolve_correct_index(
     text = _norm(token)
     if not text:
         return None
+    # A digit token may name an option by its text ("144") or by position
+    # ("2"); the exact text match wins when both are possible.
+    for index, option in enumerate(options):
+        if _norm(option["text"]).casefold() == text.casefold():
+            return index
+    if text.isdigit():
+        return _resolve_correct_index(int(text), options, number)
     if len(text) == 1 and text.isalpha():
         letter = text.upper()
         index = ord(letter) - ord("A")
         if 0 <= index < len(options):
             return index
         return None
-    if text.isdigit():
-        return _resolve_correct_index(int(text), options, number)
     lowered = text.casefold()
     for index, option in enumerate(options):
         if _norm(option["text"]).casefold() == lowered:
@@ -375,6 +626,8 @@ def store_document(
             questionType="multiple_choice",
             orderIndex=index + 1,
             explanation=item["explanation"],
+            difficulty=item.get("difficulty"),
+            audioSentence=item.get("audioSentence"),
             quiz_id=quiz.id,
         )
         db.add(question)
@@ -431,14 +684,34 @@ def load_question_ids(attempt) -> List[str]:
     return [str(item) for item in ids if item]
 
 
-def select_questions(db, quiz_id: str, order: str, count: int) -> List:
-    """Pick the session's question subset in sequential or random order (R9-R10)."""
+def select_questions(
+    db,
+    quiz_id: str,
+    order: str,
+    count: int,
+    difficulty: Optional[str] = None,
+    question_type: Optional[str] = None,
+) -> List:
+    """Pick the session's question subset in sequential or random order.
+
+    Filters first (R11-R14): ``difficulty`` keeps only questions tagged with
+    that difficulty, ``question_type='audio'`` keeps only questions that carry
+    an audio sentence for the listening exercise, ``'mcq'`` (or None) keeps
+    all questions. The order applies to the filtered pool (R9-R10)."""
     from sql_alchemy import Question
 
+    query = db.query(Question).filter(Question.quiz_id == quiz_id)
+    if difficulty:
+        query = query.filter(Question.difficulty.isnot(None)).filter(
+            Question.difficulty.ilike(difficulty)
+        )
+    if question_type == "audio":
+        # Audio questions only: a non-empty audio sentence is required (R13)
+        query = query.filter(Question.audioSentence.isnot(None)).filter(
+            Question.audioSentence != ""
+        )
     pool = (
-        db.query(Question)
-        .filter(Question.quiz_id == quiz_id)
-        .order_by(Question.orderIndex.asc(), Question.id.asc())
+        query.order_by(Question.orderIndex.asc(), Question.id.asc())
         .all()
     )
     if order == "random":

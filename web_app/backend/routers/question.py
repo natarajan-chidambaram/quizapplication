@@ -179,7 +179,7 @@ async def create_question(question_data: QuestionCreate, database: Session = Dep
                 raise HTTPException(status_code=422, detail="Response requires " + ", ".join(missing))
 
     db_question = Question(
-        instructions=question_data.instructions,        orderIndex=question_data.orderIndex,        points=question_data.points,        questionType=question_data.questionType,        quizId=question_data.quizId,        text=question_data.text,        explanation=question_data.explanation,        quiz_id=question_data.quiz        )
+        instructions=question_data.instructions,        orderIndex=question_data.orderIndex,        points=question_data.points,        questionType=question_data.questionType,        quizId=question_data.quizId,        text=question_data.text,        explanation=question_data.explanation,        difficulty=question_data.difficulty,        audioSentence=question_data.audioSentence,        quiz_id=question_data.quiz        )
 
     database.add(db_question)
     database.flush()
@@ -235,7 +235,7 @@ async def bulk_create_question(items: list[QuestionCreate], database: Session = 
                 raise ValueError("Quiz ID is required")
 
             db_question = Question(
-                instructions=item_data.instructions,                orderIndex=item_data.orderIndex,                points=item_data.points,                questionType=item_data.questionType,                quizId=item_data.quizId,                text=item_data.text,                quiz_id=item_data.quiz            )
+                instructions=item_data.instructions,                orderIndex=item_data.orderIndex,                points=item_data.points,                questionType=item_data.questionType,                quizId=item_data.quizId,                text=item_data.text,                explanation=item_data.explanation,                difficulty=item_data.difficulty,                audioSentence=item_data.audioSentence,                quiz_id=item_data.quiz            )
             database.add(db_question)
             database.flush()  # Get ID without committing
             created_items.append(db_question.id)
@@ -301,6 +301,8 @@ async def update_question(question_id: str, question_data: QuestionCreate, datab
     setattr(db_question, 'quizId', question_data.quizId)
     setattr(db_question, 'text', question_data.text)
     setattr(db_question, 'explanation', question_data.explanation)
+    setattr(db_question, 'difficulty', question_data.difficulty)
+    setattr(db_question, 'audioSentence', question_data.audioSentence)
     if question_data.quiz is not None:
         related_quiz = database.query(Quiz).filter(Quiz.id == question_data.quiz).first()
         if not related_quiz:
