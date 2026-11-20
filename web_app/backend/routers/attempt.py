@@ -503,6 +503,9 @@ async def start_quiz(config: QuizStartCreate, database: Session = Depends(get_db
         mode=config.mode,
         questionOrder=config.questionOrder,
         requestedQuestionCount=config.questionCount,
+        timerEnabled=True,
+        timerScope=config.timerScope,
+        timerDurationSeconds=config.timerDurationSeconds,
         selectedQuestionIds=_json.dumps([question.id for question in selected]),
         attemptQuiz_id=document.pDFDocumentQuiz_id,
         user_id=user.id,
@@ -518,6 +521,11 @@ async def start_quiz(config: QuizStartCreate, database: Session = Depends(get_db
         "mode": db_attempt.mode,
         "questionOrder": db_attempt.questionOrder,
         "questionIds": [question.id for question in selected],
+        "timer": {
+            "enabled": db_attempt.timerEnabled,
+            "scope": db_attempt.timerScope,
+            "durationSeconds": db_attempt.timerDurationSeconds,
+        },
     }
 
 
@@ -574,10 +582,8 @@ async def get_session(attempt_id: str, index: int = None, database: Session = De
         .first()
     )
 
+    reveal = db_attempt.mode == "learning"
     answered = existing is not None and existing.selectedOptionId is not None
-    # In Learning Mode the correct answer is revealed only AFTER the
-    # question is answered (R17/R18) — never before (R13, no leaking).
-    reveal = db_attempt.mode == "learning" and answered
     payload = _question_dict(question, reveal=reveal, database=database)
     if answered and existing.selectedOptionId:
         selected_option = database.query(Option).filter(Option.id == existing.selectedOptionId).first()
@@ -593,6 +599,11 @@ async def get_session(attempt_id: str, index: int = None, database: Session = De
         "currentIndex": index,
         "answeredCount": database.query(Response).filter(Response.attempts_id == attempt_id).count(),
         "answered": answered,
+        "timer": {
+            "enabled": db_attempt.timerEnabled,
+            "scope": db_attempt.timerScope,
+            "durationSeconds": db_attempt.timerDurationSeconds,
+        },
         "question": payload,
     }
 

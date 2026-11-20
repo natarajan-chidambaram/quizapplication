@@ -35,14 +35,10 @@ async function request(path: string, options: RequestInit = {}): Promise<any> {
 }
 
 export const quizApi = {
-  /** Document Upload (R3-R6): POST /pdfdocument/upload/ stores the file,
-   * parses and validates it, then creates the PDFDocument row, its Quiz and
-   * the extracted Question/Option rows in one transaction. */
+  /** Document Upload (R3-R6) */
   uploadDocument: (file: File): Promise<any> => {
     const body = new FormData();
     body.append("file", file);
-    // request() must not set a Content-Type header for FormData:
-    // the browser supplies the multipart boundary automatically.
     return request("/pdfdocument/upload/", { method: "POST", body });
   },
 
@@ -55,8 +51,15 @@ export const quizApi = {
 
   deleteDocument: (id: string): Promise<any> => request(`/pdfdocument/${id}/`, { method: "DELETE" }),
 
-  /** Quiz Configuration (R9-R11) */
-  startQuiz: (payload: { documentId: string; mode: string; questionOrder: string; questionCount: number }) =>
+  /** Quiz Configuration (R9-R14) */
+  startQuiz: (payload: {
+    documentId: string;
+    mode: string;
+    questionOrder: string;
+    questionCount: number;
+    timerScope: string;
+    timerDurationSeconds: number;
+  }) =>
     request("/attempt/start/", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) }),
 
   /** Quiz Session (R12-R20) */

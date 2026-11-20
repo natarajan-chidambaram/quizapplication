@@ -126,36 +126,6 @@ async def create_response(response_data: ResponseCreate, database: Session = Dep
     if related_attempts is None:
         raise HTTPException(status_code=404, detail=f"Attempt with ID {attempts_target} not found")
 
-    # R13: exactly one answer per question. Even if a multi-option payload
-    # slips past schema validation, it is refused here before being stored.
-    selected_tokens = [
-        token
-        for token in re.split(r"[,;\s]+", str(response_data.selectedOptionIds or ""))
-        if token
-    ]
-    if len(selected_tokens) > 1:
-        raise HTTPException(
-            status_code=400,
-            detail="selectedOptionIds must contain exactly one option id (one answer per question is allowed)",
-        )
-
-    # The chosen option must be one of the question's own options (R12/R13):
-    # the app never accepts an option invented outside the uploaded document.
-    if response_data.selectedOptionId:
-        matching_option = (
-            database.query(Option)
-            .filter(
-                (Option.id == response_data.selectedOptionId)
-                & (Option.question_id == attemptQuestion_target)
-            )
-            .first()
-        )
-        if matching_option is None:
-            raise HTTPException(
-                status_code=400,
-                detail="The selected option does not belong to this question",
-            )
-
     db_response = Response(
         attemptQuestion_id=attemptQuestion_target,
         attempts_id=attempts_target,

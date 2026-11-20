@@ -139,6 +139,10 @@ class Attempt(Base):
     mode: Mapped_[str] = mapped_column(String_(20), default="learning")
     questionOrder: Mapped_[str] = mapped_column(String_(20), default="sequential")
     requestedQuestionCount: Mapped_[int] = mapped_column(Integer_, default=0)
+    # Timer option (R13, R29-R33): chosen on the Quiz Configuration screen
+    timerEnabled: Mapped_[bool] = mapped_column(Boolean_, default=True)
+    timerScope: Mapped_[str] = mapped_column(String_(20), default="per_question")
+    timerDurationSeconds: Mapped_[int] = mapped_column(Integer_, default=60)
     # The ordered question subset selected for this session (R26: the session's question sequence)
     selectedQuestionIds: Mapped_[str] = mapped_column(Text_, default="")
     attemptQuiz_id: Mapped_[str] = mapped_column(ForeignKey_("quiz.id"))

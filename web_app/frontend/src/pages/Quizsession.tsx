@@ -1,8 +1,7 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import quizApi, { ApiError } from "../api/quizApi";
 import { useQuizState, QuizAnswer } from "../context/QuizStateContext";
-import JerryAvatar from "../components/JerryAvatar";
 
 /**
  * Screen 3 — Quiz Session (R12-R20).
@@ -17,6 +16,8 @@ const Quizsession: React.FC = () => {
   const navigate = useNavigate();
   const { state, recordAnswer, nextQuestion } = useQuizState();
   const attemptId = state.attemptId;
+  const currentIndex = state.currentIndex;
+  const mode = state.mode;
 
   const [session, setSession] = useState<any>(null);
   const [loading, setLoading] = useState(true);
@@ -25,8 +26,90 @@ const Quizsession: React.FC = () => {
   const [submitting, setSubmitting] = useState(false);
   const [answerResult, setAnswerResult] = useState<any>(null);
 
-  const currentIndex = state.currentIndex;
-  const mode = state.mode;
+  // Timer (R29-R33): driven by the TimerSetting chosen on the configuration
+  // screen and persisted with the attempt. "per_question" restarts for every
+  // question; "per_session" counts the whole quiz. Green while more than 25%
+  // of the allotted time remains, red once 75% of it has elapsed.
+  const timerEnabled = session?.timer ? Boolean(session.timer.enabled) : true;
+  const timerScope = ((session?.timer?.scope as "per_question" | "per_session" | undefined) ?? state.timerScope ?? "per_question");
+  const allottedSeconds = session?.timer?.durationSeconds ?? state.timerDurationSeconds ?? 60;
+  const [remainingSeconds, setRemainingSeconds] = useState<number>(allottedSeconds);
+  const [timeUp, setTimeUp] = useState(false);
+  const timerAnchors = useRef<{ sessionStart: number | null; questionIndex: number; questionStart: number }>({
+    sessionStart: null,
+    questionIndex: -1,
+    questionStart: 0,
+  });
+
+  useEffect(() => {
+    if (!attemptId || !timerEnabled) return;
+    // Restore the anchors so a page reload does not reset the countdown.
+    try {
+      const raw = window.localStorage.getItem("quizTimerState");
+      if (raw) {
+        const saved = JSON.parse(raw);
+        if (saved.attemptId === attemptId && saved.scope === timerScope) {
+          timerAnchors.current = {
+            sessionStart: saved.sessionStart ?? null,
+            questionIndex: typeof saved.questionIndex === "number" ? saved.questionIndex : -1,
+            questionStart: saved.questionStart ?? 0,
+          };
+        }
+      }
+    } catch {
+      // no saved timer state: start fresh
+    }
+    const now = Date.now();
+    if (timerScope === "per_session" && timerAnchors.current.sessionStart == null) {
+      timerAnchors.current.sessionStart = now;
+    }
+    if (timerScope === "per_question" && timerAnchors.current.questionIndex !== currentIndex) {
+      timerAnchors.current.questionIndex = currentIndex; // reset for this question (R30)
+      timerAnchors.current.questionStart = now;
+    }
+    setTimeUp(false);
+    const computeRemaining = () => {
+      const anchor =
+        timerScope === "per_session"
+          ? timerAnchors.current.sessionStart ?? Date.now()
+          : timerAnchors.current.questionStart || Date.now();
+      const elapsed = Math.max(0, Math.floor((Date.now() - anchor) / 1000));
+      return Math.max(0, allottedSeconds - elapsed);
+    };
+    setRemainingSeconds(computeRemaining());
+    const interval = window.setInterval(() => {
+      const remaining = computeRemaining();
+      setRemainingSeconds(remaining);
+      try {
+        window.localStorage.setItem(
+          "quizTimerState",
+          JSON.stringify({
+            attemptId,
+            scope: timerScope,
+            sessionStart: timerAnchors.current.sessionStart,
+            questionIndex: timerAnchors.current.questionIndex,
+            questionStart: timerAnchors.current.questionStart,
+          })
+        );
+      } catch {
+        // storage unavailable: the timer still works for this page load
+      }
+      if (remaining <= 0) {
+        setTimeUp(true);
+        window.clearInterval(interval);
+      }
+    }, 1000);
+    return () => window.clearInterval(interval);
+  }, [attemptId, currentIndex, timerEnabled, timerScope, allottedSeconds]);
+
+  const formatTime = (seconds: number): string => {
+    const safe = Math.max(0, seconds);
+    const minutes = Math.floor(safe / 60);
+    const rest = safe % 60;
+    return `${minutes}:${rest.toString().padStart(2, "0")}`;
+  };
+  // Red once 75% of the allotted time has elapsed (R33).
+  const timerWarning = remainingSeconds <= Math.ceil(allottedSeconds * 0.25);
 
   const loadSession = useCallback(
     async (index: number, attempt: string) => {
@@ -147,11 +230,31 @@ const Quizsession: React.FC = () => {
 
   return (
     <div className="ds-section">
-      <div style={{ display: "flex", justifyContent: "space-between", flexWrap: "wrap", gap: "0.5rem" }}>
+      <div style={{ display: "flex", justifyContent: "space-between", flexWrap: "wrap", gap: "0.5rem", alignItems: "center" }}>
         <h1 className="ds-heading" style={{ marginBottom: 0 }}>
           Question {currentIndex + 1} of {total}
         </h1>
-        <span className="ds-badge">{isLearning ? "Learning Mode" : "Testing Mode"}</span>
+        <div style={{ display: "flex", gap: "0.5rem", alignItems: "center", flexWrap: "wrap" }}>
+          {timerEnabled && (
+            <div
+              className={`quiz-timer ${timerWarning ? "quiz-timer--warning" : ""}`}
+              role="timer"
+              aria-label={
+                timerScope === "per_question"
+                  ? "Remaining time for this question"
+                  : "Remaining time for the entire session"
+              }
+            >
+              <span aria-hidden="true">⏱</span>
+              <span>
+                {timeUp
+                  ? "Time is up"
+                  : `${formatTime(remainingSeconds)} ${timerScope === "per_question" ? "left for this question" : "left in the session"}`}
+              </span>
+            </div>
+          )}
+          <span className="ds-badge">{isLearning ? "Learning Mode" : "Testing Mode"}</span>
+        </div>
       </div>
 
       <div className="quiz-progress" style={{ marginTop: "0.75rem" }} aria-label="Quiz progress">
@@ -197,7 +300,13 @@ const Quizsession: React.FC = () => {
 
           {isLearning && alreadyAnswered && (
             <div style={{ display: "flex", gap: "0.75rem", alignItems: "center", marginTop: "1rem", flexWrap: "wrap" }}>
-              <JerryAvatar clapping={isCorrect} />
+              <div
+                className={`jerry-avatar ${isCorrect ? "jerry-avatar--cheer" : ""}`}
+                role="img"
+                aria-label={isCorrect ? "Jerry the mouse clapping" : "Jerry the mouse"}
+              >
+                {isCorrect ? "🐭👏" : "🐭"}
+              </div>
               <div>
                 {isCorrect && (
                   <>
@@ -234,8 +343,6 @@ const Quizsession: React.FC = () => {
             >
               {submitting ? "Saving your answer…" : alreadyAnswered ? "Answer saved (cannot be changed)" : "Submit answer"}
             </button>
-            {/* R17: the Next button advances one question per page and is
-                disabled until the current question has its single answer. */}
             <button type="button" className="ds-btn" onClick={handleNext} disabled={!alreadyAnswered}>
               {currentIndex + 1 >= total ? "Finish and see results →" : "Next question →"}
             </button>

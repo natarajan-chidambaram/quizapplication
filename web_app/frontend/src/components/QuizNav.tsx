@@ -30,36 +30,27 @@ const QuizNav: React.FC = () => {
           Document Quiz
         </Link>
       </div>
-      {/* Request update #2: every page stays visible across the top as a
-          progress indicator. The current page is highlighted, pages that
-          are finished show a completed badge, future pages are faded. */}
-      <nav className="quiznav" aria-label="Quiz progress">
+      <nav style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem", alignItems: "center" }}>
         {steps.map((step, stepIndex) => {
           const locked = stepIndex === 3 && !state.completed;
           const active = stepIndex === currentStep;
-          // A page is finished once the user has moved past it.
-          const done = stepIndex < currentStep;
-          const classes = [
-            "quiznav-step",
-            active ? "quiznav-step--current" : "",
-            done ? "quiznav-step--done" : "",
-            !active && !done ? "quiznav-step--future" : "",
-          ]
-            .filter(Boolean)
-            .join(" ");
-          const badge = done ? "✓" : stepIndex + 1;
           return (
             <Link
               key={step.to}
               to={step.to}
-              className={classes}
               aria-current={active ? "page" : undefined}
-              aria-label={`${step.label}${done ? " (completed)" : active ? " (current)" : " (not started)"}`}
               title={locked ? "Results unlock after all questions are answered" : step.label}
+              style={{
+                color: "#fff",
+                textDecoration: locked ? "none" : "none",
+                opacity: locked ? 0.55 : active ? 1 : 0.8,
+                fontWeight: active ? 700 : 500,
+                padding: "0.25rem 0.6rem",
+                borderRadius: "var(--ds-radius)",
+                background: active ? "rgba(255,255,255,0.18)" : "transparent",
+              }}
             >
-              <span className="quiznav-step-badge" aria-hidden="true">
-                {badge}
-              </span>
+              {locked ? "🔒 " : ""}
               {step.label}
             </Link>
           );

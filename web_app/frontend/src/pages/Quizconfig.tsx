@@ -17,6 +17,8 @@ const Quizconfig: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [mode, setMode] = useState<"learning" | "testing">(state.mode ?? "learning");
   const [questionOrder, setQuestionOrder] = useState<"sequential" | "random">(state.questionOrder ?? "sequential");
+  const [timerScope, setTimerScope] = useState<"per_question" | "per_session">(state.timerScope ?? "per_question");
+  const [timerDurationSeconds, setTimerDurationSeconds] = useState<number>(state.timerDurationSeconds || 60);
   const [questionCount, setQuestionCount] = useState<number>(1);
 
   useEffect(() => {
@@ -56,8 +58,10 @@ const Quizconfig: React.FC = () => {
         mode,
         questionOrder,
         questionCount,
+        timerScope,
+        timerDurationSeconds,
       });
-      configure(mode, questionOrder);
+      configure(mode, questionOrder, timerScope, timerDurationSeconds);
       startAttempt(
         result.attempt.id,
         result.questionIds.length,
@@ -70,7 +74,7 @@ const Quizconfig: React.FC = () => {
     } finally {
       setStarting(false);
     }
-  }, [configure, mode, navigate, questionCount, questionOrder, startAttempt, state.documentId]);
+  }, [configure, mode, navigate, questionCount, questionOrder, startAttempt, state.documentId, timerDurationSeconds, timerScope]);
 
   if (!state.documentId) {
     return (
@@ -179,6 +183,54 @@ const Quizconfig: React.FC = () => {
                 Random
               </label>
             </div>
+          </div>
+
+          <div className="ds-field">
+            <span className="ds-label">Timer</span>
+            <div style={{ display: "flex", gap: "1rem", flexWrap: "wrap" }}>
+              <label style={{ display: "flex", gap: "0.4rem", alignItems: "center" }}>
+                <input
+                  type="radio"
+                  name="timer-scope"
+                  value="per_question"
+                  checked={timerScope === "per_question"}
+                  onChange={() => setTimerScope("per_question")}
+                />
+                Per question
+              </label>
+              <label style={{ display: "flex", gap: "0.4rem", alignItems: "center" }}>
+                <input
+                  type="radio"
+                  name="timer-scope"
+                  value="per_session"
+                  checked={timerScope === "per_session"}
+                  onChange={() => setTimerScope("per_session")}
+                />
+                Entire session
+              </label>
+            </div>
+            <div className="ds-field" style={{ marginTop: "0.75rem", maxWidth: "240px" }}>
+              <label className="ds-label" htmlFor="timer-duration">
+                Time allotted ({timerScope === "per_question" ? "per question" : "for the whole session"})
+              </label>
+              <select
+                id="timer-duration"
+                className="ds-input"
+                value={timerDurationSeconds}
+                onChange={(event) => setTimerDurationSeconds(Number(event.target.value))}
+              >
+                {[30, 60, 120, 180, 300, 600].map((seconds) => (
+                  <option key={seconds} value={seconds}>
+                    {seconds >= 60 ? `${seconds / 60} minute${seconds > 60 ? "s" : ""}` : `${seconds} seconds`}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <span style={{ color: "var(--ds-muted)", fontSize: "0.85rem" }}>
+              {timerScope === "per_question"
+                ? "The timer resets for every question and counts that question's remaining time."
+                : "One timer counts down the remaining time for the entire quiz."}
+            </span>
           </div>
 
           {error && (

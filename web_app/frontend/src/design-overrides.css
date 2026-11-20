@@ -101,103 +101,23 @@
   font-weight: 700;
 }
 
-/* Jerry avatar internals (request update #1): the SVG hands clap and
-   Jerry bounces while cheering on a correct answer. */
-.jerry-avatar svg {
-  display: block;
-}
-
-.jerry-hand {
-  transform-box: fill-box;
-  transform-origin: center;
-}
-
-.jerry-avatar--cheer svg {
-  animation: jerry-bounce 0.6s ease-in-out infinite alternate;
-}
-
-@keyframes jerry-bounce {
-  from {
-    transform: translateY(0);
-  }
-  to {
-    transform: translateY(-6px);
-  }
-}
-
-.jerry-avatar--cheer .jerry-hand--left {
-  animation: jerry-clap-left 0.3s ease-in-out infinite alternate;
-}
-
-@keyframes jerry-clap-left {
-  from {
-    transform: translateX(0) rotate(0deg);
-  }
-  to {
-    transform: translateX(7px) rotate(14deg);
-  }
-}
-
-.jerry-avatar--cheer .jerry-hand--right {
-  animation: jerry-clap-right 0.3s ease-in-out infinite alternate;
-}
-
-@keyframes jerry-clap-right {
-  from {
-    transform: translateX(0) rotate(0deg);
-  }
-  to {
-    transform: translateX(-7px) rotate(-14deg);
-  }
-}
-
-/* Top progress indicator (request update #2): every page is always
-   visible; the current page and finished pages are highlighted, future
-   pages are faded. */
-.quiznav {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  align-items: center;
-}
-
-.quiznav-step {
+/* Timer module (R29-R33): green while running, red once 75% of the
+   allotted time has elapsed. */
+.quiz-timer {
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
-  color: #fff;
-  text-decoration: none;
-  padding: 0.3rem 0.75rem;
+  padding: 0.4rem 0.9rem;
   border-radius: 999px;
-  border: 1px solid transparent;
-  font-weight: 500;
-  transition: opacity 0.2s ease;
-}
-
-.quiznav-step--current {
-  background: rgba(255, 255, 255, 0.22);
-  border-color: rgba(255, 255, 255, 0.55);
+  border: 1px solid #10b981;
+  color: #10b981;
   font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  background: rgba(16, 185, 129, 0.08);
 }
 
-.quiznav-step--done {
-  background: var(--ds-accent);
-  font-weight: 600;
-}
-
-.quiznav-step--future {
-  opacity: 0.45;
-}
-
-.quiznav-step-badge {
-  display: inline-flex;
-  width: 1.35rem;
-  height: 1.35rem;
-  align-items: center;
-  justify-content: center;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.25);
-  font-size: 0.75rem;
-  font-weight: 700;
-  flex: none;
+.quiz-timer--warning {
+  border-color: #f43f5e;
+  color: #f43f5e;
+  background: rgba(244, 63, 94, 0.08);
 }

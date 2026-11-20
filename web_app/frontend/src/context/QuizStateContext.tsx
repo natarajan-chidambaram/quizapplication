@@ -19,6 +19,8 @@ export interface QuizState {
   documentName: string | null;
   mode: "learning" | "testing" | null;
   questionOrder: "sequential" | "random" | null;
+  timerScope: "per_question" | "per_session" | null;
+  timerDurationSeconds: number;
   attemptId: string | null;
   totalQuestions: number;
   currentIndex: number;
@@ -33,6 +35,8 @@ const EMPTY_STATE: QuizState = {
   documentName: null,
   mode: null,
   questionOrder: null,
+  timerScope: null,
+  timerDurationSeconds: 60,
   attemptId: null,
   totalQuestions: 0,
   currentIndex: 0,
@@ -54,13 +58,22 @@ function loadState(): QuizState {
 interface QuizStateContextValue {
   state: QuizState;
   selectDocument: (documentId: string, documentName: string) => void;
-  configure: (mode: "learning" | "testing", questionOrder: "sequential" | "random") => void;
-  startAttempt: (attemptId: string, totalQuestions: number, mode: "learning" | "testing", questionOrder: "sequential" | "random") => void;
+  configure: (
+    mode: "learning" | "testing",
+    questionOrder: "sequential" | "random",
+    timerScope: "per_question" | "per_session",
+    timerDurationSeconds: number
+  ) => void;
+  startAttempt: (
+    attemptId: string,
+    totalQuestions: number,
+    mode: "learning" | "testing",
+    questionOrder: "sequential" | "random"
+  ) => void;
   recordAnswer: (answer: QuizAnswer) => void;
   nextQuestion: () => void;
   markCompleted: () => void;
   resetSession: () => void;
-  resetAll: () => void;
 }
 
 const QuizStateContext = createContext<QuizStateContextValue | undefined>(undefined);
@@ -81,8 +94,13 @@ export const QuizStateProvider: React.FC<{ children: React.ReactNode }> = ({ chi
   }, []);
 
   const configure = useCallback(
-    (mode: "learning" | "testing", questionOrder: "sequential" | "random") => {
-      setState((previous) => ({ ...previous, mode, questionOrder }));
+    (
+      mode: "learning" | "testing",
+      questionOrder: "sequential" | "random",
+      timerScope: "per_question" | "per_session",
+      timerDurationSeconds: number
+    ) => {
+      setState((previous) => ({ ...previous, mode, questionOrder, timerScope, timerDurationSeconds }));
     },
     []
   );
@@ -128,13 +146,6 @@ export const QuizStateProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     setState((previous) => ({ ...previous, completed: true }));
   }, []);
 
-  const resetAll = useCallback(() => {
-    // "Upload a new document" (request update #3): clear EVERYTHING,
-    // including the locked uploaded document, so a new file can be
-    // uploaded on the Document Upload screen.
-    setState({ ...EMPTY_STATE });
-  }, []);
-
   const resetSession = useCallback(() => {
     // Restart (R25): keep only the chosen document, go back to configuration.
     setState((previous) => ({
@@ -142,6 +153,8 @@ export const QuizStateProvider: React.FC<{ children: React.ReactNode }> = ({ chi
       documentName: previous.documentName,
       mode: null,
       questionOrder: null,
+      timerScope: previous.timerScope,
+      timerDurationSeconds: previous.timerDurationSeconds,
       attemptId: null,
       totalQuestions: 0,
       currentIndex: 0,
@@ -151,8 +164,8 @@ export const QuizStateProvider: React.FC<{ children: React.ReactNode }> = ({ chi
   }, []);
 
   const value = useMemo(
-    () => ({ state, selectDocument, configure, startAttempt, recordAnswer, nextQuestion, markCompleted, resetSession, resetAll }),
-    [state, selectDocument, configure, startAttempt, recordAnswer, nextQuestion, markCompleted, resetSession, resetAll]
+    () => ({ state, selectDocument, configure, startAttempt, recordAnswer, nextQuestion, markCompleted, resetSession }),
+    [state, selectDocument, configure, startAttempt, recordAnswer, nextQuestion, markCompleted, resetSession]
   );
 
   return <QuizStateContext.Provider value={value}>{children}</QuizStateContext.Provider>;
