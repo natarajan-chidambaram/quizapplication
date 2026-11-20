@@ -90,7 +90,7 @@ const Quizconfig: React.FC = () => {
     } finally {
       setStarting(false);
     }
-  }, [configure, mode, navigate, questionCount, questionOrder, startAttempt, state.documentId, timerDurationSeconds, timerScope]);
+  }, [configure, difficulty, mode, navigate, questionCount, questionOrder, questionType, startAttempt, state.documentId, timerDurationSeconds, timerEnabled, timerScope]);
 
   if (!state.documentId) {
     return (

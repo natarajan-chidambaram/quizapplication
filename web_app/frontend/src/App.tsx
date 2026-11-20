@@ -2,7 +2,7 @@ import React from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import { QuizStateProvider } from "./context/QuizStateContext";
 import QuizNav from "./components/QuizNav";
-import Documentspage from "./pages/Documentspage";
+import UploadedDocument from "./pages/UploadedDocument";
 import Quizconfig from "./pages/Quizconfig";
 import Quizsession from "./pages/Quizsession";
 import Results from "./pages/Results";
@@ -18,7 +18,7 @@ function App() {
         <QuizNav />
         <main className="ds-container" style={{ paddingBottom: "3rem" }}>
           <Routes>
-            <Route path="/" element={<Documentspage />} />
+            <Route path="/" element={<UploadedDocument />} />
             <Route path="/configure" element={<Quizconfig />} />
             <Route path="/quiz" element={<Quizsession />} />
             <Route path="/results" element={<Results />} />

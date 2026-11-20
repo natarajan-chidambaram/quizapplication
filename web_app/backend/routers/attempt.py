@@ -573,7 +573,9 @@ def _question_dict(q: Question, reveal: bool, database: Session) -> dict:
     payload = {
         "id": q.id,
         "text": q.text,
-        "explanation": q.explanation,
+        # R27: the explanation is feedback, so it stays hidden in Testing
+        # Mode until the quiz is completed (Results reveals it there).
+        "explanation": q.explanation if reveal else None,
         "difficulty": getattr(q, "difficulty", None),
         "audioSentence": getattr(q, "audioSentence", None),
         "questionType": getattr(q, "questionType", None),

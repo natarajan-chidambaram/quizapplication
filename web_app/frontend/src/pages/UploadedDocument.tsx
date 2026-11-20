@@ -4,12 +4,12 @@ import quizApi from "../api/quizApi";
 import { useQuizState } from "../context/QuizStateContext";
 
 /**
- * Screen 1 — Document Upload (R3-R6).
- * Upload a JSON, PDF or Word (.docx) file of MCQs, see validation errors,
- * list uploaded documents, and click one to base the quiz on it (proceeds
- * to Quiz Configuration).
+ * Screen 1 — Document Upload (R3-R6). Original page name: UploadedDocument
+ * (R1: never renamed to DocumentsPage). Upload a JSON, PDF or Word (.docx)
+ * file of MCQs, see validation errors, list uploaded documents, and click one
+ * to base the quiz on it (proceeds to Quiz Configuration).
  */
-const Documentspage: React.FC = () => {
+const UploadedDocument: React.FC = () => {
   const navigate = useNavigate();
   const { state, selectDocument } = useQuizState();
   const inputRef = useRef<HTMLInputElement>(null);
@@ -209,4 +209,4 @@ const Documentspage: React.FC = () => {
   );
 };
 
-export default Documentspage;
+export default UploadedDocument;
