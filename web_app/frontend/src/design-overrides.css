@@ -122,42 +122,48 @@
   background: rgba(244, 63, 94, 0.08);
 }
 
-/* Non-clickable four-tab progress bar (R32-R34) */
+/* Non-clickable four-tab progress bar (display only, never links) */
+.ds-nav {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
 .quiz-tab {
   padding: 0.3rem 0.7rem;
   border-radius: var(--ds-radius);
   font-size: 0.85rem;
-  color: #fff;
-  background: transparent;
-  border: 1px solid transparent;
+  color: var(--ds-muted);
+  background: var(--ds-surface);
+  border: 1px solid var(--ds-border);
   user-select: none;
-}
-
-.quiz-tab--active {
-  background: rgba(255, 255, 255, 0.22);
-  border-color: rgba(255, 255, 255, 0.45);
-  font-weight: 700;
+  white-space: nowrap;
 }
 
 .quiz-tab--done {
   font-weight: 600;
-  background: rgba(255, 255, 255, 0.12);
+  color: var(--ds-primary);
+  border-color: var(--ds-primary);
+  background: var(--ds-surface);
+}
+
+.quiz-tab--active {
+  background: var(--ds-primary);
+  border-color: var(--ds-primary);
+  color: var(--ds-surface);
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 2px;
 }
 
 .quiz-tab--upcoming {
   opacity: 0.55;
 }
 
-/* Top-left Exit button (R35) */
+/* Top-left Exit button (always visible, returns to Document Upload) */
 .quiz-nav-exit {
-  color: #fff;
-  border-color: rgba(255, 255, 255, 0.5);
-  background: transparent;
   padding: 0.25rem 0.75rem;
-}
-
-.quiz-nav-exit:hover {
-  background: rgba(255, 255, 255, 0.15);
 }
 
 /* Speech controls of the listening exercise (R26-R27) */

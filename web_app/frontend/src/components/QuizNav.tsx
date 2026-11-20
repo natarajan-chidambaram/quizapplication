@@ -1,5 +1,5 @@
 import React from "react";
-import { Link, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { useQuizState } from "../context/QuizStateContext";
 
 /**
@@ -43,9 +43,9 @@ const QuizNav: React.FC = () => {
         <span style={{ fontSize: "1.4rem" }} role="img" aria-label="quiz">
           📝
         </span>
-        <Link to="/" className="ds-heading" style={{ fontSize: "1.15rem", marginBottom: 0, color: "#fff" }}>
+        <span className="ds-heading" style={{ fontSize: "1.15rem", marginBottom: 0 }}>
           Document Quiz
-        </Link>
+        </span>
       </div>
       <nav
         aria-label="Quiz progress"
