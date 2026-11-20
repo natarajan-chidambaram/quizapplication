@@ -745,6 +745,28 @@ async def get_results(attempt_id: str, database: Session = Depends(get_db)):
 
     score = _finish_attempt(db_attempt, database)
     responses_by_question = {response.attemptQuestion_id: response for response in responses}
+    # Elapsed-time measurement (R-extra): always derived from startedAt /
+    # answeredAt / finishedAt, so it works even when the countdown timer is
+    # switched off. Per-question time is the gap between consecutive answers
+    # (first question measured from startedAt); total is finishedAt-startedAt.
+    _started = db_attempt.startedAt
+    _finished = db_attempt.finishedAt or _datetime.now()
+    try:
+        _total_elapsed = int((_finished - _started).total_seconds()) if _started and _finished else 0
+    except Exception:
+        _total_elapsed = 0
+    _total_elapsed = max(0, _total_elapsed)
+    _ordered = sorted(responses, key=lambda r: (r.answeredAt or _finished))
+    _elapsed_by_qid: dict = {}
+    _prev = _started
+    for _resp in _ordered:
+        _cur = _resp.answeredAt or _finished
+        try:
+            _delta = int((_cur - _prev).total_seconds()) if _cur and _prev else 0
+        except Exception:
+            _delta = 0
+        _elapsed_by_qid[_resp.attemptQuestion_id] = max(0, _delta)
+        _prev = _cur
     correct = 0
     details = []
     for qid in question_ids:
@@ -773,6 +795,7 @@ async def get_results(attempt_id: str, database: Session = Depends(get_db)):
                 "correctOptionId": correct_option.id if correct_option else None,
                 "correctOptionText": correct_option.optionText if correct_option else None,
                 "isCorrect": was_correct,
+                "elapsedSeconds": _elapsed_by_qid.get(qid, 0),
             }
         )
 
@@ -784,6 +807,12 @@ async def get_results(attempt_id: str, database: Session = Depends(get_db)):
         "incorrectCount": len(question_ids) - correct,
         "percentageScore": score,
         "details": details,
+        "timer": {
+            "enabled": db_attempt.timerEnabled,
+            "scope": db_attempt.timerScope,
+            "durationSeconds": db_attempt.timerDurationSeconds,
+        },
+        "totalElapsedSeconds": _total_elapsed,
     }
 
 

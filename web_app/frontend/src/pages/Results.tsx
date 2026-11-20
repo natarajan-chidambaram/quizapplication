@@ -92,12 +92,31 @@ const Results: React.FC = () => {
   }
 
   const isTesting = results?.mode === "testing";
+  // Elapsed time (request #2): always measured by the backend from
+  // startedAt/answeredAt/finishedAt, so it is shown even when the countdown
+  // timer was switched off. Per-question scope shows each question's time
+  // plus the total; per-session scope shows only the total session time.
+  const timerScope = (results?.timer?.scope as string | undefined) ?? state.timerScope ?? "per_question";
+  const showPerQuestionTime = timerScope !== "per_session";
+  const formatElapsed = (totalSeconds: number | null | undefined): string => {
+    const safe = Math.max(0, Math.floor(Number(totalSeconds ?? 0) || 0));
+    const minutes = Math.floor(safe / 60);
+    const seconds = safe % 60;
+    if (minutes === 0) return `${seconds}s`;
+    return `${minutes}m ${seconds.toString().padStart(2, "0")}s`;
+  };
+  const totalElapsed = results?.totalElapsedSeconds as number | undefined;
 
   return (
     <div className="ds-section">
       <h1 className="ds-heading">Results</h1>
       <p style={{ color: "var(--ds-muted)", marginTop: 0 }}>
         <span className="ds-badge">{isTesting ? "Testing Mode" : "Learning Mode"}</span>
+        {typeof totalElapsed === "number" && (
+          <span className="ds-badge" style={{ marginLeft: "0.5rem" }} title="Measured from quiz start to finish, even when the countdown timer is off">
+            ⏱ Total time: {formatElapsed(totalElapsed)}
+          </span>
+        )}
       </p>
 
       <div className="ds-grid-2" style={{ maxWidth: "720px" }}>
@@ -141,6 +160,11 @@ const Results: React.FC = () => {
             )}
             {detail.explanation && (
               <p style={{ margin: "0.25rem 0", color: "var(--ds-muted)" }}>Explanation: {detail.explanation}</p>
+            )}
+            {showPerQuestionTime && typeof detail.elapsedSeconds === "number" && (
+              <p style={{ margin: "0.25rem 0", color: "var(--ds-muted)" }} title="Time spent on this question, measured from the previous answer">
+                ⏱ Time taken: {formatElapsed(detail.elapsedSeconds)}
+              </p>
             )}
           </div>
         ))}

@@ -7,12 +7,11 @@ interface JerryAvatarProps {
 }
 
 /**
- * Cheerful Jerry avatar in the style of the Tom and Jerry cartoon,
- * drawn as inline SVG so it actually resembles the character: a brown
- * mouse with big round ears (tan insides), a tan muzzle, buck tooth
- * smile, red bow tie, long tail and little tan hands. When `clapping`
- * is true his hands clap together and he bounces with joy
- * (request update #1 / R20).
+ * Cheerful Jerry avatar in the style of Jerry from the Tom & Jerry cartoon:
+ * warm orange-brown fur, oversized round ears with peachy-pink insides, a
+ * little hair tuft, big expressive eyes, tiny black nose, buck-tooth grin,
+ * whiskers, cream muzzle/belly and a long curvy tail. When `clapping` is
+ * true he bounces with joy and his paws clap together (Learning Mode).
  */
 const JerryAvatar: React.FC<JerryAvatarProps> = ({ clapping = false, size = 96 }) => (
   <div
@@ -20,52 +19,70 @@ const JerryAvatar: React.FC<JerryAvatarProps> = ({ clapping = false, size = 96 }
     role="img"
     aria-label={clapping ? "Jerry the mouse clapping and cheering" : "Jerry the mouse"}
   >
-    <svg viewBox="0 0 100 100" width={size} height={size} aria-hidden="true" focusable="false">
+    <svg viewBox="0 0 120 120" width={size} height={size} aria-hidden="true" focusable="false">
       {/* long curvy tail */}
       <path
-        d="M67 82 Q 88 88 87 70 Q 86 58 75 59"
+        d="M80 100 Q 104 104 102 84 Q 100 68 88 72"
         fill="none"
-        stroke="#a9662c"
+        stroke="#8a4f1c"
         strokeWidth="4"
         strokeLinecap="round"
       />
-      {/* big round ears with tan insides */}
-      <circle cx="26" cy="26" r="15" fill="#b06f2e" />
-      <circle cx="26" cy="26" r="8" fill="#f2c896" />
-      <circle cx="74" cy="26" r="15" fill="#b06f2e" />
-      <circle cx="74" cy="26" r="8" fill="#f2c896" />
+      {/* big round ears with peachy-pink insides */}
+      <circle cx="28" cy="28" r="18" fill="#c17a2e" stroke="#8a4f1c" strokeWidth="2" />
+      <circle cx="28" cy="28" r="9.5" fill="#f9cfa3" />
+      <circle cx="92" cy="28" r="18" fill="#c17a2e" stroke="#8a4f1c" strokeWidth="2" />
+      <circle cx="92" cy="28" r="9.5" fill="#f9cfa3" />
+      {/* hair tuft on top */}
+      <path
+        d="M50 16 Q 54 4 60 14 Q 65 3 70 14 Q 75 5 78 17 Q 69 12 60 15 Q 51 12 50 16 Z"
+        fill="#8a4f1c"
+      />
       {/* head */}
-      <ellipse cx="50" cy="38" rx="27" ry="24" fill="#b06f2e" />
-      {/* tan muzzle */}
-      <ellipse cx="50" cy="47" rx="17" ry="13" fill="#f2c896" />
-      {/* eyes */}
-      <ellipse cx="41" cy="31" rx="6.5" ry="7.5" fill="#ffffff" stroke="#7a4a1d" strokeWidth="1" />
-      <ellipse cx="59" cy="31" rx="6.5" ry="7.5" fill="#ffffff" stroke="#7a4a1d" strokeWidth="1" />
-      <circle cx="42.5" cy="33" r="2.6" fill="#3b2314" />
-      <circle cx="60.5" cy="33" r="2.6" fill="#3b2314" />
-      <circle cx="43.4" cy="32" r="0.9" fill="#ffffff" />
-      <circle cx="61.4" cy="32" r="0.9" fill="#ffffff" />
-      {/* nose */}
-      <ellipse cx="50" cy="42" rx="3" ry="2.4" fill="#7a4a1d" />
-      {/* cheerful smile */}
-      <path d="M41 49 Q 50 56 59 49" fill="none" stroke="#7a4a1d" strokeWidth="2" strokeLinecap="round" />
-      {/* body and tan belly */}
-      <ellipse cx="50" cy="76" rx="19" ry="15" fill="#b06f2e" />
-      <ellipse cx="50" cy="78" rx="12" ry="10" fill="#f2c896" />
-      {/* red bow tie */}
-      <path d="M44 61 L50 64 L44 67 Z" fill="#e03131" />
-      <path d="M56 61 L50 64 L56 67 Z" fill="#e03131" />
-      <circle cx="50" cy="64" r="1.8" fill="#b02525" />
-      {/* clapping hands */}
+      <ellipse cx="60" cy="44" rx="33" ry="29" fill="#c17a2e" />
+      {/* cream muzzle */}
+      <ellipse cx="60" cy="57" rx="22" ry="17" fill="#f9d8ae" />
+      {/* big expressive eyes */}
+      <ellipse cx="48" cy="37" rx="9" ry="11" fill="#ffffff" stroke="#8a4f1c" strokeWidth="1.4" />
+      <ellipse cx="72" cy="37" rx="9" ry="11" fill="#ffffff" stroke="#8a4f1c" strokeWidth="1.4" />
+      <circle cx="49.5" cy="39.5" r="4" fill="#241207" />
+      <circle cx="73.5" cy="39.5" r="4" fill="#241207" />
+      <circle cx="51" cy="37.8" r="1.4" fill="#ffffff" />
+      <circle cx="75" cy="37.8" r="1.4" fill="#ffffff" />
+      {/* happy eyebrows */}
+      <path d="M40 24 Q 48 21 55 24" fill="none" stroke="#8a4f1c" strokeWidth="1.6" strokeLinecap="round" />
+      <path d="M65 24 Q 72 21 80 24" fill="none" stroke="#8a4f1c" strokeWidth="1.6" strokeLinecap="round" />
+      {/* tiny black nose */}
+      <ellipse cx="60" cy="51" rx="4.2" ry="3.2" fill="#241207" />
+      <circle cx="61.4" cy="50" r="1" fill="#ffffff" opacity="0.85" />
+      {/* buck-tooth grin */}
+      <path d="M48 59 Q 60 68 72 59" fill="none" stroke="#7a451a" strokeWidth="2" strokeLinecap="round" />
+      <rect x="56.5" y="62.5" width="7" height="7" rx="1.5" fill="#ffffff" stroke="#7a451a" strokeWidth="1.2" />
+      <line x1="60" y1="62.8" x2="60" y2="69.2" stroke="#7a451a" strokeWidth="1" />
+      {/* whiskers */}
+      <g stroke="#7a451a" strokeWidth="1.1" strokeLinecap="round" opacity="0.9">
+        <line x1="22" y1="55" x2="38" y2="57" />
+        <line x1="22" y1="60" x2="38" y2="60" />
+        <line x1="23" y1="65" x2="38" y2="63" />
+        <line x1="82" y1="57" x2="98" y2="55" />
+        <line x1="82" y1="60" x2="98" y2="60" />
+        <line x1="82" y1="63" x2="97" y2="65" />
+      </g>
+      {/* body and cream belly */}
+      <ellipse cx="60" cy="94" rx="23" ry="18" fill="#c17a2e" />
+      <ellipse cx="60" cy="96" rx="14" ry="11.5" fill="#f9d8ae" />
+      {/* clapping paws */}
       <g className="jerry-hand jerry-hand--left">
-        <circle cx="36" cy="72" r="6" fill="#f2c896" stroke="#b06f2e" strokeWidth="1.5" />
+        <circle cx="42" cy="90" r="7" fill="#f9d8ae" stroke="#8a4f1c" strokeWidth="1.6" />
+        <circle cx="40" cy="88" r="1.2" fill="#e8a76f" />
       </g>
       <g className="jerry-hand jerry-hand--right">
-        <circle cx="64" cy="72" r="6" fill="#f2c896" stroke="#b06f2e" strokeWidth="1.5" />
+        <circle cx="78" cy="90" r="7" fill="#f9d8ae" stroke="#8a4f1c" strokeWidth="1.6" />
+        <circle cx="80" cy="88" r="1.2" fill="#e8a76f" />
       </g>
       {/* feet */}
-      <ellipse cx="41" cy="90" rx="7" ry="4" fill="#f2c896" />
-      <ellipse cx="59" cy="90" rx="7" ry="4" fill="#f2c896" />
+      <ellipse cx="49" cy="110" rx="9" ry="5" fill="#f9d8ae" stroke="#8a4f1c" strokeWidth="1.4" />
+      <ellipse cx="71" cy="110" rx="9" ry="5" fill="#f9d8ae" stroke="#8a4f1c" strokeWidth="1.4" />
     </svg>
   </div>
 );

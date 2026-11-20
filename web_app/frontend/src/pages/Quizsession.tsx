@@ -15,7 +15,7 @@ import { useQuizState, QuizAnswer } from "../context/QuizStateContext";
  */
 const Quizsession: React.FC = () => {
   const navigate = useNavigate();
-  const { state, recordAnswer, nextQuestion, selectDocument } = useQuizState();
+  const { state, recordAnswer, nextQuestion, markCompleted, selectDocument } = useQuizState();
   const attemptId = state.attemptId;
   const currentIndex = state.currentIndex;
   const mode = state.mode;
@@ -260,9 +260,19 @@ const Quizsession: React.FC = () => {
     if (!alreadyAnswered) return;
     nextQuestion(); // the context sets completed=true after the last question
     if (currentIndex + 1 >= state.totalQuestions) {
+      markCompleted();
       navigate("/results");
     }
-  }, [alreadyAnswered, currentIndex, navigate, nextQuestion, state.totalQuestions]);
+  }, [alreadyAnswered, currentIndex, markCompleted, navigate, nextQuestion, state.totalQuestions]);
+
+  // Timer expiry (request #3): when the countdown reaches 00:00, go directly
+  // to the Results screen. This fires for either scope (per-question or
+  // per-session) as soon as the visible timer hits 00:00.
+  useEffect(() => {
+    if (!timeUp || !attemptId) return;
+    markCompleted();
+    navigate("/results");
+  }, [timeUp, attemptId, markCompleted, navigate]);
 
   if (!attemptId) {
     return (

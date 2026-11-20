@@ -20,12 +20,61 @@
   animation: jerry-clap 0.5s ease-in-out infinite alternate;
 }
 
+.jerry-avatar svg {
+  overflow: visible;
+}
+
+.jerry-avatar--cheer svg {
+  animation: jerry-bounce 0.5s ease-in-out infinite alternate;
+  transform-origin: 50% 85%;
+}
+
+.jerry-hand {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.jerry-avatar--cheer .jerry-hand--left {
+  animation: jerry-clap-left 0.35s ease-in-out infinite alternate;
+}
+
+.jerry-avatar--cheer .jerry-hand--right {
+  animation: jerry-clap-right 0.35s ease-in-out infinite alternate;
+}
+
 @keyframes jerry-clap {
   from {
     transform: rotate(-6deg) scale(1);
   }
   to {
     transform: rotate(6deg) scale(1.12);
+  }
+}
+
+@keyframes jerry-bounce {
+  from {
+    transform: translateY(0) rotate(-3deg);
+  }
+  to {
+    transform: translateY(-6px) rotate(3deg);
+  }
+}
+
+@keyframes jerry-clap-left {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(9px);
+  }
+}
+
+@keyframes jerry-clap-right {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-9px);
   }
 }
 
