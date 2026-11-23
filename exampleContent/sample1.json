@@ -1,0 +1,149 @@
+{
+  "title": "English A2 Quiz",
+  "questions": [
+    {
+      "text": "She always ________ her homework before dinner.",
+      "type": "multiple_choice",
+      "options": [
+        "do",
+        "does",
+        "doing",
+        "did"
+      ],
+      "correctAnswer": "does",
+      "points": 1,
+      "explanation": "'Always' signals a habit, so we use the present simple. The subject 'She' is third person singular, so the verb takes -s/-es: 'does'.",
+      "difficulty": "medium",
+      "audioSentence": "She always does her homework before dinner."
+    },
+    {
+      "text": "We ________ football in the park last Saturday.",
+      "type": "multiple_choice",
+      "options": [
+        "play",
+        "plays",
+        "played",
+        "playing"
+      ],
+      "correctAnswer": "played",
+      "points": 1,
+      "explanation": "'Last Saturday' refers to a finished time in the past, so we use the past simple: 'played'.",
+      "difficulty": "easy"
+    },
+    {
+      "text": "My brother is ________ than me. He can reach the top shelf easily.",
+      "type": "multiple_choice",
+      "options": [
+        "tall",
+        "taller",
+        "tallest",
+        "more tall"
+      ],
+      "correctAnswer": "taller",
+      "points": 1,
+      "explanation": "We are comparing two people ('than me'), so we need the comparative. Short adjectives add -er: 'taller'.",
+      "difficulty": "easy"
+    },
+    {
+      "text": "They usually ________ to school by bus.",
+      "type": "multiple_choice",
+      "options": [
+        "go",
+        "goes",
+        "going",
+        "went"
+      ],
+      "correctAnswer": "go",
+      "points": 1,
+      "explanation": "'Usually' signals a routine, so we use the present simple. With the plural subject 'They', the verb has no -s: 'go'.",
+      "difficulty": "easy",
+      "audioSentence": "They usually go to school by bus."
+    },
+    {
+      "text": "________ you like to have some orange juice?",
+      "type": "multiple_choice",
+      "options": [
+        "Do",
+        "Are",
+        "Would",
+        "Will"
+      ],
+      "correctAnswer": "Would",
+      "points": 1,
+      "explanation": "'Would you like...?' is the polite, fixed phrase for offering something to someone.",
+      "difficulty": "medium"
+    },
+    {
+      "text": "It was ________ cold yesterday that we stayed inside all day.",
+      "type": "multiple_choice",
+      "options": [
+        "too",
+        "very",
+        "so",
+        "such"
+      ],
+      "correctAnswer": "so",
+      "points": 1,
+      "explanation": "The structure 'so + adjective + that' shows result: it was so cold that we stayed inside. 'Such' needs a noun, and 'very' cannot be followed by 'that' to show result.",
+      "difficulty": "hard"
+    },
+    {
+      "text": "She ________ reading a book when the phone rang.",
+      "type": "multiple_choice",
+      "options": [
+        "is",
+        "was",
+        "were",
+        "has"
+      ],
+      "correctAnswer": "was",
+      "points": 1,
+      "explanation": "The past continuous ('was reading') describes an action in progress when another past action (the phone rang) interrupted it. The subject 'She' takes 'was'.",
+      "difficulty": "medium"
+    },
+    {
+      "text": "I have never ________ sushi before.",
+      "type": "multiple_choice",
+      "options": [
+        "eat",
+        "ate",
+        "eaten",
+        "eating"
+      ],
+      "correctAnswer": "eaten",
+      "points": 1,
+      "explanation": "'Have never ... before' is the present perfect, which needs the past participle of 'eat': 'eaten'.",
+      "difficulty": "hard"
+    },
+    {
+      "text": "There ________ a lot of students in the classroom this morning.",
+      "type": "multiple_choice",
+      "options": [
+        "was",
+        "were",
+        "is",
+        "be"
+      ],
+      "correctAnswer": "were",
+      "points": 1,
+      "explanation": "'This morning' is used here for a finished past time, and 'a lot of students' is plural, so we use the past form 'were'.",
+      "difficulty": "medium",
+      "audioSentence": "There were a lot of students in the classroom this morning."
+    },
+    {
+      "text": "Please ________ quiet in the library. People are studying.",
+      "type": "multiple_choice",
+      "options": [
+        "is",
+        "are",
+        "be",
+        "being"
+      ],
+      "correctAnswer": "be",
+      "points": 1,
+      "explanation": "In a polite imperative (a command or request) we use the base form of the verb, so 'be' is correct.",
+      "difficulty": "hard",
+      "audioSentence": "Please be quiet in the library. People are studying."
+    }
+  ]
+}

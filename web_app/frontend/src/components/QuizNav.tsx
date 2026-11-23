@@ -44,7 +44,7 @@ const QuizNav: React.FC = () => {
           📝
         </span>
         <span className="ds-heading" style={{ fontSize: "1.15rem", marginBottom: 0 }}>
-          Document Quiz
+          FOQUS - Free and Open QUiz System
         </span>
       </div>
       <nav
